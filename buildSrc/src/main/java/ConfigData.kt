@@ -12,5 +12,5 @@ object ConfigData {
     const val versionCode = 1
     const val versionName = "1.0"
 
-    const val namespaceRoot = "com.chummer"
+    const val namespace = "com.chummer.finance"
 }

@@ -19,4 +19,12 @@ object Dependencies {
     const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines_version}"
 
     const val dataStore = "androidx.datastore:datastore-preferences:${Versions.data_store_version}"
+
+    object Infrastructure {
+        private const val root = "com.chummer.infrastructure"
+
+        const val db = "$root:db:${Versions.infrastructure}"
+        const val network = "$root:network:${Versions.infrastructure}"
+        const val preferences = "$root:preferences:${Versions.infrastructure}"
+    }
 }

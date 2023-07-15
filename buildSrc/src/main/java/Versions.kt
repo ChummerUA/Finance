@@ -11,4 +11,6 @@ object Versions {
 
     const val ktor_version = "2.3.2"
     const val ok_http_version = "4.4.0"
+
+    const val infrastructure = "1.0.0"
 }

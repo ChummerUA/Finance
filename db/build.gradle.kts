@@ -1,27 +1,23 @@
 plugins {
-    id(Plugins.Android.application)
+    id(Plugins.Android.library)
     id(Plugins.JetBrains.android)
 }
 
 android {
-    namespace = ConfigData.namespace
+    namespace = "${ConfigData.namespace}.db"
 
     defaultConfig {
-        applicationId = ConfigData.namespace
-
-        minSdk = ConfigData.minSdk
-
         compileSdk = ConfigData.targetSdkVersion
-        targetSdk = ConfigData.targetSdkVersion
-
-        versionCode = ConfigData.versionCode
-        versionName = ConfigData.versionName
+        minSdk = ConfigData.minSdk
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -34,4 +30,5 @@ android {
 }
 
 dependencies {
+    implementation(Dependencies.Infrastructure.db)
 }
