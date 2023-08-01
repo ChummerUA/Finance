@@ -16,5 +16,7 @@ dependencyResolutionManagement {
 }
 rootProject.name = "finance"
 include(":app")
+include(":networkModels")
+include(":models")
 include(":network")
 include(":db")

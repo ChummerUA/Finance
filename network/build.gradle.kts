@@ -1,6 +1,7 @@
 plugins {
     id(Plugins.Android.library)
     id(Plugins.JetBrains.android)
+    id(Plugins.JetBrains.serialisation)
 }
 
 android {
@@ -30,5 +31,9 @@ android {
 }
 
 dependencies {
-    implementation(Dependencies.Infrastructure.network)
+    api(Dependencies.Infrastructure.usecase)
+    api(Dependencies.Infrastructure.network)
+
+    api(project(mapOf("path" to ":networkModels")))
+    api(project(mapOf("path" to ":models")))
 }

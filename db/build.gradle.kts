@@ -30,5 +30,5 @@ android {
 }
 
 dependencies {
-    implementation(Dependencies.Infrastructure.db)
+    api(Dependencies.Infrastructure.db)
 }
