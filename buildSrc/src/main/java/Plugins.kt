@@ -10,6 +10,7 @@ object Plugins {
     object JetBrains {
         const val android = "org.jetbrains.kotlin.android"
         const val jvm = "org.jetbrains.kotlin.jvm"
+        const val serialisation = "org.jetbrains.kotlin.plugin.serialization"
     }
 
     const val sqlDelight = "com.squareup.sqldelight"

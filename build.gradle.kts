@@ -12,8 +12,9 @@ buildscript {
 }
 
 plugins {
-    id(Plugins.Android.application) version Versions.gradle_version apply false
-    id(Plugins.Android.library) version Versions.gradle_version apply false
-    id(Plugins.JetBrains.android) version Versions.kotlin_version apply false
-    id(Plugins.JetBrains.jvm) version Versions.kotlin_version apply false
+    id(Plugins.Android.application) version Versions.gradle apply false
+    id(Plugins.Android.library) version Versions.gradle apply false
+    id(Plugins.JetBrains.android) version Versions.kotlin apply false
+    id(Plugins.JetBrains.jvm) version Versions.kotlin apply false
+    id(Plugins.JetBrains.serialisation) version Versions.KotlinX.serialization apply false
 }
