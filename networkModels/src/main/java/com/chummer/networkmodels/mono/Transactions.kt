@@ -1,14 +1,5 @@
 package com.chummer.networkmodels.mono
 
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class GetTransactionsRequest(
-    val account: String,
-    val from: Long,
-    val to: Long
-)
-
 data class GetTransactionsResponse(
     val id: String,
     val time: Long,

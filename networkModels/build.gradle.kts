@@ -11,4 +11,6 @@ java {
 
 dependencies {
     implementation(Dependencies.KotilnX.serialization)
+
+    api(project(mapOf("path" to ":models")))
 }
