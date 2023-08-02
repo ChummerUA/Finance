@@ -8,6 +8,7 @@ buildscript {
     dependencies {
         classpath(Dependencies.gradle)
         classpath(Dependencies.kotlinGradle)
+        classpath(Dependencies.SqlDelight.gradle)
     }
 }
 
@@ -17,4 +18,5 @@ plugins {
     id(Plugins.JetBrains.android) version Versions.kotlin apply false
     id(Plugins.JetBrains.jvm) version Versions.kotlin apply false
     id(Plugins.JetBrains.serialisation) version Versions.KotlinX.serialization apply false
+    id(Plugins.sqlDelight) version Versions.sqlDelight apply false
 }

@@ -12,8 +12,9 @@ object Dependencies {
     }
 
     object SqlDelight {
-        const val androidDriver = "com.squareup.sqldelight:android-driver:${Versions.sqlDelight}"
-        const val gradle = "com.squareup.sqldelight:gradle-plugin:${Versions.sqlDelight}"
+        const val androidDriver = "app.cash.sqldelight:android-driver:${Versions.sqlDelight}"
+        const val gradle = "app.cash.sqldelight:gradle-plugin:${Versions.sqlDelight}"
+        const val dialect = "app.cash.sqldelight:mysql-dialect:${Versions.sqlDelight}"
     }
 
     object KotilnX {

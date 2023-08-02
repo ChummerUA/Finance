@@ -13,4 +13,6 @@ object ConfigData {
     const val versionName = "1.0"
 
     const val namespace = "com.chummer.finance"
+
+    const val dbName = "ChummerFinanceDatabase"
 }

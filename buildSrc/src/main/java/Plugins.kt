@@ -13,5 +13,5 @@ object Plugins {
         const val serialisation = "org.jetbrains.kotlin.plugin.serialization"
     }
 
-    const val sqlDelight = "com.squareup.sqldelight"
+    const val sqlDelight = "app.cash.sqldelight"
 }

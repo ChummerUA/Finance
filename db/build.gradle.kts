@@ -1,6 +1,7 @@
 plugins {
     id(Plugins.Android.library)
     id(Plugins.JetBrains.android)
+    id(Plugins.sqlDelight)
 }
 
 android {
@@ -31,4 +32,13 @@ android {
 
 dependencies {
     api(Dependencies.Infrastructure.db)
+}
+
+sqldelight {
+    databases {
+        create(ConfigData.dbName) {
+            packageName.set(ConfigData.namespace)
+            dialect(Dependencies.SqlDelight.dialect)
+        }
+    }
 }
