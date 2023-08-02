@@ -14,4 +14,6 @@ object Plugins {
     }
 
     const val sqlDelight = "app.cash.sqldelight"
+
+    const val lint = "com.android.lint"
 }

@@ -1,6 +1,6 @@
 object Versions {
     const val kotlin = "1.9.0"
-    const val gradle = "8.0.2"
+    const val gradle = "8.1.0"
 
     const val ktx = "1.10.1"
 
@@ -18,4 +18,7 @@ object Versions {
         const val serialization = "1.9.0"
         const val jsonSerialization = "1.5.1"
     }
+
+    //For historical reasons lint version should be gradle + 23
+    const val buildTools = "31.1.0"
 }

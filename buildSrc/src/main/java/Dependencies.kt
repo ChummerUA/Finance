@@ -7,14 +7,17 @@ object Dependencies {
     }
 
     object Ktor {
-        const val core = "io.ktor:ktor-client-core:${Versions.ktor}"
-        const val okhttp = "io.ktor:ktor-client-okhttp:${Versions.ktor}"
+        private const val root = "io.ktor"
+        const val core = "$root:ktor-client-core:${Versions.ktor}"
+        const val okhttp = "$root:ktor-client-okhttp:${Versions.ktor}"
     }
 
     object SqlDelight {
-        const val androidDriver = "app.cash.sqldelight:android-driver:${Versions.sqlDelight}"
-        const val gradle = "app.cash.sqldelight:gradle-plugin:${Versions.sqlDelight}"
-        const val dialect = "app.cash.sqldelight:mysql-dialect:${Versions.sqlDelight}"
+        private const val root = "app.cash.sqldelight"
+
+        const val androidDriver = "$root:android-driver:${Versions.sqlDelight}"
+        const val gradle = "$root:gradle-plugin:${Versions.sqlDelight}"
+        const val dialect = "$root:mysql-dialect:${Versions.sqlDelight}"
     }
 
     object KotilnX {
@@ -33,5 +36,12 @@ object Dependencies {
         const val db = "$root:db:${Versions.infrastructure}"
         const val network = "$root:network:${Versions.infrastructure}"
         const val preferences = "$root:preferences:${Versions.infrastructure}"
+    }
+
+    object Lint {
+        private const val root = "com.android.tools.lint"
+
+        const val api = "$root:lint-api:${Versions.buildTools}"
+        const val checks = "$root:lint-checks:${Versions.buildTools}"
     }
 }
