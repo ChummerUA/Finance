@@ -18,5 +18,5 @@ data class GetTransactionsResponse(
     val invoiceId: String?,
     val counterEdrpou: String?,
     val counterIban: String?,
-    val counterName: String
+    val counterName: String?
 )

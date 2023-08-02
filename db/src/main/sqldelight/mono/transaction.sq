@@ -1,0 +1,20 @@
+CREATE TABLE transaction (
+    id TEXT NOT NULL PRIMARY KEY,
+    time BIGINT NOT NULL,
+    description TEXT NOT NULL,
+    mcc INT NOT NULL,
+    original_mcc INT NOT NULL,
+    hold BOOLEAN NOT NULL,
+    amount BIGINT NOT NULL,
+    operation_amount BIGINT NOT NULL,
+    currency_code BIGINT NOT NULL,
+    commission_rate BIGINT NOT NULL,
+    cashback_amount BIGINT NOT NULL,
+    balance BIGINT NOT NULL,
+    comment TEXT,
+    receipt_id TEXT,
+    invoice_id TEXT,
+    counter_edrpou TEXT,
+    counter_iban TEXT,
+    counter_name TEXT
+);
