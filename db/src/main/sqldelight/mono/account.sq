@@ -2,5 +2,15 @@ CREATE TABLE account(
     id TEXT NOT NULL PRIMARY KEY,
     balance BIGINT NOT NULL,
     credit_limit BIGINT NOT NULL,
-    type INT NOT NULL
+    type TEXT NOT NULL,
+    masked_pans TEXT
 );
+
+getAccounts:
+SELECT *
+FROM account;
+
+getAccountById:
+SELECT *
+FROM account
+WHERE account.id = :accountId;

@@ -1,5 +1,6 @@
 package com.chummer.networkmodels.mono
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -15,7 +16,9 @@ data class Account(
     val id: String,
     val balance: Long,
     val creditLimit: Long,
-    val type: CardType
+    val type: CardType,
+    @SerialName("maskedPan")
+    val maskedPans: List<String>
 )
 
 @Serializable

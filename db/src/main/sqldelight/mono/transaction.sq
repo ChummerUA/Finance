@@ -18,3 +18,13 @@ CREATE TABLE transaction (
     counter_iban TEXT,
     counter_name TEXT
 );
+
+getTransactions:
+SELECT id, time, description, operation_amount, currency_code, mcc, original_mcc, cashback_amount
+FROM transaction;
+
+
+getTransactionById:
+SELECT *
+FROM transaction
+WHERE transaction.id = :transactionId;

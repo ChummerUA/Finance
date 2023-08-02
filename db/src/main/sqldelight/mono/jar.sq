@@ -6,3 +6,12 @@ CREATE TABLE jar (
     balance BIGINT NOT NULL,
     goal BIGINT NOT NULL
 );
+
+getJars:
+SELECT id, title, currency_code, balance, goal
+FROM jar;
+
+getJarById:
+SELECT *
+FROM jar
+WHERE jar.id = :jarId;
