@@ -12,7 +12,7 @@ import io.ktor.http.HttpMethod
 
 class GetPersonalInfoUseCase(
     client: HttpClient
-) : HttpUseCase<None, AccountResponse, Throwable>(key, client) {
+) : HttpUseCase<None, AccountResponse, Throwable>(KEY, client) {
 
     override val definition = RequestDefinition(
         subPath = "personal/client-info",
@@ -28,4 +28,4 @@ class GetPersonalInfoUseCase(
     }
 }
 
-private const val key = "get_personal_info_usecase"
+private const val KEY = "get_personal_info"
