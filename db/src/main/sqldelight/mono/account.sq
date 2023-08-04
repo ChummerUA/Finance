@@ -1,10 +1,21 @@
 CREATE TABLE account(
     id TEXT NOT NULL PRIMARY KEY,
-    balance BIGINT NOT NULL,
-    credit_limit BIGINT NOT NULL,
+    balance INTEGER NOT NULL,
+    credit_limit INTEGER NOT NULL,
     type TEXT NOT NULL,
     masked_pans TEXT
 );
+
+upsertAccount {
+    UPDATE account
+    SET balance = :balance,
+        credit_limit = :creditLimit,
+        type = :type,
+        masked_pans = :maskedPans
+    WHERE id = :id;
+
+    INSERT OR IGNORE INTO account VALUES (:id, :balance, :creditLimit, :type, :maskedPans);
+}
 
 getAccounts:
 SELECT *

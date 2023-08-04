@@ -32,13 +32,13 @@ android {
 
 dependencies {
     api(Dependencies.Infrastructure.db)
+    api(project(mapOf("path" to ":networkModels")))
 }
 
 sqldelight {
     databases {
         create(ConfigData.dbName) {
             packageName.set(ConfigData.namespace)
-            dialect(Dependencies.SqlDelight.dialect)
         }
     }
 }

@@ -17,7 +17,6 @@ object Dependencies {
 
         const val androidDriver = "$root:android-driver:${Versions.sqlDelight}"
         const val gradle = "$root:gradle-plugin:${Versions.sqlDelight}"
-        const val dialect = "$root:mysql-dialect:${Versions.sqlDelight}"
     }
 
     object KotilnX {
