@@ -2,10 +2,24 @@ CREATE TABLE jar (
     id TEXT NOT NULL PRIMARY KEY,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
-    currency_code INT NOT NULL,
-    balance BIGINT NOT NULL,
-    goal BIGINT NOT NULL
+    currency_code INTEGER NOT NULL,
+    balance INTEGER NOT NULL,
+    goal INTEGER NOT NULL
 );
+
+upsertJar {
+    UPDATE jar
+    SET title = :title,
+        description = :description,
+        currency_code = :currencyCode,
+        balance = :balance,
+        goal = :goal
+    WHERE id = :id;
+
+    INSERT OR IGNORE
+    INTO jar
+    VALUES (:id, :title, :description, :currencyCode, :balance, :goal);
+}
 
 getJars:
 SELECT id, title, currency_code, balance, goal
