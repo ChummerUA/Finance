@@ -33,11 +33,24 @@ data class Jar(
 
 @Serializable
 enum class CardType {
+    @SerialName("black")
     BLACK,
+
+    @SerialName("white")
     WHITE,
+
+    @SerialName("platinum")
     PLATINUM,
+
+    @SerialName("iron")
     IRON,
+
+    @SerialName("fop")
     FOP,
+
+    @SerialName("yellow")
     YELLOW,
+
+    @SerialName("e_aid")
     E_AID
 }
