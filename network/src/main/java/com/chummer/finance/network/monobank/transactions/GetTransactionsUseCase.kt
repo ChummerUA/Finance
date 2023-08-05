@@ -5,7 +5,7 @@ import com.chummer.infrastructure.network.HttpUseCase
 import com.chummer.infrastructure.network.RequestDefinition
 import com.chummer.infrastructure.network.ResultMapper
 import com.chummer.models.mono.GetTransactionsParameters
-import com.chummer.networkmodels.mono.GetTransactionsResponse
+import com.chummer.networkmodels.mono.Transactions
 import io.ktor.client.HttpClient
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.url
@@ -13,13 +13,13 @@ import io.ktor.http.HttpMethod
 
 class GetTransactionsUseCase(
     client: HttpClient
-): HttpUseCase<GetTransactionsParameters, GetTransactionsResponse, Throwable>(key, client) {
+): HttpUseCase<GetTransactionsParameters, Transactions, Throwable>(KEY, client) {
     override val definition = RequestDefinition(
         subPath = "personal/statement",
         method = HttpMethod.Get
     )
 
-    override val responseMapper: ResultMapper<GetTransactionsResponse> =
+    override val responseMapper: ResultMapper<Transactions> =
         ResultMapper.JsonResultMapper()
     override val errorMapper: ErrorMapper<Throwable>
         get() = TODO("Not yet implemented")
@@ -33,4 +33,4 @@ class GetTransactionsUseCase(
     }
 }
 
-const val key = "get_transactions"
+const val KEY = "get_transactions"

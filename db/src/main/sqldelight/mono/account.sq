@@ -3,7 +3,8 @@ CREATE TABLE account(
     balance INTEGER NOT NULL,
     credit_limit INTEGER NOT NULL,
     type TEXT NOT NULL,
-    masked_pans TEXT
+    masked_pans TEXT,
+    client_id TEXT NOT NULL
 );
 
 upsertAccount {
@@ -11,10 +12,11 @@ upsertAccount {
     SET balance = :balance,
         credit_limit = :creditLimit,
         type = :type,
-        masked_pans = :maskedPans
+        masked_pans = :maskedPans,
+        client_id = :clientId
     WHERE id = :id;
 
-    INSERT OR IGNORE INTO account VALUES (:id, :balance, :creditLimit, :type, :maskedPans);
+    INSERT OR IGNORE INTO account VALUES (:id, :balance, :creditLimit, :type, :maskedPans, :clientId);
 }
 
 getAccounts:

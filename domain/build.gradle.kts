@@ -1,16 +1,11 @@
 plugins {
     id(Plugins.Android.library)
     id(Plugins.JetBrains.android)
-    id(Plugins.sqlDelight)
 }
 
 android {
-    namespace = "${ConfigData.namespace}.db"
-
-    defaultConfig {
-        compileSdk = ConfigData.targetSdkVersion
-        minSdk = ConfigData.minSdk
-    }
+    namespace = "com.chummer.domain"
+    compileSdk = ConfigData.targetSdkVersion
 
     buildTypes {
         release {
@@ -21,6 +16,12 @@ android {
             )
         }
     }
+
+    defaultConfig {
+        compileSdk = ConfigData.targetSdkVersion
+        minSdk = ConfigData.minSdk
+    }
+
     compileOptions {
         sourceCompatibility = ConfigData.javaVersion
         targetCompatibility = ConfigData.javaVersion
@@ -31,15 +32,8 @@ android {
 }
 
 dependencies {
-    api(Dependencies.Infrastructure.db)
-    api(project(mapOf("path" to ":networkModels")))
-    implementation(Dependencies.SqlDelight.adapters)
-}
-
-sqldelight {
-    databases {
-        create(ConfigData.dbName) {
-            packageName.set(ConfigData.namespace)
-        }
-    }
+    api(Dependencies.Infrastructure.usecase)
+    api(project(mapOf("path" to ":models")))
+    api(project(mapOf("path" to ":network")))
+    api(project(mapOf("path" to ":db")))
 }

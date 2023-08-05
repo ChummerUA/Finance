@@ -1,10 +1,13 @@
+import kotlin.Int;
+
 CREATE TABLE jar (
     id TEXT NOT NULL PRIMARY KEY,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
-    currency_code INTEGER NOT NULL,
+    currency_code INTEGER AS Int NOT NULL,
     balance INTEGER NOT NULL,
-    goal INTEGER NOT NULL
+    goal INTEGER NOT NULL,
+    client_id TEXT NOT NULL
 );
 
 upsertJar {
@@ -13,12 +16,13 @@ upsertJar {
         description = :description,
         currency_code = :currencyCode,
         balance = :balance,
-        goal = :goal
+        goal = :goal,
+        client_id = :clientId
     WHERE id = :id;
 
     INSERT OR IGNORE
     INTO jar
-    VALUES (:id, :title, :description, :currencyCode, :balance, :goal);
+    VALUES (:id, :title, :description, :currencyCode, :balance, :goal, :clientId);
 }
 
 getJars:

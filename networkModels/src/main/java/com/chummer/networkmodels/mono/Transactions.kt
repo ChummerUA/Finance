@@ -1,6 +1,6 @@
 package com.chummer.networkmodels.mono
 
-data class GetTransactionsResponse(
+data class Transactions(
     val id: String,
     val time: Long,
     val description: String,

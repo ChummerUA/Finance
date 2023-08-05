@@ -15,7 +15,8 @@ class UpsertAccountsUseCase(
                 type = it.type,
                 balance = it.balance,
                 creditLimit = it.credit_limit,
-                maskedPans = it.masked_pans
+                maskedPans = it.masked_pans,
+                clientId = it.client_id
             )
         }
     }

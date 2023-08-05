@@ -34,4 +34,5 @@ android {
 }
 
 dependencies {
+    project(mapOf("path" to ":domain"))
 }

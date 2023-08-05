@@ -32,25 +32,27 @@ data class Jar(
 )
 
 @Serializable
-enum class CardType {
+enum class CardType(
+    val value: String
+) {
     @SerialName("black")
-    BLACK,
+    BLACK("black"),
 
     @SerialName("white")
-    WHITE,
+    WHITE("white"),
 
     @SerialName("platinum")
-    PLATINUM,
+    PLATINUM("platinum"),
 
     @SerialName("iron")
-    IRON,
+    IRON("iron"),
 
     @SerialName("fop")
-    FOP,
+    FOP("fop"),
 
     @SerialName("yellow")
-    YELLOW,
+    YELLOW("yellow"),
 
     @SerialName("e_aid")
-    E_AID
+    EAID("e_aid")
 }
