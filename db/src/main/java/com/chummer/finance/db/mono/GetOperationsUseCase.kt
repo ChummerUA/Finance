@@ -1,6 +1,8 @@
 package com.chummer.finance.db.mono
 
 import app.cash.sqldelight.Query
+import com.chummer.dbmodels.mono.getOperations.GetOperationArgument
+import com.chummer.dbmodels.mono.getOperations.ListOperationItem
 import com.chummer.infrastructure.db.useCases.flow.DbListFlowUseCase
 import kotlinx.coroutines.Dispatchers
 import mono.OperationQueries
@@ -32,19 +34,3 @@ class GetOperationsUseCase(
 }
 
 private const val KEY = "get_operations"
-
-data class GetOperationArgument(
-    val time: Long,
-    val pageSize: Int
-)
-
-data class ListOperationItem(
-    val id: String,
-    val time: Long,
-    val description: String,
-    val operationAmount: Long,
-    val currencyCode: Long,
-    val mcc: Int,
-    val originalMcc: Int,
-    val cashback: Long
-)

@@ -30,4 +30,4 @@ class FetchPersonalInfoUseCase(
     }
 }
 
-const val KEY = "fetch_accounts"
+private const val KEY = "fetch_accounts"

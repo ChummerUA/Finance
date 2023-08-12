@@ -33,6 +33,7 @@ android {
 dependencies {
     api(Dependencies.Infrastructure.db)
     api(project(mapOf("path" to ":networkModels")))
+    api(project(mapOf("path" to ":dbModels")))
     implementation(Dependencies.SqlDelight.adapters)
 }
 
