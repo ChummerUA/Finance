@@ -44,4 +44,15 @@ object Dependencies {
         const val api = "$root:lint-api:${Versions.buildTools}"
         const val checks = "$root:lint-checks:${Versions.buildTools}"
     }
+
+    object Compose {
+        private const val root = "androidx.compose"
+
+        const val animation = "$root.animation:animation:${Versions.compose}"
+        const val foundation = "$root.foundation:foundation:${Versions.compose}"
+        const val runtime = "$root.runtime:runtime:${Versions.compose}"
+        const val ui = "$root.ui:ui:${Versions.compose}"
+        const val compiler = "$root.compiler:compiler:${Versions.composeCompiler}"
+//        const val  = "$root.::${Versions.compose}"
+    }
 }

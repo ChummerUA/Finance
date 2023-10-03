@@ -31,8 +31,22 @@ android {
     kotlinOptions {
         jvmTarget = ConfigData.jvmTarget
     }
+
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = Versions.composeCompiler
+    }
 }
 
 dependencies {
     project(mapOf("path" to ":domain"))
+
+    implementation(Dependencies.Compose.compiler)
+    implementation(Dependencies.Compose.runtime)
+    implementation(Dependencies.Compose.foundation)
+    implementation(Dependencies.Compose.ui)
+    implementation(Dependencies.Compose.animation)
 }
