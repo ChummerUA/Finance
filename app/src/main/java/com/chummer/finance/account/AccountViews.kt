@@ -4,15 +4,17 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.chummer.finance.spacing.Fill
 import com.chummer.finance.text.ItemDescriptionText
 import com.chummer.finance.text.ItemTitleText
 import com.chummer.finance.text.MediumPriceText
+import com.chummer.finance.theme.AppTheme
 
 @Composable
 fun CardListItem(
@@ -81,21 +83,22 @@ fun AccountCardView(
     Column(
         Modifier
             .clickable(onClick = onCardClicked)
-            .background(Color(0xFFE1E1E1))
+            .clip(shape = RoundedCornerShape(12.dp))
+            .background(AppTheme.colors.backgroundSecondary)
             .padding(12.dp)
     ) {
         ItemTitleText(
             text = name,
-            color = Color(0xFF292020)
+            color = AppTheme.colors.textPrimary
         )
         Fill()
         ItemDescriptionText(
             text = additionalInfo?.title ?: "",
-            color = Color(0xFFBEBEBE)
+            color = AppTheme.colors.textSecondary
         )
         ItemDescriptionText(
             text = additionalInfo?.value ?: "",
-            color = Color(0xFF292020)
+            color = AppTheme.colors.textPrimary
         )
         MediumPriceText(text = balance)
     }

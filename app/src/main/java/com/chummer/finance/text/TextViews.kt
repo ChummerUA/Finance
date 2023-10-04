@@ -7,6 +7,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.chummer.finance.theme.AppTheme
 
 //region prices
 @Composable
@@ -26,7 +27,7 @@ fun MediumPriceText(text: String) = BasicText(
         fontSize = 20.sp,
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight(400),
-        color = Color(0xFF292020)
+        color = AppTheme.colors.textPrimary
     )
 )
 //endregion
