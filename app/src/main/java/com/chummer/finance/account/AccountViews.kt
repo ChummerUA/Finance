@@ -17,7 +17,7 @@ import com.chummer.finance.text.MediumPriceText
 import com.chummer.finance.theme.AppTheme
 
 @Composable
-fun CardListItem(
+fun CardListItemView(
     card: AccountUiListModel.Card,
     onCardClicked: (() -> Unit)
 ) {
@@ -38,7 +38,7 @@ fun CardListItem(
 }
 
 @Composable
-fun FopListItem(
+fun FopListItemView(
     fop: AccountUiListModel.FOP,
     onCardClicked: (() -> Unit)
 ) {
@@ -53,7 +53,7 @@ fun FopListItem(
 }
 
 @Composable
-fun JarListItem(
+fun JarListItemView(
     card: AccountUiListModel.Jar,
     onCardClicked: (() -> Unit)
 ) {
