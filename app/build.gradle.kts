@@ -49,4 +49,12 @@ dependencies {
     implementation(Dependencies.Compose.foundation)
     implementation(Dependencies.Compose.ui)
     implementation(Dependencies.Compose.animation)
+
+    implementation(Dependencies.AndroidX.core)
+    implementation(Dependencies.AndroidX.appCompat)
+    implementation(Dependencies.AndroidX.lifecycleProcess)
+    implementation(Dependencies.AndroidX.lifecycleRuntime)
+    implementation(Dependencies.AndroidX.activityCompose)
+    implementation(Dependencies.AndroidX.viewModelCompose)
+    implementation(Dependencies.AndroidX.navigationCompose)
 }

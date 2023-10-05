@@ -3,7 +3,15 @@ object Dependencies {
     const val kotlinGradle = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
 
     object AndroidX {
-        const val core = "androidx.core:core-ktx:${Versions.ktx}"
+        const val root = "androidx"
+        const val core = "$root.core:core-ktx:${Versions.ktx}"
+        const val activity = "$root.activity:activity-ktx:${Versions.ktx}"
+        const val appCompat = "$root.appcompat:appcompat:${Versions.appCompat}"
+        const val lifecycleProcess = "$root.lifecycle:lifecycle-process:${Versions.lifecycle}"
+        const val lifecycleRuntime = "$root.lifecycle:lifecycle-runtime-ktx:${Versions.lifecycle}"
+        const val activityCompose = "$root.activity:activity-compose:${Versions.activity}"
+        const val navigationCompose = "$root.navigation:navigation-compose:${Versions.composeNavigation}"
+        const val viewModelCompose = "$root.lifecycle:lifecycle-viewmodel-compose:${Versions.lifecycle}"
     }
 
     object Ktor {

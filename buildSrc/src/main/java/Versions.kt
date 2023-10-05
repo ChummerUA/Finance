@@ -1,8 +1,14 @@
 object Versions {
     const val kotlin = "1.9.0"
     const val gradle = "8.1.0"
+    const val ktx = "1.12.0"
 
-    const val ktx = "1.10.1"
+    const val appCompat = "1.6.1"
+
+    const val lifecycle = "2.6.2"
+
+    const val composeNavigation = "2.4.2"
+    const val activity = "1.8.0"
 
     const val sqlDelight = "2.0.0"
 
