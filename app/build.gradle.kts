@@ -37,12 +37,12 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = Versions.composeCompiler
+        kotlinCompilerExtensionVersion = Versions.Compose.compiler
     }
 }
 
 dependencies {
-    project(mapOf("path" to ":domain"))
+    implementation(project(mapOf("path" to ":domain")))
 
     implementation(Dependencies.Compose.compiler)
     implementation(Dependencies.Compose.runtime)
@@ -52,9 +52,19 @@ dependencies {
 
     implementation(Dependencies.AndroidX.core)
     implementation(Dependencies.AndroidX.appCompat)
-    implementation(Dependencies.AndroidX.lifecycleProcess)
-    implementation(Dependencies.AndroidX.lifecycleRuntime)
-    implementation(Dependencies.AndroidX.activityCompose)
-    implementation(Dependencies.AndroidX.viewModelCompose)
+
+    implementation(Dependencies.AndroidX.Lifecycle.process)
+    implementation(Dependencies.AndroidX.Lifecycle.runtime)
+    implementation(Dependencies.AndroidX.Lifecycle.viewModelCompose)
+
+    implementation(Dependencies.AndroidX.Activity.compose)
+    implementation(Dependencies.AndroidX.Activity.ktx)
     implementation(Dependencies.AndroidX.navigationCompose)
+
+    implementation(Dependencies.AndroidX.Hilt.compose)
+    implementation(Dependencies.AndroidX.Hilt.viewModel)
+
+    implementation(Dependencies.Dagger.hilt)
+//    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+//    kapt "androidx.hilt:hilt-compiler:$hilt_androidX_version"
 }

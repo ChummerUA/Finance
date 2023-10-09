@@ -25,9 +25,16 @@ object Versions {
         const val jsonSerialization = "1.5.1"
     }
 
-    const val compose = "1.5.2"
-    const val composeCompiler = "1.5.3"
+    object Compose {
+        const val version = "1.5.2"
+        const val compiler = "1.5.3"
+    }
 
     //For historical reasons lint version should be gradle + 23
     const val buildTools = "31.1.0"
+
+    object Hilt {
+        const val dagger = "2.40.1"
+        const val version = "1.0.0"
+    }
 }

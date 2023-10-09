@@ -5,13 +5,27 @@ object Dependencies {
     object AndroidX {
         const val root = "androidx"
         const val core = "$root.core:core-ktx:${Versions.ktx}"
-        const val activity = "$root.activity:activity-ktx:${Versions.ktx}"
         const val appCompat = "$root.appcompat:appcompat:${Versions.appCompat}"
-        const val lifecycleProcess = "$root.lifecycle:lifecycle-process:${Versions.lifecycle}"
-        const val lifecycleRuntime = "$root.lifecycle:lifecycle-runtime-ktx:${Versions.lifecycle}"
-        const val activityCompose = "$root.activity:activity-compose:${Versions.activity}"
         const val navigationCompose = "$root.navigation:navigation-compose:${Versions.composeNavigation}"
-        const val viewModelCompose = "$root.lifecycle:lifecycle-viewmodel-compose:${Versions.lifecycle}"
+
+        object Activity {
+            const val root = "${AndroidX.root}.activity"
+            const val ktx = "$root:activity-ktx:${Versions.ktx}"
+            const val compose = "$root:activity-compose:${Versions.activity}"
+        }
+
+        object Lifecycle {
+            const val root = "${AndroidX.root}.lifecycle"
+            const val process = "$root:lifecycle-process:${Versions.lifecycle}"
+            const val runtime = "$root:lifecycle-runtime-ktx:${Versions.lifecycle}"
+            const val viewModelCompose = "$root:lifecycle-viewmodel-compose:${Versions.lifecycle}"
+        }
+
+        object Hilt {
+            const val root = "${AndroidX.root}.hilt"
+            const val compose = "$root:hilt-navigation-compose:${Versions.Hilt.version}"
+            const val viewModel = "$root:hilt-lifecycle-viewmodel:${Versions.Hilt.version}"
+        }
     }
 
     object Ktor {
@@ -56,11 +70,14 @@ object Dependencies {
     object Compose {
         private const val root = "androidx.compose"
 
-        const val animation = "$root.animation:animation:${Versions.compose}"
-        const val foundation = "$root.foundation:foundation:${Versions.compose}"
-        const val runtime = "$root.runtime:runtime:${Versions.compose}"
-        const val ui = "$root.ui:ui:${Versions.compose}"
-        const val compiler = "$root.compiler:compiler:${Versions.composeCompiler}"
-//        const val  = "$root.::${Versions.compose}"
+        const val animation = "$root.animation:animation:${Versions.Compose.version}"
+        const val foundation = "$root.foundation:foundation:${Versions.Compose.version}"
+        const val runtime = "$root.runtime:runtime:${Versions.Compose.version}"
+        const val ui = "$root.ui:ui:${Versions.Compose.version}"
+        const val compiler = "$root.compiler:compiler:${Versions.Compose.compiler}"
+    }
+
+    object Dagger {
+        const val hilt = "com.google.dagger:hilt-android:${Versions.Hilt.dagger}"
     }
 }
