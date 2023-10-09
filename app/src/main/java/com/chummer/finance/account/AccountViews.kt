@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import com.chummer.finance.account.selectAccount.AccountUiListModel
 import com.chummer.finance.spacing.Fill
 import com.chummer.finance.text.ItemDescriptionText
 import com.chummer.finance.text.ItemTitleText
@@ -58,10 +59,10 @@ fun JarListItemView(
     onCardClicked: (() -> Unit)
 ) {
     with(card) {
-        val additionalInfo = remember(id, target) {
+        val additionalInfo = remember(id, goal) {
             AccountCardViewAdditionalInfo(
-                targetTitle,
-                target
+                goalTitle,
+                goal
             )
         }
         AccountCardView(
