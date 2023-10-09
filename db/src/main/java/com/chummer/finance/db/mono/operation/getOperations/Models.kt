@@ -1,4 +1,4 @@
-package com.chummer.dbmodels.mono.getOperations
+package com.chummer.finance.db.mono.operation.getOperations
 
 data class ListOperationItem(
     val id: String,

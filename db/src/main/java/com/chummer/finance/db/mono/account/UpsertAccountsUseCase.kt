@@ -1,4 +1,4 @@
-package com.chummer.finance.db.mono
+package com.chummer.finance.db.mono.account
 
 import app.cash.sqldelight.TransactionWithoutReturn
 import com.chummer.infrastructure.db.useCases.transaction.withoutResult.DbTransactionUseCase
@@ -14,6 +14,7 @@ class UpsertAccountsUseCase(
                 id = it.id,
                 type = it.type,
                 balance = it.balance,
+                currencyCode = it.currency_code,
                 creditLimit = it.credit_limit,
                 maskedPans = it.masked_pans,
                 clientId = it.client_id

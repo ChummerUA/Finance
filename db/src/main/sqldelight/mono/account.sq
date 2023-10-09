@@ -1,9 +1,12 @@
+import kotlin.Int;
+
 CREATE TABLE account(
     id TEXT NOT NULL PRIMARY KEY,
     balance INTEGER NOT NULL,
     credit_limit INTEGER NOT NULL,
-    type TEXT NOT NULL,
-    masked_pans TEXT,
+    type INTEGER AS Int NOT NULL,
+    currency_code INTEGER AS Int NOT NULL,
+    masked_pans TEXT NOT NULL,
     client_id TEXT NOT NULL
 );
 
@@ -16,11 +19,11 @@ upsertAccount {
         client_id = :clientId
     WHERE id = :id;
 
-    INSERT OR IGNORE INTO account VALUES (:id, :balance, :creditLimit, :type, :maskedPans, :clientId);
+    INSERT OR IGNORE INTO account VALUES (:id, :balance, :creditLimit, :type, :currencyCode, :maskedPans, :clientId);
 }
 
 getAccounts:
-SELECT *
+SELECT id, balance, credit_limit, currency_code, type, masked_pans
 FROM account;
 
 getAccountById:

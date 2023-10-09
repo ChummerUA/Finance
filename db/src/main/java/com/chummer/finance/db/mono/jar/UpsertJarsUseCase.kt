@@ -1,4 +1,4 @@
-package com.chummer.finance.db.mono
+package com.chummer.finance.db.mono.jar
 
 import app.cash.sqldelight.TransactionWithoutReturn
 import com.chummer.infrastructure.db.useCases.transaction.withoutResult.DbTransactionUseCase

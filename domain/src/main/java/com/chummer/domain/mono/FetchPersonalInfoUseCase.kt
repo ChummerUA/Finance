@@ -1,8 +1,8 @@
 package com.chummer.domain.mono
 
 import com.chummer.domain.mapping.mono.toDbModel
-import com.chummer.finance.db.mono.UpsertAccountsUseCase
-import com.chummer.finance.db.mono.UpsertJarsUseCase
+import com.chummer.finance.db.mono.account.UpsertAccountsUseCase
+import com.chummer.finance.db.mono.jar.UpsertJarsUseCase
 import com.chummer.finance.network.monobank.account.GetPersonalInfoUseCase
 import com.chummer.infrastructure.usecase.ExecutableUseCase
 import com.chummer.models.None

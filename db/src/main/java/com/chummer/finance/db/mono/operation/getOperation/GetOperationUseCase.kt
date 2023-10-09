@@ -1,4 +1,4 @@
-package com.chummer.finance.db.mono
+package com.chummer.finance.db.mono.operation.getOperation
 
 import app.cash.sqldelight.Query
 import com.chummer.infrastructure.db.useCases.flow.DbItemFlowUseCase

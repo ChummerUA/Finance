@@ -1,8 +1,7 @@
-package com.chummer.finance.db.mono
+package com.chummer.finance.db.mono.operation.getOperations
 
 import app.cash.sqldelight.Query
-import com.chummer.dbmodels.mono.getOperations.GetOperationArgument
-import com.chummer.dbmodels.mono.getOperations.ListOperationItem
+import com.chummer.finance.db.mono.operation.getOperation.GetOperationArgument
 import com.chummer.infrastructure.db.useCases.flow.DbListFlowUseCase
 import kotlinx.coroutines.Dispatchers
 import mono.OperationQueries
