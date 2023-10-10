@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">finance</string>
+
+    <string name="select_account_title">Select account</string>
+    <string name="select_account_accounts">Accounts</string>
+    <string name="select_account_jars">Jars</string>
+    <string name="account_your_money">Your money</string>
+    <string name="jar_goal">Goal</string>
 </resources>

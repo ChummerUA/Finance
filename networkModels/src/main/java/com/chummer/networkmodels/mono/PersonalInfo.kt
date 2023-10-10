@@ -17,6 +17,7 @@ data class Account(
     val balance: Long,
     val creditLimit: Long,
     val type: CardType,
+    val currencyCode: Int,
     @SerialName("maskedPan")
     val maskedPans: List<String>
 )
@@ -33,26 +34,26 @@ data class Jar(
 
 @Serializable
 enum class CardType(
-    val value: String
+    val value: Int
 ) {
     @SerialName("black")
-    BLACK("black"),
+    BLACK(0),
 
     @SerialName("white")
-    WHITE("white"),
+    WHITE(1),
 
     @SerialName("platinum")
-    PLATINUM("platinum"),
+    PLATINUM(2),
 
     @SerialName("iron")
-    IRON("iron"),
+    IRON(3),
 
     @SerialName("fop")
-    FOP("fop"),
+    FOP(4),
 
     @SerialName("yellow")
-    YELLOW("yellow"),
+    YELLOW(5),
 
     @SerialName("e_aid")
-    EAID("e_aid")
+    EAID(6)
 }

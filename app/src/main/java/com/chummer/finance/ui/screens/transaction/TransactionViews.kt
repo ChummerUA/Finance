@@ -1,4 +1,4 @@
-package com.chummer.finance.transaction
+package com.chummer.finance.ui.screens.transaction
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,9 +10,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.chummer.finance.text.ItemDescriptionText
-import com.chummer.finance.text.ItemTitleText
-import com.chummer.finance.theme.AppTheme
+import com.chummer.finance.ui.text.ItemDescriptionText
+import com.chummer.finance.ui.text.ItemTitleText
+import com.chummer.finance.ui.theme.AppTheme
 
 @Composable
 fun TransactionListItemView(

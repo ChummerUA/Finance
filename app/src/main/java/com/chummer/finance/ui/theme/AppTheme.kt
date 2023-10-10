@@ -1,4 +1,4 @@
-package com.chummer.finance.theme
+package com.chummer.finance.ui.theme
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable

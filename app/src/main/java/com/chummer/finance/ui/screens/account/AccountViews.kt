@@ -1,4 +1,4 @@
-package com.chummer.finance.account
+package com.chummer.finance.ui.screens.account
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,12 +10,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.chummer.finance.account.selectAccount.AccountUiListModel
-import com.chummer.finance.spacing.Fill
-import com.chummer.finance.text.ItemDescriptionText
-import com.chummer.finance.text.ItemTitleText
-import com.chummer.finance.text.MediumPriceText
-import com.chummer.finance.theme.AppTheme
+import com.chummer.finance.ui.screens.account.selectAccount.AccountUiListModel
+import com.chummer.finance.ui.spacing.Fill
+import com.chummer.finance.ui.text.ItemDescriptionText
+import com.chummer.finance.ui.text.ItemTitleText
+import com.chummer.finance.ui.text.MediumPriceText
+import com.chummer.finance.ui.theme.AppTheme
 
 @Composable
 fun CardListItemView(

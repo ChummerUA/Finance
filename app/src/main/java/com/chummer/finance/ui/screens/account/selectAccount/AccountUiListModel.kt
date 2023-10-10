@@ -1,7 +1,8 @@
-package com.chummer.finance.account.selectAccount
+package com.chummer.finance.ui.screens.account.selectAccount
 
 import android.content.Context
 import com.chummer.domain.ClientAccountListItem
+import com.chummer.finance.R
 import com.chummer.finance.db.mono.account.AccountListItem
 import com.chummer.finance.db.mono.account.AccountType
 import com.chummer.finance.db.mono.jar.JarListItem
@@ -49,7 +50,7 @@ fun AccountListItem.toCardUiModel(context: Context) = AccountUiListModel.Card(
     id = id,
     name = name,
     balance = getFormattedAmount(balance, currencyCode),
-    creditMoneyTitle = context.getString(TODO()),
+    creditMoneyTitle = context.getString(R.string.account_your_money),
     creditMoney = getFormattedAmount(balance - creditLimit, currencyCode)
 )
 
@@ -63,6 +64,6 @@ fun JarListItem.toUiModel(context: Context) = AccountUiListModel.Jar(
     id = id,
     name = name,
     balance = getFormattedAmount(balance, currencyCode),
-    goalTitle = context.getString(TODO()),
+    goalTitle = context.getString(R.string.jar_goal),
     goal = getFormattedAmount(goal, currencyCode)
 )

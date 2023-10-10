@@ -1,4 +1,4 @@
-package com.chummer.finance.account.selectAccount
+package com.chummer.finance.ui.screens.account.selectAccount
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -7,15 +7,16 @@ import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.chummer.finance.account.CardListItemView
-import com.chummer.finance.account.FopListItemView
-import com.chummer.finance.account.JarListItemView
-import com.chummer.finance.text.ItemTitleText
-import com.chummer.finance.theme.AppTheme
+import com.chummer.finance.ui.screens.account.CardListItemView
+import com.chummer.finance.ui.screens.account.FopListItemView
+import com.chummer.finance.ui.screens.account.JarListItemView
+import com.chummer.finance.ui.text.ItemTitleText
+import com.chummer.finance.ui.theme.AppTheme
 import com.chummer.finance.utils.rememberStateWithLifecycle
 
 @Composable
@@ -47,14 +48,24 @@ private fun SelectAccountUiState.DisplayContent(
             vertical = 0.dp
         )
     ) {
-        header(accountsTitle)
-        items(accounts, key = { it.id }) { item ->
-            item.View(onItemClicked = onItemClicked)
+        val anyAccount by derivedStateOf {
+            accounts.any()
+        }
+        if (anyAccount) {
+            header(accountsTitle)
+            items(accounts, key = { it.id }) { item ->
+                item.View(onItemClicked = onItemClicked)
+            }
         }
 
-        header(jarsTitle)
-        items(jars, key = { it.id }) { item ->
-            item.View(onItemClicked = onItemClicked)
+        val anyJar by derivedStateOf {
+            jars.any()
+        }
+        if (anyJar) {
+            header(jarsTitle)
+            items(jars, key = { it.id }) { item ->
+                item.View(onItemClicked = onItemClicked)
+            }
         }
     }
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">finance</string>
+    <string name="select_account_title">Вибрати рахунок</string>
+    <string name="select_account_accounts">Рахунки</string>
+    <string name="select_account_jars">Накопичення</string>
+    <string name="jar_goal">Ціль</string>
+    <string name="account_your_money">Власні кошти</string>
+</resources>

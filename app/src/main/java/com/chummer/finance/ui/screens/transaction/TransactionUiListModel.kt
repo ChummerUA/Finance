@@ -1,4 +1,4 @@
-package com.chummer.finance.transaction
+package com.chummer.finance.ui.screens.transaction
 
 data class TransactionUiListModel(
     val name: String,
