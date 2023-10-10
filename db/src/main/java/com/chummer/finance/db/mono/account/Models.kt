@@ -16,7 +16,7 @@ enum class AccountType(
     WHITE(1),
     PLATINUM(2),
     IRON(3),
-    FOP(3),
-    YELLOW(4),
-    EAID(5)
+    FOP(4),
+    YELLOW(5),
+    EAID(6)
 }
