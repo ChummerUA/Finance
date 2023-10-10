@@ -1,5 +1,5 @@
 object Versions {
-    const val kotlin = "1.9.0"
+    const val kotlin = "1.9.10"
     const val gradle = "8.1.0"
     const val ktx = "1.12.0"
 
@@ -7,7 +7,7 @@ object Versions {
 
     const val lifecycle = "2.6.2"
 
-    const val composeNavigation = "2.4.2"
+    const val composeNavigation = "2.5.3"
     const val activity = "1.8.0"
 
     const val sqlDelight = "2.0.0"
@@ -23,6 +23,7 @@ object Versions {
         const val coroutines_version = "1.7.1"
         const val serialization = "1.9.0"
         const val jsonSerialization = "1.5.1"
+        const val immutableCollections = "0.3.6"
     }
 
     object Compose {
@@ -34,7 +35,9 @@ object Versions {
     const val buildTools = "31.1.0"
 
     object Hilt {
-        const val dagger = "2.40.1"
+        const val dagger = "2.48.1"
         const val version = "1.0.0"
     }
+
+    const val ksp = "1.9.10-1.0.13"
 }

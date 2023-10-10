@@ -16,4 +16,8 @@ object Plugins {
     const val sqlDelight = "app.cash.sqldelight"
 
     const val lint = "com.android.lint"
+
+    const val hilt = "com.google.dagger.hilt.android"
+
+    const val ksp = "com.google.devtools.ksp"
 }

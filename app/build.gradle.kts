@@ -1,6 +1,8 @@
 plugins {
     id(Plugins.Android.application)
     id(Plugins.JetBrains.android)
+    id(Plugins.hilt)
+    id(Plugins.ksp)
 }
 
 android {
@@ -58,13 +60,12 @@ dependencies {
     implementation(Dependencies.AndroidX.Lifecycle.viewModelCompose)
 
     implementation(Dependencies.AndroidX.Activity.compose)
-    implementation(Dependencies.AndroidX.Activity.ktx)
     implementation(Dependencies.AndroidX.navigationCompose)
 
     implementation(Dependencies.AndroidX.Hilt.compose)
-    implementation(Dependencies.AndroidX.Hilt.viewModel)
 
     implementation(Dependencies.Dagger.hilt)
-//    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
-//    kapt "androidx.hilt:hilt-compiler:$hilt_androidX_version"
+    ksp(Dependencies.Dagger.hiltCompiler)
+
+    implementation(Dependencies.KotilnX.immutableCollections)
 }

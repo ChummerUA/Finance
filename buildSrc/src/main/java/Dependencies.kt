@@ -47,6 +47,7 @@ object Dependencies {
 
         const val coroutines = "$root:kotlinx-coroutines-android:${Versions.KotlinX.coroutines_version}"
         const val serialization = "$root:kotlinx-serialization-json:${Versions.KotlinX.jsonSerialization}"
+        const val immutableCollections = "$root:kotlinx-collections-immutable:${Versions.KotlinX.immutableCollections}"
     }
 
     const val dataStore = "androidx.datastore:datastore-preferences:${Versions.dataStore}"
@@ -78,6 +79,10 @@ object Dependencies {
     }
 
     object Dagger {
-        const val hilt = "com.google.dagger:hilt-android:${Versions.Hilt.dagger}"
+        const val root = "com.google.dagger"
+        const val hilt = "$root:hilt-android:${Versions.Hilt.dagger}"
+        const val hiltClassPath = "$root:hilt-android-gradle-plugin:${Versions.Hilt.dagger}"
+        const val daggerCompiler = "$root:dagger-compiler:${Versions.Hilt.dagger}"
+        const val hiltCompiler = "$root:hilt-compiler:${Versions.Hilt.dagger}"
     }
 }

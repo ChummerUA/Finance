@@ -1,6 +1,8 @@
 plugins {
     id(Plugins.Android.library)
     id(Plugins.JetBrains.android)
+    id(Plugins.hilt)
+    id(Plugins.ksp)
 }
 
 android {
@@ -36,4 +38,7 @@ dependencies {
     api(project(mapOf("path" to ":models")))
     api(project(mapOf("path" to ":network")))
     api(project(mapOf("path" to ":db")))
+    implementation(Dependencies.Dagger.hilt)
+    ksp(Dependencies.Dagger.daggerCompiler)
+    ksp(Dependencies.Dagger.hiltCompiler)
 }
