@@ -2,8 +2,16 @@
 <resources>
     <string name="app_name">finance</string>
     <string name="select_account_title">Вибрати рахунок</string>
-    <string name="select_account_accounts">Рахунки</string>
+    <string name="select_account_cards">Картки</string>
+    <string name="select_account_fop">Рахунки ФОП</string>
     <string name="select_account_jars">Накопичення</string>
     <string name="jar_goal">Ціль</string>
     <string name="account_your_money">Власні кошти</string>
+
+    <string name="card_black">Чорна картка</string>
+    <string name="card_white">Біла картка</string>
+    <string name="card_yellow">Жовта картка</string>
+    <string name="card_platinum">Платинова картка</string>
+    <string name="card_iron">Залізна картка</string>
+    <string name="card_e_aid">єДопомога</string>
 </resources>

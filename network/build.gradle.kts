@@ -2,6 +2,8 @@ plugins {
     id(Plugins.Android.library)
     id(Plugins.JetBrains.android)
     id(Plugins.JetBrains.serialisation)
+    id(Plugins.hilt)
+    id(Plugins.ksp)
 }
 
 android {
@@ -36,4 +38,11 @@ dependencies {
 
     api(project(mapOf("path" to ":networkModels")))
     api(project(mapOf("path" to ":models")))
+
+    implementation(Dependencies.Ktor.contentNegotiation)
+    implementation(Dependencies.Ktor.jsonSerialization)
+
+    implementation(Dependencies.Dagger.hilt)
+    ksp(Dependencies.Dagger.compiler)
+    ksp(Dependencies.Dagger.hiltCompiler)
 }

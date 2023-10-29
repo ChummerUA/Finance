@@ -1,6 +1,5 @@
 package com.chummer.domain
 
-import com.chummer.finance.ChummerFinanceDatabase
 import com.chummer.finance.db.mono.account.AccountListItem
 import com.chummer.finance.db.mono.account.GetAccountsUseCase
 import com.chummer.finance.db.mono.jar.GetJarsUseCase
@@ -13,10 +12,9 @@ import kotlinx.coroutines.flow.combine
 import kotlin.coroutines.CoroutineContext
 
 class GetAllClientAccountsUseCase(
-    db: ChummerFinanceDatabase
+    private val getAccountsUseCase: GetAccountsUseCase,
+    private val getJarsUseCase: GetJarsUseCase
 ) : FlowUseCase<None, List<ClientAccountListItem>>(KEY) {
-    private val getAccountsUseCase = GetAccountsUseCase(db.accountQueries)
-    private val getJarsUseCase = GetJarsUseCase(db.jarQueries)
 
     override val coroutineContext: CoroutineContext = Dispatchers.Default
 

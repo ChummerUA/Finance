@@ -6,17 +6,5 @@ data class AccountListItem(
     val balance: Long,
     val creditLimit: Long,
     val currencyCode: Int,
-    val type: AccountType
+    val type: String
 )
-
-enum class AccountType(
-    val value: Int
-) {
-    BLACK(0),
-    WHITE(1),
-    PLATINUM(2),
-    IRON(3),
-    FOP(4),
-    YELLOW(5),
-    EAID(6)
-}

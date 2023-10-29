@@ -20,7 +20,7 @@ class FetchOperationsUseCase(
 
     override val coroutineContext: CoroutineContext = Dispatchers.Main
 
-    override suspend fun invoke(input: GetTransactionsParameters) {
+    override suspend fun execute(input: GetTransactionsParameters) {
         val transactions = getTransactionsUseCase(input)
         upsertOperationsUseCase(
             transactions.map { it.toDbOperation() }

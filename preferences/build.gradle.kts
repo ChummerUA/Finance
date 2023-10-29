@@ -1,18 +1,13 @@
 plugins {
     id(Plugins.Android.library)
     id(Plugins.JetBrains.android)
-    id(Plugins.sqlDelight)
     id(Plugins.hilt)
     id(Plugins.ksp)
 }
 
 android {
-    namespace = "${ConfigData.namespace}.db"
-
-    defaultConfig {
-        compileSdk = ConfigData.targetSdkVersion
-        minSdk = ConfigData.minSdk
-    }
+    namespace = "com.chummer.preferences"
+    compileSdk = ConfigData.targetSdkVersion
 
     buildTypes {
         release {
@@ -23,7 +18,14 @@ android {
             )
         }
     }
+
+    defaultConfig {
+        compileSdk = ConfigData.targetSdkVersion
+        minSdk = ConfigData.minSdk
+    }
+
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = ConfigData.javaVersion
         targetCompatibility = ConfigData.javaVersion
     }
@@ -33,18 +35,10 @@ android {
 }
 
 dependencies {
-    api(Dependencies.Infrastructure.db)
-    api(project(mapOf("path" to ":networkModels")))
-    implementation(Dependencies.SqlDelight.adapters)
+    api(Dependencies.Infrastructure.usecase)
+    api(Dependencies.Infrastructure.preferences)
     implementation(Dependencies.Dagger.hilt)
     ksp(Dependencies.Dagger.compiler)
     ksp(Dependencies.Dagger.hiltCompiler)
-}
-
-sqldelight {
-    databases {
-        create(ConfigData.dbName) {
-            packageName.set(ConfigData.namespace)
-        }
-    }
+    coreLibraryDesugaring(Dependencies.desugaring)
 }

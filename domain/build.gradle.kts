@@ -38,7 +38,8 @@ dependencies {
     api(project(mapOf("path" to ":models")))
     api(project(mapOf("path" to ":network")))
     api(project(mapOf("path" to ":db")))
+    api(project(mapOf("path" to ":preferences")))
     implementation(Dependencies.Dagger.hilt)
-    ksp(Dependencies.Dagger.daggerCompiler)
+    ksp(Dependencies.Dagger.compiler)
     ksp(Dependencies.Dagger.hiltCompiler)
 }

@@ -1,6 +1,7 @@
 package com.chummer.finance
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
@@ -14,7 +15,9 @@ import com.chummer.finance.ui.theme.AppTheme
 fun Navigation(navController: NavHostController, start: NodeDefinition) = NavHost(
     navController = navController,
     startDestination = start.route,
-    Modifier.background(AppTheme.colors.backgroundPrimary)
+    Modifier
+        .background(AppTheme.colors.backgroundPrimary)
+        .fillMaxSize(1f)
 ) {
     addNode(AccountScreens.SelectAccount)
 }

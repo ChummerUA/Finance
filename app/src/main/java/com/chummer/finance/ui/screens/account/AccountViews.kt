@@ -3,6 +3,7 @@ package com.chummer.finance.ui.screens.account
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -83,8 +84,9 @@ fun AccountCardView(
 ) {
     Column(
         Modifier
-            .clickable(onClick = onCardClicked)
+            .height(150.dp)
             .clip(shape = RoundedCornerShape(12.dp))
+            .clickable(onClick = onCardClicked)
             .background(AppTheme.colors.backgroundSecondary)
             .padding(12.dp)
     ) {

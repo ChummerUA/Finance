@@ -5,6 +5,10 @@ import app.cash.sqldelight.adapter.primitive.IntColumnAdapter
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.chummer.finance.ChummerFinanceDatabase
+import com.chummer.finance.db.mono.account.GetAccountsUseCase
+import com.chummer.finance.db.mono.account.UpsertAccountsUseCase
+import com.chummer.finance.db.mono.jar.GetJarsUseCase
+import com.chummer.finance.db.mono.jar.UpsertJarsUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -52,7 +56,20 @@ object DbModule {
 
     @Provides
     fun provideAccountAdapter(): Account.Adapter = Account.Adapter(
-        typeAdapter = IntColumnAdapter,
         currency_codeAdapter = IntColumnAdapter
     )
+
+    @Provides
+    fun provideUpsertAccountsUseCase(db: ChummerFinanceDatabase) =
+        UpsertAccountsUseCase(db.accountQueries)
+
+    @Provides
+    fun provideUpsertJarsUseCase(db: ChummerFinanceDatabase) = UpsertJarsUseCase(db.jarQueries)
+
+    @Provides
+    fun provideGetAccountsUseCase(db: ChummerFinanceDatabase) =
+        GetAccountsUseCase(db.accountQueries)
+
+    @Provides
+    fun provideGetJarsUseCase(db: ChummerFinanceDatabase) = GetJarsUseCase(db.jarQueries)
 }

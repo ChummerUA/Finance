@@ -16,7 +16,7 @@ class GetAccountsUseCase(
                 balance = balance,
                 creditLimit = creditLimit,
                 currencyCode = currencyCode,
-                type = AccountType.values().first { it.value == type }
+                type = type
             )
         }
     }

@@ -2,8 +2,16 @@
     <string name="app_name">finance</string>
 
     <string name="select_account_title">Select account</string>
-    <string name="select_account_accounts">Accounts</string>
+    <string name="select_account_cards">Cards</string>
+    <string name="select_account_fop">FOP Accounts</string>
     <string name="select_account_jars">Jars</string>
     <string name="account_your_money">Your money</string>
     <string name="jar_goal">Goal</string>
+
+    <string name="card_black">Black card</string>
+    <string name="card_white">White card</string>
+    <string name="card_yellow">Yellow card</string>
+    <string name="card_platinum">Platinum card</string>
+    <string name="card_iron">Iron card</string>
+    <string name="card_e_aid">eAid</string>
 </resources>

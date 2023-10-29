@@ -16,7 +16,7 @@ data class Account(
     val id: String,
     val balance: Long,
     val creditLimit: Long,
-    val type: CardType,
+    val type: String,
     val currencyCode: Int,
     @SerialName("maskedPan")
     val maskedPans: List<String>
@@ -32,28 +32,10 @@ data class Jar(
     val goal: Long
 )
 
-@Serializable
-enum class CardType(
-    val value: Int
-) {
-    @SerialName("black")
-    BLACK(0),
-
-    @SerialName("white")
-    WHITE(1),
-
-    @SerialName("platinum")
-    PLATINUM(2),
-
-    @SerialName("iron")
-    IRON(3),
-
-    @SerialName("fop")
-    FOP(4),
-
-    @SerialName("yellow")
-    YELLOW(5),
-
-    @SerialName("e_aid")
-    EAID(6)
-}
+const val CARD_TYPE_BLACK = "black"
+const val CARD_TYPE_WHITE = "white"
+const val CARD_TYPE_PLATINUM = "platinum"
+const val CARD_TYPE_IRON = "iron"
+const val CARD_TYPE_FOP = "fop"
+const val CARD_TYPE_YELLOW = "yellow"
+const val CARD_TYPE_EAID = "eAid"

@@ -4,9 +4,10 @@ import android.content.Context
 import com.chummer.domain.ClientAccountListItem
 import com.chummer.finance.R
 import com.chummer.finance.db.mono.account.AccountListItem
-import com.chummer.finance.db.mono.account.AccountType
 import com.chummer.finance.db.mono.jar.JarListItem
-import com.chummer.finance.utils.getFormattedAmount
+import com.chummer.finance.utils.getAccountName
+import com.chummer.finance.utils.getFormattedAmountAndCurrency
+import com.chummer.networkmodels.mono.CARD_TYPE_FOP
 
 sealed class AccountUiListModel(
     open val id: String,
@@ -40,7 +41,7 @@ fun ClientAccountListItem.toUiModel(
     context: Context
 ): AccountUiListModel = when(this) {
     is ClientAccountListItem.Account -> when(info.type) {
-        AccountType.FOP -> info.toFopUiModel()
+        CARD_TYPE_FOP -> info.toFopUiModel()
         else -> info.toCardUiModel(context)
     }
     is ClientAccountListItem.Jar -> info.toUiModel(context)
@@ -48,22 +49,22 @@ fun ClientAccountListItem.toUiModel(
 
 fun AccountListItem.toCardUiModel(context: Context) = AccountUiListModel.Card(
     id = id,
-    name = name,
-    balance = getFormattedAmount(balance, currencyCode),
+    name = getAccountName(currencyCode, type, context),
+    balance = getFormattedAmountAndCurrency(balance, currencyCode),
     creditMoneyTitle = context.getString(R.string.account_your_money),
-    creditMoney = getFormattedAmount(balance - creditLimit, currencyCode)
+    creditMoney = getFormattedAmountAndCurrency(balance - creditLimit, currencyCode)
 )
 
 fun AccountListItem.toFopUiModel() = AccountUiListModel.FOP(
     id = id,
-    name = name,
-    balance = getFormattedAmount(balance, currencyCode)
+    name = getAccountName(currencyCode),
+    balance = getFormattedAmountAndCurrency(balance, currencyCode)
 )
 
 fun JarListItem.toUiModel(context: Context) = AccountUiListModel.Jar(
     id = id,
     name = name,
-    balance = getFormattedAmount(balance, currencyCode),
+    balance = getFormattedAmountAndCurrency(balance, currencyCode),
     goalTitle = context.getString(R.string.jar_goal),
-    goal = getFormattedAmount(goal, currencyCode)
+    goal = getFormattedAmountAndCurrency(goal, currencyCode)
 )

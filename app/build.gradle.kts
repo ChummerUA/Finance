@@ -27,6 +27,7 @@ android {
         }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = ConfigData.javaVersion
         targetCompatibility = ConfigData.javaVersion
     }
@@ -45,6 +46,7 @@ android {
 
 dependencies {
     implementation(project(mapOf("path" to ":domain")))
+    implementation(project(mapOf("path" to ":preferences")))
 
     implementation(Dependencies.Compose.compiler)
     implementation(Dependencies.Compose.runtime)
@@ -63,9 +65,15 @@ dependencies {
     implementation(Dependencies.AndroidX.navigationCompose)
 
     implementation(Dependencies.AndroidX.Hilt.compose)
+    implementation(Dependencies.AndroidX.Hilt.common)
 
     implementation(Dependencies.Dagger.hilt)
     ksp(Dependencies.Dagger.hiltCompiler)
+    implementation(Dependencies.AndroidX.Hilt.work)
+    ksp(Dependencies.AndroidX.Hilt.compiler)
 
     implementation(Dependencies.KotilnX.immutableCollections)
+
+    implementation(Dependencies.AndroidX.work)
+    coreLibraryDesugaring(Dependencies.desugaring)
 }

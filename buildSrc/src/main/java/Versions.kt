@@ -5,6 +5,8 @@ object Versions {
 
     const val appCompat = "1.6.1"
 
+    const val work = "2.8.1"
+
     const val lifecycle = "2.6.2"
 
     const val composeNavigation = "2.5.3"
@@ -36,8 +38,10 @@ object Versions {
 
     object Hilt {
         const val dagger = "2.48.1"
-        const val version = "1.0.0"
+        const val daggerAssistedInjections = "0.5.2"
+        const val version = "1.1.0-alpha01"
     }
 
     const val ksp = "1.9.10-1.0.13"
+    const val desugaring = "2.0.3"
 }
