@@ -7,8 +7,8 @@ import kotlinx.serialization.Serializable
 data class AccountResponse(
     val clientId: String,
     val name: String,
-    val accounts: List<Account>,
-    val jars: List<Jar>
+    val accounts: List<Account>? = null,
+    val jars: List<Jar>? = null
 )
 
 @Serializable

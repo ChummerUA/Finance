@@ -24,11 +24,14 @@ class FetchPersonalInfoUseCase(
         withContext(coroutineContext) {
             Log.d(KEY, "Fetching info")
             val info = getPersonalInfoUseCase(None)
+            val accounts = info.accounts?.map { it.toDbModel(info.clientId) } ?: emptyList()
+            val jar = info.jars?.map { it.toDbModel(info.clientId) } ?: emptyList()
             Log.d(KEY, "Got info")
             awaitAll(
-                async { upsertAccountsUseCase(info.accounts.map { it.toDbModel(info.clientId) }) },
-                async { upsertJarsUseCase(info.jars.map { it.toDbModel(info.clientId) }) }
+                async { upsertAccountsUseCase(accounts) },
+                async { upsertJarsUseCase(jar) }
             )
+            // TODO remove deleted accounts/jars from db
             Log.d(KEY, "Finish upserting info")
         }
     }
