@@ -1,7 +1,6 @@
 package com.chummer.finance.network.monobank.account
 
 import com.chummer.finance.network.utils.deserializeBody
-import com.chummer.infrastructure.network.ErrorMapper
 import com.chummer.infrastructure.network.HttpUseCase
 import com.chummer.infrastructure.network.RequestDefinition
 import com.chummer.models.None
@@ -12,18 +11,12 @@ import io.ktor.http.HttpMethod
 
 class GetPersonalInfoUseCase(
     client: HttpClient
-) : HttpUseCase<None, AccountResponse, Throwable>(KEY, client) {
+) : HttpUseCase<None, AccountResponse>(KEY, client) {
 
     override val definition = RequestDefinition(
         subPath = "personal/client-info",
         method = HttpMethod.Get
     )
-
-    override val errorMapper: ErrorMapper<Throwable> = object : ErrorMapper<Throwable>() {
-        override suspend fun HttpResponse.toError(): Throwable {
-            return Error("Failed to fetch accounts info from monobank")
-        }
-    }
 
     override suspend fun HttpResponse.deserialize(): AccountResponse {
         return deserializeBody()

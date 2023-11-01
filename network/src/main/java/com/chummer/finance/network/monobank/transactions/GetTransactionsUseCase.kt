@@ -1,7 +1,6 @@
 package com.chummer.finance.network.monobank.transactions
 
 import com.chummer.finance.network.utils.deserializeBody
-import com.chummer.infrastructure.network.ErrorMapper
 import com.chummer.infrastructure.network.HttpUseCase
 import com.chummer.infrastructure.network.RequestDefinition
 import com.chummer.models.mono.GetTransactionsParameters
@@ -14,14 +13,11 @@ import io.ktor.http.HttpMethod
 
 class GetTransactionsUseCase(
     client: HttpClient
-): HttpUseCase<GetTransactionsParameters, List<Transaction>, Throwable>(KEY, client) {
+) : HttpUseCase<GetTransactionsParameters, List<Transaction>>(KEY, client) {
     override val definition = RequestDefinition(
         subPath = "personal/statement",
         method = HttpMethod.Get
     )
-
-    override val errorMapper: ErrorMapper<Throwable>
-        get() = TODO("Not yet implemented")
 
     override suspend fun HttpResponse.deserialize(): List<Transaction> = deserializeBody()
 
