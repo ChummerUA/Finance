@@ -1,9 +1,11 @@
 package com.chummer.domain.di
 
 import com.chummer.domain.GetAllClientAccountsUseCase
-import com.chummer.finance.db.di.DbModule
+import com.chummer.finance.db.di.DbUseCasesModule
+import com.chummer.finance.db.mono.account.DeleteAccountsThatAreNotInListUseCase
 import com.chummer.finance.db.mono.account.GetAccountsUseCase
 import com.chummer.finance.db.mono.account.UpsertAccountsUseCase
+import com.chummer.finance.db.mono.jar.DeleteJarsThatAreNotInListUseCase
 import com.chummer.finance.db.mono.jar.GetJarsUseCase
 import com.chummer.finance.db.mono.jar.UpsertJarsUseCase
 import com.chummer.finance.network.di.NetworkModule
@@ -18,7 +20,7 @@ import com.chummer.domain.mono.FetchPersonalInfoUseCase as FetchMonoPersonalInfo
 @InstallIn(SingletonComponent::class)
 @Module(
     includes = [
-        DbModule::class,
+        DbUseCasesModule::class,
         NetworkModule::class,
         PreferencesModule::class
     ]
@@ -34,10 +36,14 @@ object DomainModule {
     fun provideFetchMonoUseCase(
         getPersonalInfoUseCase: GetPersonalInfoUseCase,
         upsertAccountsUseCase: UpsertAccountsUseCase,
-        upsertJarsUseCase: UpsertJarsUseCase
+        upsertJarsUseCase: UpsertJarsUseCase,
+        deleteAccountsThatAreNotInListUseCase: DeleteAccountsThatAreNotInListUseCase,
+        deleteJarsThatAreNotInListUseCase: DeleteJarsThatAreNotInListUseCase
     ) = FetchMonoPersonalInfoUseCase(
         getPersonalInfoUseCase,
         upsertAccountsUseCase,
-        upsertJarsUseCase
+        upsertJarsUseCase,
+        deleteAccountsThatAreNotInListUseCase,
+        deleteJarsThatAreNotInListUseCase
     )
 }

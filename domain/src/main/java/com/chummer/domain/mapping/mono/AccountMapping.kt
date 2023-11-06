@@ -10,7 +10,8 @@ fun NetworkAccount.toDbModel(clientId: String) = DbAccount(
     type = type,
     masked_pans = maskedPans.joinToString(SEPARATOR),
     currency_code = currencyCode,
-    client_id = clientId
+    client_id = clientId,
+    is_deleted = false
 )
 
 const val SEPARATOR = ","

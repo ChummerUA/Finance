@@ -10,5 +10,6 @@ fun NetworkJar.toDbModel(clientId: String) = DbJar(
     currency_code = currencyCode,
     balance = balance,
     goal = goal,
-    client_id = clientId
+    client_id = clientId,
+    is_deleted = false
 )

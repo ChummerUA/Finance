@@ -1,3 +1,4 @@
+import kotlin.Boolean;
 import kotlin.Int;
 
 CREATE TABLE jar (
@@ -7,7 +8,8 @@ CREATE TABLE jar (
     currency_code INTEGER AS Int NOT NULL,
     balance INTEGER NOT NULL,
     goal INTEGER NOT NULL,
-    client_id TEXT NOT NULL
+    client_id TEXT NOT NULL,
+    is_deleted INTEGER AS Boolean DEFAULT 0 NOT NULL
 );
 
 upsertJar {
@@ -22,14 +24,25 @@ upsertJar {
 
     INSERT OR IGNORE
     INTO jar
-    VALUES (:id, :title, :description, :currencyCode, :balance, :goal, :clientId);
+    VALUES (:id, :title, :description, :currencyCode, :balance, :goal, :clientId, is_deleted = 0);
 }
+
+getOpenJarIds:
+SELECT id
+FROM jar
+WHERE is_deleted = 0;
 
 getJars:
 SELECT id, title, currency_code, balance, goal
-FROM jar;
+FROM jar
+WHERE is_deleted = 0;
 
 getJarById:
 SELECT *
 FROM jar
 WHERE jar.id = :jarId;
+
+softDeleteJarById:
+UPDATE jar
+SET is_deleted = 1
+WHERE id = :id;

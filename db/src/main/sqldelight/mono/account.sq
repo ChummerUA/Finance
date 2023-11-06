@@ -1,3 +1,4 @@
+import kotlin.Boolean;
 import kotlin.Int;
 
 CREATE TABLE account(
@@ -7,7 +8,8 @@ CREATE TABLE account(
     type TEXT NOT NULL,
     currency_code INTEGER AS Int NOT NULL,
     masked_pans TEXT NOT NULL,
-    client_id TEXT NOT NULL
+    client_id TEXT NOT NULL,
+    is_deleted INTEGER AS Boolean DEFAULT 0 NOT NULL
 );
 
 upsertAccount {
@@ -19,14 +21,25 @@ upsertAccount {
         client_id = :clientId
     WHERE id = :id;
 
-    INSERT OR IGNORE INTO account VALUES (:id, :balance, :creditLimit, :type, :currencyCode, :maskedPans, :clientId);
+    INSERT OR IGNORE INTO account VALUES (:id, :balance, :creditLimit, :type, :currencyCode, :maskedPans, :clientId, 0);
 }
+
+getOpenAccountIds:
+SELECT id
+FROM account
+WHERE is_deleted = 0;
 
 getAccounts:
 SELECT id, balance, credit_limit, currency_code, type, masked_pans
-FROM account;
+FROM account
+WHERE is_deleted = 0;
 
 getAccountById:
 SELECT *
 FROM account
 WHERE account.id = :accountId;
+
+softDeleteAccountById:
+UPDATE account
+SET is_deleted = 1
+WHERE id = :id;
