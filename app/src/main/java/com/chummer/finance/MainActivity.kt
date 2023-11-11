@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         setContent {
             val navController = rememberNavController()
 
-            Navigation(navController = navController, start = AccountScreens.SelectAccount)
+            Navigation(navController = navController, start = AccountNode.SelectAccount)
         }
     }
 

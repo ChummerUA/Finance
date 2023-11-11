@@ -72,7 +72,7 @@ dependencies {
     implementation(Dependencies.AndroidX.Hilt.work)
     ksp(Dependencies.AndroidX.Hilt.compiler)
 
-    implementation(Dependencies.KotilnX.immutableCollections)
+    implementation(Dependencies.KotlinX.immutableCollections)
 
     implementation(Dependencies.AndroidX.work)
     coreLibraryDesugaring(Dependencies.desugaring)

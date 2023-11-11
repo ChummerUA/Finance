@@ -19,7 +19,9 @@ CREATE TABLE operation (
     invoice_id TEXT,
     counter_edrpou TEXT,
     counter_iban TEXT,
-    counter_name TEXT
+    counter_name TEXT,
+    account_id TEXT,
+    jar_id TEXT
 );
 
 upsertOperation {
@@ -40,7 +42,9 @@ upsertOperation {
         invoice_id = :invoiceId,
         counter_edrpou = :counterEdrpou,
         counter_iban = :counterIban,
-        counter_name = :counterIban
+        counter_name = :counterIban,
+        account_id = :accountId,
+        jar_id = :jarId
     WHERE id = :id;
 
     INSERT OR IGNORE
@@ -63,14 +67,16 @@ upsertOperation {
         :invoiceId,
         :counterEdrpou,
         :counterIban,
-        :counterIban
+        :counterIban,
+        :accountId,
+        :jarId
     );
 }
 
 getOperations:
 SELECT id, time, description, operation_amount, currency_code, mcc, original_mcc, cashback_amount
 FROM operation
-WHERE time < :time
+WHERE time < :time AND account_id = :accountId AND jar_id = :jarId
 ORDER BY time DESC, id DESC
 LIMIT :pageSize;
 

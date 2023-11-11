@@ -8,9 +8,11 @@ fun NetworkAccount.toDbModel(clientId: String) = DbAccount(
     balance = balance,
     credit_limit = creditLimit,
     type = type,
+    cashback_type = cashbackType,
     masked_pans = maskedPans.joinToString(SEPARATOR),
     currency_code = currencyCode,
     client_id = clientId,
+    iban = iban,
     is_deleted = false
 )
 

@@ -3,7 +3,10 @@ package com.chummer.domain.mapping.mono
 import com.chummer.networkmodels.mono.Transaction
 import mono.Operation
 
-internal fun Transaction.toDbOperation() = Operation(
+internal fun Transaction.toDbOperation(
+    accountId: String?,
+    jarId: String?
+) = Operation(
     id = id,
     time = time,
     description = description,
@@ -21,5 +24,7 @@ internal fun Transaction.toDbOperation() = Operation(
     invoice_id = invoiceId,
     counter_edrpou = counterEdrpou,
     counter_iban = counterIban,
-    counter_name = counterName
+    counter_name = counterName,
+    account_id = accountId,
+    jar_id = jarId
 )

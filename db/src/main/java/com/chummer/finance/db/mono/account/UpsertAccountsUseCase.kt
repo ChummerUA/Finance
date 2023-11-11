@@ -15,8 +15,10 @@ class UpsertAccountsUseCase(
                 type = it.type,
                 balance = it.balance,
                 currencyCode = it.currency_code,
+                cashbackType = it.cashback_type,
                 creditLimit = it.credit_limit,
                 maskedPans = it.masked_pans,
+                iban = it.iban,
                 clientId = it.client_id
             )
         }

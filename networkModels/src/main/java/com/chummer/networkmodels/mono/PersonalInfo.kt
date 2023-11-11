@@ -16,8 +16,10 @@ data class Account(
     val id: String,
     val balance: Long,
     val creditLimit: Long,
+    val cashbackType: String? = null,
     val type: String,
     val currencyCode: Int,
+    val iban: String,
     @SerialName("maskedPan")
     val maskedPans: List<String>
 )

@@ -5,8 +5,14 @@
     <string name="select_account_cards">Cards</string>
     <string name="select_account_fop">FOP Accounts</string>
     <string name="select_account_jars">Jars</string>
-    <string name="account_your_money">Your money</string>
     <string name="jar_goal">Goal</string>
+
+    <string name="account_your_money">Your money</string>
+    <string name="account_card_number">Card number</string>
+    <string name="account_select_all_accounts">see all</string>
+    <string name="account_iban">IBAN</string>
+    <string name="account_balance">Balance</string>
+    <string name="account_edrpou">EDRPOU</string>
 
     <string name="card_black">Black card</string>
     <string name="card_white">White card</string>

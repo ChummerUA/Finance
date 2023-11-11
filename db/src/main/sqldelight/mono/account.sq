@@ -6,7 +6,9 @@ CREATE TABLE account(
     balance INTEGER NOT NULL,
     credit_limit INTEGER NOT NULL,
     type TEXT NOT NULL,
+    cashback_type TEXT,
     currency_code INTEGER AS Int NOT NULL,
+    iban TEXT NOT NULL,
     masked_pans TEXT NOT NULL,
     client_id TEXT NOT NULL,
     is_deleted INTEGER AS Boolean DEFAULT 0 NOT NULL
@@ -21,7 +23,18 @@ upsertAccount {
         client_id = :clientId
     WHERE id = :id;
 
-    INSERT OR IGNORE INTO account VALUES (:id, :balance, :creditLimit, :type, :currencyCode, :maskedPans, :clientId, 0);
+    INSERT OR IGNORE INTO account VALUES (
+        :id,
+        :balance,
+        :creditLimit,
+        :type,
+        :cashbackType,
+        :currencyCode,
+        :iban,
+        :maskedPans,
+        :clientId,
+        0
+    );
 }
 
 getOpenAccountIds:

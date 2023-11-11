@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -11,6 +12,8 @@ import com.chummer.domain.GetAllClientAccountsUseCase
 import com.chummer.finance.R
 import com.chummer.finance.utils.stateInViewModelScope
 import com.chummer.finance.workers.FetchMonoAccountsWorker
+import com.chummer.finance.workers.FetchMonoTransactionsWorker
+import com.chummer.finance.workers.FetchOperationsType
 import com.chummer.models.None
 import com.chummer.preferences.mono.lastInfoFetchTime.GetLastMonoAccountsFetchTimeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,6 +39,8 @@ class SelectAccountViewModel @Inject constructor(
     getAccounts: GetAllClientAccountsUseCase,
 //    private val setSelectedAccountUseCase: Any = TODO()
 ) : AndroidViewModel(application) {
+
+    private val workerManager = WorkManager.getInstance(application.applicationContext)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val allAccountsFlow = getAccounts(None).mapLatest { list ->
@@ -71,7 +76,6 @@ class SelectAccountViewModel @Inject constructor(
     }
 
     private fun scheduleFetch() = viewModelScope.launch {
-        val workerManager = WorkManager.getInstance(application.applicationContext)
         val now = LocalDateTime.now()
         val lastFetchTime = LocalDateTime.parse(
             getLastMonoFetchTime(),
@@ -101,8 +105,27 @@ class SelectAccountViewModel @Inject constructor(
         )
     }
 
-    fun selectAccount(account: AccountUiListModel) {
-        // TODO()
+    fun selectAccount(item: AccountUiListModel) {
+
+        val type = when (item) {
+            is AccountUiListModel.Jar -> FetchOperationsType.JAR
+            else -> FetchOperationsType.ACCOUNT
+        }
+
+        val data = Data.Builder().apply {
+            putString(FetchMonoTransactionsWorker.ID_KEY, item.id)
+            putInt(FetchMonoTransactionsWorker.FETCH_TYPE_KEY, type.value)
+        }.build()
+
+        val request = OneTimeWorkRequestBuilder<FetchMonoTransactionsWorker>()
+            .setInputData(data)
+            .build()
+
+        workerManager.enqueueUniqueWork(
+            FetchMonoTransactionsWorker.NAME,
+            ExistingWorkPolicy.KEEP,
+            request
+        )
     }
 
     private companion object {

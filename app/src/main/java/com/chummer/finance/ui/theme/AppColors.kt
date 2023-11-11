@@ -7,6 +7,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
 class AppColors (
+    primary: Color,
     backgroundPrimary: Color,
     backgroundSecondary: Color,
     textPrimary: Color,
@@ -14,6 +15,9 @@ class AppColors (
     divider: Color,
     income: Color
 ) {
+    var primary by mutableStateOf(primary)
+        private set
+
     var backgroundPrimary by mutableStateOf(backgroundPrimary)
         private set
 
@@ -39,8 +43,10 @@ private val lightTextPrimaryColor = Color(0xFF292020)
 private val lightTextSecondaryColor = Color(0xFF969696)
 private val lightDividerColor = Color(0xFFD3D3D3)
 private val lightIncomeColor = Color(0xFF72A800)
+private val lightPrimaryColor = Color(0xFF033BFF)
 
 fun lightColors() = AppColors(
+    primary = lightPrimaryColor,
     backgroundPrimary = lightBackgroundPrimaryColor,
     backgroundSecondary = lightBackgroundSecondaryColor,
     textPrimary = lightTextPrimaryColor,

@@ -9,6 +9,10 @@ import com.chummer.networkmodels.mono.CARD_TYPE_PLATINUM
 import com.chummer.networkmodels.mono.CARD_TYPE_WHITE
 import com.chummer.networkmodels.mono.CARD_TYPE_YELLOW
 import java.text.NumberFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.util.Currency
 import java.util.Locale
 
@@ -54,3 +58,12 @@ private fun getCurrencyByNumericCode(code: Int): Currency? {
         it.numericCode == code
     }
 }
+
+fun LocalDateTime.toTimeString(): String = format(DateTimeFormatter.ofPattern("H:mm"))
+
+fun LocalDate.toDateString(): String {
+    val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+    return format(formatter)
+}
+
+fun LocalDateTime.toDateTimeString() = "${toLocalDate().toDateString()} ${toTimeString()}"

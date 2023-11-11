@@ -2,6 +2,7 @@ package com.chummer.finance.ui.text
 
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -16,7 +17,8 @@ fun LargePriceText(text: String) = BasicText(
     style = TextStyle(
         fontSize = 36.sp,
         fontFamily = FontFamily.Default,
-        fontWeight = FontWeight(400)
+        fontWeight = FontWeight(400),
+        color = AppTheme.colors.textPrimary
     )
 )
 
@@ -36,7 +38,8 @@ fun MediumPriceText(text: String) = BasicText(
 @Composable
 fun ItemTitleText(
     text: String,
-    color: Color
+    color: Color,
+    modifier: Modifier = Modifier
 ) = BasicText(
     text = text,
     style = TextStyle(
@@ -44,7 +47,8 @@ fun ItemTitleText(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight(400),
         color = color
-    )
+    ),
+    modifier = modifier
 )
 
 @Composable
@@ -85,6 +89,20 @@ fun ItemDescriptionText(
     text = text,
     style = TextStyle(
         fontSize = 10.sp,
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight(400),
+        color = color
+    )
+)
+
+@Composable
+fun ClickableText(
+    text: String,
+    color: Color
+) = BasicText(
+    text = text,
+    style = TextStyle(
+        fontSize = 12.sp,
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight(400),
         color = color

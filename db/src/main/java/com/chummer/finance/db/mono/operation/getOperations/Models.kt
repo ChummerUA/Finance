@@ -5,7 +5,7 @@ data class ListOperationItem(
     val time: Long,
     val description: String,
     val operationAmount: Long,
-    val currencyCode: Long,
+    val currencyCode: Int,
     val mcc: Int,
     val originalMcc: Int,
     val cashback: Long

@@ -28,12 +28,15 @@ class UpsertOperationsUseCase(
                     invoiceId = invoice_id,
                     counterEdrpou = counter_edrpou,
                     counterIban = counter_iban,
-                    id = id
+                    id = id,
+                    accountId = account_id,
+                    jarId = jar_id
                 )
             }
         }
     }
 
+    private companion object {
+        const val KEY = "upsert_transactions"
+    }
 }
-
-private const val KEY = "upsert_transactions"

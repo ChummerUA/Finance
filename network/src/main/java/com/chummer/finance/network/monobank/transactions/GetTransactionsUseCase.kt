@@ -22,7 +22,7 @@ class GetTransactionsUseCase(
     override suspend fun HttpResponse.deserialize(): List<Transaction> = deserializeBody()
 
     override fun HttpRequestBuilder.configureRequest(parameter: GetTransactionsParameters) {
-        assert(parameter.to > 0 && parameter.from > parameter.to)
+        assert(parameter.from > 0 && parameter.to > parameter.from)
         assert(parameter.account.isNotBlank())
 
         this.method = definition.method
