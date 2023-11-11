@@ -10,7 +10,6 @@ buildscript {
         classpath(Dependencies.kotlinGradle)
         classpath(Dependencies.SqlDelight.gradle)
         classpath(Dependencies.SqlDelight.adapters)
-//        classpath(Dependencies.Dagger.hiltClassPath)
     }
 }
 
@@ -19,7 +18,7 @@ plugins {
     id(Plugins.Android.library) version Versions.gradle apply false
     id(Plugins.JetBrains.android) version Versions.kotlin apply false
     id(Plugins.JetBrains.jvm) version Versions.kotlin apply false
-    id(Plugins.JetBrains.serialisation) version Versions.KotlinX.serialization apply false
+    id(Plugins.JetBrains.serialization) version Versions.KotlinX.jsonSerialization apply false
     id(Plugins.sqlDelight) version Versions.sqlDelight apply false
     id(Plugins.hilt) version Versions.Hilt.dagger apply false
     id(Plugins.ksp) version Versions.ksp apply false

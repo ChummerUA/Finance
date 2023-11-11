@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id(Plugins.javaLibrary)
     id(Plugins.JetBrains.jvm)
-    id(Plugins.JetBrains.serialisation)
+    id(Plugins.JetBrains.serialization)
 }
 
 java {
@@ -16,7 +16,7 @@ tasks.withType<KotlinCompile> {
 }
 
 dependencies {
-    implementation(Dependencies.KotilnX.serialization)
+    implementation(Dependencies.KotlinX.serialization)
 
     api(project(mapOf("path" to ":models")))
 }

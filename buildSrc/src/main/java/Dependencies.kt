@@ -48,7 +48,7 @@ object Dependencies {
         const val adapters = "$root:primitive-adapters:${Versions.sqlDelight}"
     }
 
-    object KotilnX {
+    object KotlinX {
         private const val root = "org.jetbrains.kotlinx"
 
         const val coroutines = "$root:kotlinx-coroutines-android:${Versions.KotlinX.coroutines_version}"

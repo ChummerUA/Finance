@@ -23,8 +23,7 @@ object Versions {
 
     object KotlinX {
         const val coroutines_version = "1.7.1"
-        const val serialization = "1.9.0"
-        const val jsonSerialization = "1.5.1"
+        const val jsonSerialization = "1.6.0"
         const val immutableCollections = "0.3.6"
     }
 

@@ -3,7 +3,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id(Plugins.javaLibrary)
     id(Plugins.JetBrains.jvm)
-    id(Plugins.JetBrains.serialisation)
 }
 
 java {
@@ -13,9 +12,4 @@ java {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = ConfigData.jvmTarget
-}
-
-
-dependencies {
-    implementation(Dependencies.KotilnX.serialization)
 }

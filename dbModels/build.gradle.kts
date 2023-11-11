@@ -16,5 +16,5 @@ tasks.withType<KotlinCompile> {
 }
 
 dependencies {
-    implementation(Dependencies.KotilnX.serialization)
+    implementation(Dependencies.KotlinX.serialization)
 }

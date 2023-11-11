@@ -1,5 +1,8 @@
 package com.chummer.networkmodels.mono
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Transaction(
     val id: String,
     val time: Long,
@@ -13,10 +16,10 @@ data class Transaction(
     val commissionRate: Long,
     val cashbackAmount: Long,
     val balance: Long,
-    val comment: String?,
-    val receiptId: String?,
-    val invoiceId: String?,
-    val counterEdrpou: String?,
-    val counterIban: String?,
-    val counterName: String?
+    val comment: String? = null,
+    val receiptId: String? = null,
+    val invoiceId: String? = null,
+    val counterEdrpou: String? = null,
+    val counterIban: String? = null,
+    val counterName: String? = null
 )

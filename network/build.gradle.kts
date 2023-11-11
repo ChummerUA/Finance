@@ -1,7 +1,7 @@
 plugins {
     id(Plugins.Android.library)
     id(Plugins.JetBrains.android)
-    id(Plugins.JetBrains.serialisation)
+    id(Plugins.JetBrains.serialization)
     id(Plugins.hilt)
     id(Plugins.ksp)
 }
@@ -41,6 +41,7 @@ dependencies {
 
     implementation(Dependencies.Ktor.contentNegotiation)
     implementation(Dependencies.Ktor.jsonSerialization)
+    implementation(Dependencies.KotlinX.serialization)
 
     implementation(Dependencies.Dagger.hilt)
     ksp(Dependencies.Dagger.compiler)
