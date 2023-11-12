@@ -6,9 +6,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.chummer.finance.db.mono.account.getAccountFlow.GetAccountFlowUseCase
-import com.chummer.finance.db.mono.operation.getOperation.GetOperationArgument
-import com.chummer.finance.db.mono.operation.getOperations.GetOperationsUseCase
-import com.chummer.finance.db.mono.operation.getOperations.ListOperationItem
+import com.chummer.finance.db.mono.transaction.getTransaction.GetTransactionsArgument
+import com.chummer.finance.db.mono.transaction.getTransactions.GetTransactionsFlowUseCase
+import com.chummer.finance.db.mono.transaction.getTransactions.ListTransactionItem
 import com.chummer.finance.ui.screens.transaction.TransactionUiListModel
 import com.chummer.finance.utils.getFormattedAmountAndCurrency
 import com.chummer.finance.utils.stateInViewModelScope
@@ -30,12 +30,12 @@ class AccountViewModel @Inject constructor(
     application: Application,
     savedStateHandle: SavedStateHandle,
     getAccountFlow: GetAccountFlowUseCase,
-    getOperationsFlow: GetOperationsUseCase
+    getTransactionsFlow: GetTransactionsFlowUseCase
 ) : AndroidViewModel(application) {
     private val accountId: String =
         savedStateHandle.get<String>("id") ?: error("missing account id")
 
-    private val argument = GetOperationArgument(
+    private val argument = GetTransactionsArgument(
         accountId,
         null,
         LocalDateTime.now().toUnixSecond(),
@@ -43,7 +43,7 @@ class AccountViewModel @Inject constructor(
     )
 
     private val daysWithTransactionsFlow: Flow<ImmutableList<DayWithTransactions>> =
-        getOperationsFlow(
+        getTransactionsFlow(
             argument
         ).map { it.groupToTransactionsInDays() }
 
@@ -59,16 +59,16 @@ class AccountViewModel @Inject constructor(
     }.stateInViewModelScope(viewModelScope)
 }
 
-private fun List<ListOperationItem>.groupToTransactionsInDays() =
+private fun List<ListTransactionItem>.groupToTransactionsInDays() =
     groupBy { it.time.toLocalDateTime().toLocalDate().toDateString() }
         .map { (date, items) ->
             DayWithTransactions(
                 date,
-                items.toUiOperations()
+                items.toUiTransactions()
             )
         }.toImmutableList()
 
-private fun List<ListOperationItem>.toUiOperations() = map {
+private fun List<ListTransactionItem>.toUiTransactions() = map {
     Log.d("AccountViewModel", "Mapping ${it.time} to ${it.time.toLocalDateTime()}")
     TransactionUiListModel(
         id = it.id,

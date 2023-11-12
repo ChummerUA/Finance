@@ -5,8 +5,8 @@ import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.chummer.domain.mono.operations.FetchOperationsInput
-import com.chummer.domain.mono.operations.FetchOperationsUseCase
+import com.chummer.domain.mono.transactions.FetchTransactionsArgument
+import com.chummer.domain.mono.transactions.FetchTransactionsUseCase
 import com.chummer.finance.utils.toUnixSecond
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -16,7 +16,7 @@ import java.time.LocalDateTime
 class FetchMonoTransactionsWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
-    private val fetchUseCase: FetchOperationsUseCase,
+    private val fetchUseCase: FetchTransactionsUseCase,
 ) : CoroutineWorker(context, params) {
     private val data = params.inputData
     private val id = data.getString(ID_KEY) ?: argumentError(ID_KEY)
@@ -33,7 +33,7 @@ class FetchMonoTransactionsWorker @AssistedInject constructor(
             val jarId = id.takeIf { type == FetchOperationsType.JAR }
 
             fetchUseCase(
-                FetchOperationsInput(
+                FetchTransactionsArgument(
                     accountId = accountId,
                     jarId = jarId,
                     from = from.toUnixSecond(),

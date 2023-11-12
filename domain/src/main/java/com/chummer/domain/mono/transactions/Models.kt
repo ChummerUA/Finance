@@ -1,6 +1,6 @@
-package com.chummer.domain.mono.operations
+package com.chummer.domain.mono.transactions
 
-data class FetchOperationsInput(
+data class FetchTransactionsArgument(
     val accountId: String?,
     val jarId: String?,
     val from: Long,

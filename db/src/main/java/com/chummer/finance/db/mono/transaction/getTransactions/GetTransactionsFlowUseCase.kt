@@ -1,15 +1,18 @@
-package com.chummer.finance.db.mono.operation.getOperations
+package com.chummer.finance.db.mono.transaction.getTransactions
 
 import app.cash.sqldelight.Query
-import com.chummer.finance.db.mono.operation.getOperation.GetOperationArgument
+import com.chummer.finance.db.mono.transaction.TransactionQueries
+import com.chummer.finance.db.mono.transaction.getTransaction.GetTransactionsArgument
 import com.chummer.infrastructure.db.useCases.flow.DbListFlowUseCase
-import mono.OperationQueries
 
 @Suppress("LocalVariableName")
-class GetOperationsUseCase(
-    transacter: OperationQueries
-) : DbListFlowUseCase<GetOperationArgument, ListOperationItem, OperationQueries>(KEY, transacter) {
-    override fun OperationQueries.getQuery(argument: GetOperationArgument): Query<ListOperationItem> {
+class GetTransactionsFlowUseCase(
+    transacter: TransactionQueries
+) : DbListFlowUseCase<GetTransactionsArgument, ListTransactionItem, TransactionQueries>(
+    KEY,
+    transacter
+) {
+    override fun TransactionQueries.getQuery(argument: GetTransactionsArgument): Query<ListTransactionItem> {
         val (accountId, jarId, from, pageSize) = argument
         return transacter.getOperations(
             time = from,
@@ -17,7 +20,7 @@ class GetOperationsUseCase(
             accountId = accountId,
             jarId = jarId
         ) { id, time, description, operation_amount, currency_code, mcc, original_mcc, cashback_amount ->
-            ListOperationItem(
+            ListTransactionItem(
                 id = id,
                 time = time,
                 description = description,
@@ -29,6 +32,8 @@ class GetOperationsUseCase(
             )
         }
     }
-}
 
-private const val KEY = "get_operations"
+    private companion object {
+        const val KEY = "get_operations"
+    }
+}

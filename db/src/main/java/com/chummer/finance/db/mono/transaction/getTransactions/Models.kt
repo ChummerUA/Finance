@@ -1,6 +1,6 @@
-package com.chummer.finance.db.mono.operation.getOperations
+package com.chummer.finance.db.mono.transaction.getTransactions
 
-data class ListOperationItem(
+data class ListTransactionItem(
     val id: String,
     val time: Long,
     val description: String,

@@ -1,14 +1,12 @@
-package com.chummer.finance.db.mono.operation
+package com.chummer.finance.db.mono.transaction
 
 import app.cash.sqldelight.TransactionWithoutReturn
 import com.chummer.infrastructure.db.useCases.transaction.withoutResult.DbTransactionUseCase
-import mono.Operation
-import mono.OperationQueries
 
-class UpsertOperationsUseCase(
-    transacter: OperationQueries
-) : DbTransactionUseCase<List<Operation>, OperationQueries>(KEY, transacter) {
-    override fun TransactionWithoutReturn.execute(argument: List<Operation>) {
+class UpsertTransactionsUseCase(
+    transacter: TransactionQueries
+) : DbTransactionUseCase<List<Transaction>, TransactionQueries>(KEY, transacter) {
+    override fun TransactionWithoutReturn.execute(argument: List<Transaction>) {
         argument.forEach { operation ->
             with(operation) {
                 transacter.upsertOperation(

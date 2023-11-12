@@ -1,7 +1,7 @@
-package com.chummer.domain.mono.operations
+package com.chummer.domain.mono.transactions
 
 import com.chummer.domain.mapping.mono.toDbOperation
-import com.chummer.finance.db.mono.operation.UpsertOperationsUseCase
+import com.chummer.finance.db.mono.transaction.UpsertTransactionsUseCase
 import com.chummer.finance.network.monobank.transactions.GetTransactionsUseCase
 import com.chummer.infrastructure.usecase.ExecutableUseCase
 import com.chummer.models.None
@@ -9,13 +9,13 @@ import com.chummer.models.mono.GetTransactionsParameters
 import kotlinx.coroutines.Dispatchers
 import kotlin.coroutines.CoroutineContext
 
-class FetchOperationsUseCase(
+class FetchTransactionsUseCase(
     private val getTransactionsUseCase: GetTransactionsUseCase,
-    private val upsertOperationsUseCase: UpsertOperationsUseCase
-) : ExecutableUseCase<FetchOperationsInput, None>(KEY) {
+    private val upsertTransactionsUseCase: UpsertTransactionsUseCase
+) : ExecutableUseCase<FetchTransactionsArgument, None>(KEY) {
     override val coroutineContext: CoroutineContext = Dispatchers.Main
 
-    override suspend fun execute(input: FetchOperationsInput) {
+    override suspend fun execute(input: FetchTransactionsArgument) {
         val (accountId, jarId, from, to) = input
         val account = accountId ?: jarId ?: error(
             getArgumentsMessage("account")
@@ -30,7 +30,7 @@ class FetchOperationsUseCase(
                 to = to
             )
         )
-        upsertOperationsUseCase(
+        upsertTransactionsUseCase(
             transactions.map {
                 it.toDbOperation(
                     accountId = input.accountId,
