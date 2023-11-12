@@ -8,7 +8,7 @@ import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.chummer.domain.GetAllClientAccountsUseCase
+import com.chummer.domain.GetAccountsAndJarsFlowUseCase
 import com.chummer.finance.R
 import com.chummer.finance.utils.stateInViewModelScope
 import com.chummer.finance.workers.FetchMonoAccountsWorker
@@ -36,14 +36,14 @@ import kotlin.time.toJavaDuration
 class SelectAccountViewModel @Inject constructor(
     private val application: Application,
     private val getLastMonoFetchTime: GetLastMonoAccountsFetchTimeUseCase,
-    getAccounts: GetAllClientAccountsUseCase,
+    getAccountsAndJarsFlow: GetAccountsAndJarsFlowUseCase,
 //    private val setSelectedAccountUseCase: Any = TODO()
 ) : AndroidViewModel(application) {
 
     private val workerManager = WorkManager.getInstance(application.applicationContext)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val allAccountsFlow = getAccounts(None).mapLatest { list ->
+    private val allAccountsFlow = getAccountsAndJarsFlow(None).mapLatest { list ->
         list.map { it.toUiModel(application.applicationContext) }
     }
     private val title = application.getString(R.string.select_account_title)

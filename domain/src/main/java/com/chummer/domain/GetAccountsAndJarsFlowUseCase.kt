@@ -1,7 +1,7 @@
 package com.chummer.domain
 
 import com.chummer.finance.db.mono.account.AccountListItem
-import com.chummer.finance.db.mono.account.GetAccountsUseCase
+import com.chummer.finance.db.mono.account.GetAccountsFlowUseCase
 import com.chummer.finance.db.mono.jar.GetJarsUseCase
 import com.chummer.finance.db.mono.jar.JarListItem
 import com.chummer.infrastructure.usecase.FlowUseCase
@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlin.coroutines.CoroutineContext
 
-class GetAllClientAccountsUseCase(
-    private val getAccountsUseCase: GetAccountsUseCase,
+class GetAccountsAndJarsFlowUseCase(
+    private val getAccountsUseCase: GetAccountsFlowUseCase,
     private val getJarsUseCase: GetJarsUseCase
 ) : FlowUseCase<None, List<ClientAccountListItem>>(KEY) {
 
@@ -41,9 +41,11 @@ class GetAllClientAccountsUseCase(
             result
         }
     }
-}
 
-const val KEY = "get_all_client_accounts"
+    private companion object {
+        const val KEY = "get_all_client_accounts"
+    }
+}
 
 sealed interface ClientAccountListItem {
     @JvmInline

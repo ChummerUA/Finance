@@ -5,9 +5,9 @@ import com.chummer.infrastructure.db.useCases.flow.DbListFlowUseCase
 import com.chummer.models.None
 import mono.AccountQueries
 
-class GetAccountsUseCase(
+class GetAccountsFlowUseCase(
     queries: AccountQueries
-): DbListFlowUseCase<None, AccountListItem, AccountQueries>(KEY, queries) {
+) : DbListFlowUseCase<None, AccountListItem, AccountQueries>(KEY, queries) {
     override fun AccountQueries.getQuery(argument: None): Query<AccountListItem> {
         return getAccounts { id, balance, creditLimit, currencyCode, type, maskedPans ->
             AccountListItem(

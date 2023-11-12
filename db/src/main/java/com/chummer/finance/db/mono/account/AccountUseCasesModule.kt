@@ -17,8 +17,8 @@ object AccountUseCasesModule {
 
 
     @Provides
-    fun provideGetAccountsUseCase(db: ChummerFinanceDatabase) =
-        GetAccountsUseCase(db.accountQueries)
+    fun provideGetAccountsFlowUseCase(db: ChummerFinanceDatabase) =
+        GetAccountsFlowUseCase(db.accountQueries)
 
     @Provides
     fun provideGetAccountFlowUseCase(db: ChummerFinanceDatabase) =
