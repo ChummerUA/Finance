@@ -17,12 +17,12 @@ import java.util.Currency
 import java.util.Locale
 
 fun getFormattedAmountAndCurrency(amount: Long, currencyCode: Int): String {
-    val format = NumberFormat.getCurrencyInstance()
-    val currency = getCurrencyByNumericCode(currencyCode) ?: return TODO("")
+    val formatter = NumberFormat.getCurrencyInstance()
+    val currency = getCurrencyByNumericCode(currencyCode)
 
-    format.currency = currency
+    formatter.currency = currency
     val formattedAmount = getFormattedAmount(amount)
-    return format.format(formattedAmount)
+    return formatter.format(formattedAmount)
 }
 
 private fun getFormattedAmount(amount: Long): Double {
@@ -49,14 +49,14 @@ fun getAccountName(currencyCode: Int, type: String, context: Context): String {
     }
     return if (id != 0)
         context.getString(id)
-    else getCurrencyByNumericCode(currencyCode)?.getDisplayName(Locale.getDefault()) ?: ""
+    else getCurrencyByNumericCode(currencyCode).getDisplayName(Locale.getDefault()) ?: ""
 }
 
-private fun getCurrencyByNumericCode(code: Int): Currency? {
+private fun getCurrencyByNumericCode(code: Int): Currency {
     val currencies = Currency.getAvailableCurrencies()
     return currencies.firstOrNull {
         it.numericCode == code
-    }
+    } ?: error("Unknown currency code: $code")
 }
 
 fun LocalDateTime.toTimeString(): String = format(DateTimeFormatter.ofPattern("H:mm"))
