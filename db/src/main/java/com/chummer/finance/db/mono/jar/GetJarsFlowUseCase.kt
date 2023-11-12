@@ -5,9 +5,9 @@ import com.chummer.infrastructure.db.useCases.flow.DbListFlowUseCase
 import com.chummer.models.None
 import mono.JarQueries
 
-class GetJarsUseCase(
+class GetJarsFlowUseCase(
     queries: JarQueries
-): DbListFlowUseCase<None, JarListItem, JarQueries>(KEY, queries) {
+) : DbListFlowUseCase<None, JarListItem, JarQueries>(KEY, queries) {
 
     override fun JarQueries.getQuery(argument: None): Query<JarListItem> {
         return getJars { id, title, currencyCode, balance, goal ->
@@ -20,6 +20,8 @@ class GetJarsUseCase(
             )
         }
     }
-}
 
-private const val KEY = "get_jars"
+    private companion object {
+        const val KEY = "get_jars"
+    }
+}

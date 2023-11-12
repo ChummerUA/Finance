@@ -14,7 +14,7 @@ object JarUseCasesModule {
     fun provideUpsertJarsUseCase(db: ChummerFinanceDatabase) = UpsertJarsUseCase(db.jarQueries)
 
     @Provides
-    fun provideGetJarsUseCase(db: ChummerFinanceDatabase) = GetJarsUseCase(db.jarQueries)
+    fun provideGetJarsUseCase(db: ChummerFinanceDatabase) = GetJarsFlowUseCase(db.jarQueries)
 
     @Provides
     fun provideDeleteJarsThatAreNotInListUseCase(

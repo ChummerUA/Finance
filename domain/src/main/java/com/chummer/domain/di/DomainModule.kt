@@ -7,7 +7,7 @@ import com.chummer.finance.db.mono.account.DeleteAccountsThatAreNotInListUseCase
 import com.chummer.finance.db.mono.account.GetAccountsFlowUseCase
 import com.chummer.finance.db.mono.account.UpsertAccountsUseCase
 import com.chummer.finance.db.mono.jar.DeleteJarsThatAreNotInListUseCase
-import com.chummer.finance.db.mono.jar.GetJarsUseCase
+import com.chummer.finance.db.mono.jar.GetJarsFlowUseCase
 import com.chummer.finance.db.mono.jar.UpsertJarsUseCase
 import com.chummer.finance.db.mono.operation.UpsertOperationsUseCase
 import com.chummer.finance.network.di.NetworkModule
@@ -32,8 +32,8 @@ object DomainModule {
     @Provides
     fun providesGetAllClientAccountsUseCase(
         getAccountsFlowUseCase: GetAccountsFlowUseCase,
-        getJarsUseCase: GetJarsUseCase
-    ) = GetAccountsAndJarsFlowUseCase(getAccountsFlowUseCase, getJarsUseCase)
+        getJarsFlowUseCase: GetJarsFlowUseCase
+    ) = GetAccountsAndJarsFlowUseCase(getAccountsFlowUseCase, getJarsFlowUseCase)
 
     @Provides
     fun provideFetchMonoInfoUseCase(

@@ -2,7 +2,7 @@ package com.chummer.domain
 
 import com.chummer.finance.db.mono.account.AccountListItem
 import com.chummer.finance.db.mono.account.GetAccountsFlowUseCase
-import com.chummer.finance.db.mono.jar.GetJarsUseCase
+import com.chummer.finance.db.mono.jar.GetJarsFlowUseCase
 import com.chummer.finance.db.mono.jar.JarListItem
 import com.chummer.infrastructure.usecase.FlowUseCase
 import com.chummer.models.None
@@ -12,15 +12,15 @@ import kotlinx.coroutines.flow.combine
 import kotlin.coroutines.CoroutineContext
 
 class GetAccountsAndJarsFlowUseCase(
-    private val getAccountsUseCase: GetAccountsFlowUseCase,
-    private val getJarsUseCase: GetJarsUseCase
+    private val getAccountsFlowUseCase: GetAccountsFlowUseCase,
+    private val getJarsFlowUseCase: GetJarsFlowUseCase
 ) : FlowUseCase<None, List<ClientAccountListItem>>(KEY) {
 
     override val coroutineContext: CoroutineContext = Dispatchers.Default
 
     override fun invoke(input: None): Flow<List<ClientAccountListItem>> {
-        val accountsFlow = getAccountsUseCase(None)
-        val jarsFlow = getJarsUseCase(None)
+        val accountsFlow = getAccountsFlowUseCase(None)
+        val jarsFlow = getJarsFlowUseCase(None)
 
         return combine(
             accountsFlow,
