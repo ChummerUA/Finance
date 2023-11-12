@@ -1,4 +1,4 @@
-package com.chummer.finance.ui.screens.account.selectAccount
+package com.chummer.finance.ui.account
 
 import android.content.Context
 import com.chummer.domain.ClientAccountListItem
@@ -39,11 +39,12 @@ sealed class AccountUiListModel(
 
 fun ClientAccountListItem.toUiModel(
     context: Context
-): AccountUiListModel = when(this) {
-    is ClientAccountListItem.Account -> when(info.type) {
+): AccountUiListModel = when (this) {
+    is ClientAccountListItem.Account -> when (info.type) {
         CARD_TYPE_FOP -> info.toFopUiModel()
         else -> info.toCardUiModel(context)
     }
+
     is ClientAccountListItem.Jar -> info.toUiModel(context)
 }
 

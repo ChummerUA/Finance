@@ -1,4 +1,4 @@
-package com.chummer.finance.ui.screens.account
+package com.chummer.finance.ui.account
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,72 +11,63 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.chummer.finance.ui.screens.account.selectAccount.AccountUiListModel
 import com.chummer.finance.ui.spacing.Fill
+import com.chummer.finance.ui.text.GroupTitleText
 import com.chummer.finance.ui.text.ItemDescriptionText
 import com.chummer.finance.ui.text.ItemTitleText
 import com.chummer.finance.ui.text.MediumPriceText
 import com.chummer.finance.ui.theme.AppTheme
 
 @Composable
-fun CardListItemView(
-    card: AccountUiListModel.Card,
+fun AccountUiListModel.Card.Display(
     onCardClicked: (() -> Unit)
 ) {
-    with(card) {
-        val additionalInfo = remember(id, creditMoney) {
-            AccountCardViewAdditionalInfo(
-                creditMoneyTitle,
-                creditMoney
-            )
-        }
-        AccountCardView(
-            name = name,
-            balance = balance,
-            additionalInfo = additionalInfo,
-            onCardClicked = onCardClicked
+    val additionalInfo = remember(id, creditMoney) {
+        AccountCardViewAdditionalInfo(
+            creditMoneyTitle,
+            creditMoney
         )
     }
+    AccountCardView(
+        name = name,
+        balance = balance,
+        additionalInfo = additionalInfo,
+        onCardClicked = onCardClicked
+    )
 }
 
 @Composable
-fun FopListItemView(
-    fop: AccountUiListModel.FOP,
+fun AccountUiListModel.FOP.Display(
     onCardClicked: (() -> Unit)
 ) {
-    with(fop) {
-        AccountCardView(
-            name = name,
-            balance = balance,
-            additionalInfo = null,
-            onCardClicked = onCardClicked
-        )
-    }
+    AccountCardView(
+        name = name,
+        balance = balance,
+        additionalInfo = null,
+        onCardClicked = onCardClicked
+    )
 }
 
 @Composable
-fun JarListItemView(
-    card: AccountUiListModel.Jar,
+fun AccountUiListModel.Jar.Display(
     onCardClicked: (() -> Unit)
 ) {
-    with(card) {
-        val additionalInfo = remember(id, goal) {
-            AccountCardViewAdditionalInfo(
-                goalTitle,
-                goal
-            )
-        }
-        AccountCardView(
-            name = name,
-            balance = balance,
-            additionalInfo = additionalInfo,
-            onCardClicked = onCardClicked
+    val additionalInfo = remember(id, goal) {
+        AccountCardViewAdditionalInfo(
+            goalTitle,
+            goal
         )
     }
+    AccountCardView(
+        name = name,
+        balance = balance,
+        additionalInfo = additionalInfo,
+        onCardClicked = onCardClicked
+    )
 }
 
 @Composable
-fun AccountCardView(
+private fun AccountCardView(
     name: String,
     balance: String,
     additionalInfo: AccountCardViewAdditionalInfo?,
@@ -107,7 +98,18 @@ fun AccountCardView(
     }
 }
 
-data class AccountCardViewAdditionalInfo(
+private data class AccountCardViewAdditionalInfo(
     val title: String,
     val value: String
 )
+
+@Composable
+fun AccountInfoItem.Display() = Column(
+    Modifier.padding(
+        vertical = 12.dp,
+        horizontal = 16.dp
+    )
+) {
+    GroupTitleText(text = title, color = AppTheme.colors.textSecondary)
+    ItemTitleText(text = value, color = AppTheme.colors.textPrimary)
+}

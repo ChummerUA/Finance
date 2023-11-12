@@ -1,4 +1,4 @@
-package com.chummer.finance.ui.screens.transaction
+package com.chummer.finance.ui.transaction
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -20,7 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.chummer.finance.ui.screens.account.DayWithTransactions
+import com.chummer.finance.ui.account.DayWithTransactions
 import com.chummer.finance.ui.spacing.Space
 import com.chummer.finance.ui.text.ItemDescriptionText
 import com.chummer.finance.ui.text.ItemTitleText

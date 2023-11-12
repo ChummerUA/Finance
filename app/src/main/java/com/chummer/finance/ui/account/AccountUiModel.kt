@@ -1,9 +1,9 @@
-package com.chummer.finance.ui.screens.account
+package com.chummer.finance.ui.account
 
 import android.content.Context
 import com.chummer.finance.R
 import com.chummer.finance.db.mono.account.AccountItem
-import com.chummer.finance.ui.screens.transaction.TransactionUiListModel
+import com.chummer.finance.ui.transaction.TransactionUiListModel
 import com.chummer.finance.utils.getAccountName
 import com.chummer.finance.utils.getFormattedAmountAndCurrency
 import com.chummer.networkmodels.mono.CARD_TYPE_FOP

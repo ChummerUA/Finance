@@ -15,9 +15,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.chummer.finance.AccountNode
-import com.chummer.finance.ui.screens.account.CardListItemView
-import com.chummer.finance.ui.screens.account.FopListItemView
-import com.chummer.finance.ui.screens.account.JarListItemView
+import com.chummer.finance.ui.account.AccountUiListModel
+import com.chummer.finance.ui.account.Display
 import com.chummer.finance.ui.text.ItemTitleText
 import com.chummer.finance.ui.theme.AppTheme
 import com.chummer.finance.utils.rememberStateWithLifecycle
@@ -100,15 +99,15 @@ private fun AccountUiListModel.View(
     onItemClicked: (AccountUiListModel) -> Unit
 ) {
     when (this) {
-        is AccountUiListModel.Card -> CardListItemView(card = this) {
+        is AccountUiListModel.Card -> Display {
             onItemClicked(this)
         }
 
-        is AccountUiListModel.FOP -> FopListItemView(fop = this) {
+        is AccountUiListModel.FOP -> Display {
             onItemClicked(this)
         }
 
-        is AccountUiListModel.Jar -> JarListItemView(card = this) {
+        is AccountUiListModel.Jar -> Display {
             onItemClicked(this)
         }
     }
