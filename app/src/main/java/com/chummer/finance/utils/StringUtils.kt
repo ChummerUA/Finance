@@ -31,10 +31,9 @@ private fun getFormattedAmount(amount: Long): Double {
 
 fun getAccountName(currencyCode: Int): String {
     return getCurrencyByNumericCode(currencyCode)
-        ?.getDisplayName(Locale.getDefault())
-        ?.uppercase()
-        ?.replaceFirstChar(Char::titlecaseChar)
-        ?: ""
+        .getDisplayName(Locale.getDefault())
+        .uppercase()
+        .replaceFirstChar(Char::titlecaseChar)
 }
 
 fun getAccountName(currencyCode: Int, type: String, context: Context): String {
