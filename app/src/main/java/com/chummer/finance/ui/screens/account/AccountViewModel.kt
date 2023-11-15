@@ -16,9 +16,9 @@ import com.chummer.finance.ui.transaction.TransactionUiListModel
 import com.chummer.finance.utils.getFormattedAmountAndCurrency
 import com.chummer.finance.utils.stateInViewModelScope
 import com.chummer.finance.utils.toDateString
-import com.chummer.finance.utils.toLocalDateTime
 import com.chummer.finance.utils.toTimeString
-import com.chummer.finance.utils.toUnixSecond
+import com.chummer.models.mapping.toLocalDateTime
+import com.chummer.models.mapping.toUnixSecond
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList

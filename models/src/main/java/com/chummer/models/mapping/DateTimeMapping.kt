@@ -1,4 +1,4 @@
-package com.chummer.finance.utils
+package com.chummer.models.mapping
 
 import java.time.Instant
 import java.time.LocalDateTime

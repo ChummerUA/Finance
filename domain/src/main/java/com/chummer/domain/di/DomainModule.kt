@@ -1,7 +1,7 @@
 package com.chummer.domain.di
 
-import com.chummer.domain.GetAccountsAndJarsFlowUseCase
-import com.chummer.domain.mono.transactions.FetchTransactionsUseCase
+import com.chummer.domain.mono.GetAccountsAndJarsFlowUseCase
+import com.chummer.domain.mono.fetchTransactions.FetchMonoTransactionsUseCase
 import com.chummer.finance.db.di.DbUseCasesModule
 import com.chummer.finance.db.mono.account.DeleteAccountsThatAreNotInListUseCase
 import com.chummer.finance.db.mono.account.GetAccountsFlowUseCase
@@ -18,7 +18,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import com.chummer.domain.mono.FetchPersonalInfoUseCase as FetchMonoPersonalInfoUseCase
+import com.chummer.domain.mono.fetchAccounts.FetchMonoAccountsUseCase as FetchMonoPersonalInfoUseCase
 
 @InstallIn(SingletonComponent::class)
 @Module(
@@ -54,7 +54,7 @@ object DomainModule {
     fun provideFetchMonoTransactionsUseCase(
         getTransactionsUseCase: GetTransactionsUseCase,
         upsertTransactionsUseCase: UpsertTransactionsUseCase
-    ) = FetchTransactionsUseCase(
+    ): FetchMonoTransactionsUseCase = FetchMonoTransactionsUseCase(
         getTransactionsUseCase,
         upsertTransactionsUseCase
     )

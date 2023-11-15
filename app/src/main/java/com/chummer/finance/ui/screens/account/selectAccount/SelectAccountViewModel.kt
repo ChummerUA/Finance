@@ -4,18 +4,19 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.chummer.domain.GetAccountsAndJarsFlowUseCase
+import com.chummer.domain.mono.GetAccountsAndJarsFlowUseCase
 import com.chummer.finance.R
+import com.chummer.finance.db.mono.lastFetchTime.GetLastTransactionsFetchTimeUseCase
 import com.chummer.finance.ui.account.AccountUiListModel
 import com.chummer.finance.ui.account.toUiModel
 import com.chummer.finance.utils.stateInViewModelScope
 import com.chummer.finance.workers.FetchMonoAccountsWorker
 import com.chummer.finance.workers.FetchMonoTransactionsWorker
-import com.chummer.finance.workers.FetchOperationsType
 import com.chummer.models.None
 import com.chummer.preferences.mono.lastInfoFetchTime.GetLastMonoAccountsFetchTimeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,6 +32,8 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import javax.inject.Inject
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
 
@@ -38,7 +41,8 @@ import kotlin.time.toJavaDuration
 class SelectAccountViewModel @Inject constructor(
     private val application: Application,
     private val getLastMonoFetchTime: GetLastMonoAccountsFetchTimeUseCase,
-    getAccountsAndJarsFlow: GetAccountsAndJarsFlowUseCase,
+    private val getLastTransactionsFetchTime: GetLastTransactionsFetchTimeUseCase,
+    getAccountsAndJarsFlow: GetAccountsAndJarsFlowUseCase
 //    private val setSelectedAccountUseCase: Any = TODO()
 ) : AndroidViewModel(application) {
 
@@ -74,63 +78,44 @@ class SelectAccountViewModel @Inject constructor(
     }.stateInViewModelScope(viewModelScope)
 
     init {
-        scheduleFetch()
+        fetchAccounts()
     }
 
-    private fun scheduleFetch() = viewModelScope.launch {
-        val now = LocalDateTime.now()
+    private fun fetchAccounts() = viewModelScope.launch {
         val lastFetchTime = LocalDateTime.parse(
             getLastMonoFetchTime(),
             DateTimeFormatter.ISO_DATE_TIME
         )
-
-        Log.d(TAG, "Last fetch time: $lastFetchTime")
-        val nextAvailableTime = lastFetchTime.plusMinutes(1)
-        Log.d(TAG, "Next fetch time: $nextAvailableTime")
-        val shouldDelay = lastFetchTime != LocalDateTime.MIN && nextAvailableTime.isAfter(now)
-        Log.d(TAG, "Should delay: $shouldDelay")
-
-        val request = OneTimeWorkRequestBuilder<FetchMonoAccountsWorker>()
-            .apply {
-                if (shouldDelay) {
-                    val between = ChronoUnit.SECONDS.between(nextAvailableTime, now)
-                    val delay = between.seconds.absoluteValue
-                    Log.d(TAG, "Delay in seconds: ${delay.inWholeSeconds}")
-                    setInitialDelay(delay.toJavaDuration())
-                }
-            }
-            .build()
-        workerManager.enqueueUniqueWork(
+        workerManager.scheduleFetchWorker<FetchMonoAccountsWorker>(
             FetchMonoAccountsWorker.name,
-            ExistingWorkPolicy.KEEP,
-            request
+            null,
+            1.minutes,
+            lastFetchTime
         )
     }
 
-    fun selectAccount(item: AccountUiListModel) {
-
+    fun selectAccount(item: AccountUiListModel) = viewModelScope.launch {
         val type = when (item) {
-            is AccountUiListModel.Jar -> FetchOperationsType.JAR
-            else -> FetchOperationsType.ACCOUNT
+            is AccountUiListModel.Jar -> FetchMonoTransactionsWorker.FETCH_JAR_TYPE
+            else -> FetchMonoTransactionsWorker.FETCH_ACCOUNT_TYPE
         }
 
         val data = Data.Builder().apply {
             putString(FetchMonoTransactionsWorker.ID_KEY, item.id)
-            putInt(FetchMonoTransactionsWorker.FETCH_TYPE_KEY, type.value)
+            putInt(FetchMonoTransactionsWorker.FETCH_TYPE_KEY, type)
         }.build()
 
-        val request = OneTimeWorkRequestBuilder<FetchMonoTransactionsWorker>()
-            .setInputData(data)
-            .build()
+        val lastFetchTime = getLastTransactionsFetchTime(item.id)
 
-        workerManager.enqueueUniqueWork(
+        workerManager.scheduleFetchWorker<FetchMonoTransactionsWorker>(
             FetchMonoTransactionsWorker.NAME,
-            ExistingWorkPolicy.KEEP,
-            request
+            data,
+            1.minutes,
+            lastFetchTime
         )
     }
 
-    private companion object {
+    companion object {
         const val TAG = "SelectAccountViewModel"
     }
 }
@@ -158,3 +143,36 @@ private inline fun <reified T : AccountUiListModel> Flow<List<AccountUiListModel
             it.filterIsInstance<T>().toImmutableList()
         )
     }
+
+private inline fun <reified Worker : CoroutineWorker> WorkManager.scheduleFetchWorker(
+    workName: String,
+    data: Data?,
+    delay: Duration,
+    lastFetchTime: LocalDateTime
+) {
+    val now = LocalDateTime.now()
+    Log.d(SelectAccountViewModel.TAG, "Last fetch time: $lastFetchTime")
+    val nextAvailableTime = lastFetchTime.plusSeconds(delay.inWholeSeconds)
+    Log.d(SelectAccountViewModel.TAG, "Next fetch time: $nextAvailableTime")
+    val shouldDelay = lastFetchTime != LocalDateTime.MIN && nextAvailableTime.isAfter(now)
+    Log.d(SelectAccountViewModel.TAG, "Should delay: $shouldDelay")
+
+    val request = OneTimeWorkRequestBuilder<Worker>()
+        .apply {
+            if (data != null)
+                setInputData(data)
+
+            if (shouldDelay) {
+                val between = ChronoUnit.SECONDS.between(nextAvailableTime, now)
+                val fetchDelay = between.seconds.absoluteValue
+                Log.d(SelectAccountViewModel.TAG, "Delay in seconds: ${fetchDelay.inWholeSeconds}")
+                setInitialDelay(fetchDelay.toJavaDuration())
+            }
+        }
+        .build()
+    enqueueUniqueWork(
+        workName,
+        ExistingWorkPolicy.REPLACE,
+        request
+    )
+}

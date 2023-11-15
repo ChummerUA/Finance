@@ -1,4 +1,4 @@
-package com.chummer.domain
+package com.chummer.domain.mono
 
 import com.chummer.finance.db.mono.account.AccountListItem
 import com.chummer.finance.db.mono.account.GetAccountsFlowUseCase

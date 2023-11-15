@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.chummer.domain.mono.FetchPersonalInfoUseCase
+import com.chummer.domain.mono.fetchAccounts.FetchMonoAccountsUseCase
 import com.chummer.models.None
 import com.chummer.preferences.mono.lastInfoFetchTime.SetLastMonoAccountsFetchTimeUseCase
 import dagger.assisted.Assisted
@@ -16,7 +16,7 @@ import java.time.LocalDateTime
 class FetchMonoAccountsWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
-    private val fetchUseCase: FetchPersonalInfoUseCase,
+    private val fetchUseCase: FetchMonoAccountsUseCase,
     private val setLastMonoAccountsFetchTimeUseCase: SetLastMonoAccountsFetchTimeUseCase
 ) : CoroutineWorker(context, params) {
     override suspend fun doWork(): Result {

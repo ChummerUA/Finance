@@ -1,0 +1,21 @@
+import java.time.LocalDateTime;
+
+CREATE TABLE last_fetch_time (
+    id TEXT NOT NULL PRIMARY KEY,
+    time Integer AS LocalDateTime NOT NULL
+);
+
+upsertLastFetchTime {
+    UPDATE last_fetch_time
+    SET time = :time
+    WHERE id = :id;
+
+    INSERT OR IGNORE
+    INTO last_fetch_time
+    VALUES (:id, :time);
+}
+
+getLastFetchTimeById:
+SELECT time
+FROM last_fetch_time
+WHERE id = :id;

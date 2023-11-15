@@ -5,12 +5,14 @@ import app.cash.sqldelight.adapter.primitive.IntColumnAdapter
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.chummer.finance.ChummerFinanceDatabase
+import com.chummer.finance.db.adapters.LocalDateTimeAdapter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import mono.Account
 import mono.Jar
+import mono.Last_fetch_time
 import mono.Operation
 import javax.inject.Singleton
 
@@ -23,12 +25,14 @@ object DbComponentsModule {
         sqlDriver: SqlDriver,
         jarAdapter: Jar.Adapter,
         operationAdapter: Operation.Adapter,
-        accountAdapter: Account.Adapter
+        accountAdapter: Account.Adapter,
+        lastFetchTimeAdapter: Last_fetch_time.Adapter
     ): ChummerFinanceDatabase = ChummerFinanceDatabase(
         driver = sqlDriver,
         jarAdapter = jarAdapter,
         operationAdapter = operationAdapter,
-        accountAdapter = accountAdapter
+        accountAdapter = accountAdapter,
+        last_fetch_timeAdapter = lastFetchTimeAdapter
     )
 
     @Provides
@@ -55,5 +59,10 @@ object DbComponentsModule {
     @Provides
     fun provideAccountAdapter(): Account.Adapter = Account.Adapter(
         currency_codeAdapter = IntColumnAdapter
+    )
+
+    @Provides
+    fun provideLastFetchTimeAdapter(): Last_fetch_time.Adapter = Last_fetch_time.Adapter(
+        timeAdapter = LocalDateTimeAdapter
     )
 }

@@ -1,4 +1,4 @@
-package com.chummer.domain.mono
+package com.chummer.domain.mono.fetchAccounts
 
 import android.util.Log
 import com.chummer.domain.mapping.mono.toDbModel
@@ -15,7 +15,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
-class FetchPersonalInfoUseCase(
+class FetchMonoAccountsUseCase(
     val getPersonalInfoUseCase: GetPersonalInfoUseCase,
     val upsertAccountsUseCase: UpsertAccountsUseCase,
     val upsertJarsUseCase: UpsertJarsUseCase,
@@ -44,6 +44,9 @@ class FetchPersonalInfoUseCase(
             Log.d(KEY, "Finish upserting info")
         }
     }
+
+    private companion object {
+        const val KEY = "FETCH_MONO_ACCOUNTS"
+    }
 }
 
-private const val KEY = "fetch_accounts"

@@ -11,6 +11,10 @@ class GetLastMonoAccountsFetchTimeUseCase(
 ) : PreferencesGetUseCase<String>(KEY, context) {
     override val defaultValue: String = LocalDateTime.MIN.format(DateTimeFormatter.ISO_DATE_TIME)
     override val key: Preferences.Key<String> = lastMonoAccountsFetchTimeKey
+
+    companion object {
+        const val KEY = "GET_LAST_MONO_ACCOUNTS_FETCH_TIME"
+    }
 }
 
 private const val KEY = "get_last_mono_accounts_fetch_time"

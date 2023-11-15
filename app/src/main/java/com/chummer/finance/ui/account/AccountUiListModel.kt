@@ -1,7 +1,7 @@
 package com.chummer.finance.ui.account
 
 import android.content.Context
-import com.chummer.domain.ClientAccountListItem
+import com.chummer.domain.mono.ClientAccountListItem
 import com.chummer.finance.R
 import com.chummer.finance.db.mono.account.AccountListItem
 import com.chummer.finance.db.mono.jar.JarListItem
