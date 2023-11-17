@@ -11,7 +11,8 @@ import com.chummer.domain.mono.fetchTransactions.FetchTransactionsResult
 import com.chummer.finance.db.mono.lastFetchTime.upsertLastFetchTime.UpsertFetchTimeArgument
 import com.chummer.finance.db.mono.lastFetchTime.upsertLastFetchTime.UpsertFetchTimeUseCase
 import com.chummer.models.mapping.toLocalDateTime
-import com.chummer.models.mapping.toUnixSecond
+import com.chummer.preferences.mono.selectedAccountType.ACCOUNT_TYPE_CARD
+import com.chummer.preferences.mono.selectedAccountType.ACCOUNT_TYPE_JAR
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import java.time.LocalDateTime
@@ -35,41 +36,43 @@ class FetchMonoTransactionsWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         return try {
-            val accountId = id.takeIf { type == FETCH_ACCOUNT_TYPE }
-            val jarId = id.takeIf { type == FETCH_JAR_TYPE }
+            val cardId = id.takeIf { type == ACCOUNT_TYPE_CARD }
+            val jarId = id.takeIf { type == ACCOUNT_TYPE_JAR }
 
             var to = LocalDateTime.now()
-            val from = lastFetchTime ?: to.minusMonths(1).withDayOfMonth(1)
+            val previousMonthStart = to.minusMonths(1).withDayOfMonth(1)
+            val from = lastFetchTime ?: previousMonthStart
 
             var fetchFinished = false
             while (!fetchFinished) {
+                Log.d(
+                    TAG,
+                    "Fetching transactions. from - $from, to - $to, last fetch time: $lastFetchTime"
+                )
                 val fetchResult = fetchUseCase(
                     FetchTransactionsArgument(
-                        accountId = accountId,
+                        accountId = cardId,
                         jarId = jarId,
-                        from = from.toUnixSecond(),
-                        to = to.toUnixSecond()
+                        from = from,
+                        to = to
                     )
                 )
 
-
                 fetchFinished = fetchResult.fetchFullyCompleted
 
-                if (fetchResult is FetchTransactionsResult.TransactionsReturned) {
-                    to = fetchResult.oldestTransactionDateTime
+                Log.d(TAG, "Fetched transactions. Fetch completed: $fetchFinished")
+                Log.d(TAG, "Fetch result: $fetchResult")
 
-                    upsertFetchTimeUseCase(
-                        UpsertFetchTimeArgument(
-                            accountId ?: jarId!!,
-                            fetchResult.recentTransactionDateTime
-                        )
-                    )
-                }
+                if (fetchResult is FetchTransactionsResult.TransactionsReturned)
+                    to = fetchResult.oldestTransactionDateTime
+                upsertFetchTimeUseCase(
+                    UpsertFetchTimeArgument(cardId ?: jarId!!, fetchResult.fetchDate)
+                )
             }
 
             Result.success()
         } catch (e: Exception) {
-            Log.e("FetchMonoAccountsWorker", "Failed to fetch accounts", e)
+            Log.e(TAG, "Failed to fetch accounts", e)
             Result.failure()
         }
     }
@@ -79,9 +82,7 @@ class FetchMonoTransactionsWorker @AssistedInject constructor(
         const val ID_KEY = "id"
         const val FETCH_TYPE_KEY = "fetch_type"
         const val LAST_FETCH_TIME_KEY = "last_fetch_time"
-
-        const val FETCH_ACCOUNT_TYPE = 0
-        const val FETCH_JAR_TYPE = 1
+        private const val TAG = "FetchMonoTransactionsWorker"
     }
 
 }

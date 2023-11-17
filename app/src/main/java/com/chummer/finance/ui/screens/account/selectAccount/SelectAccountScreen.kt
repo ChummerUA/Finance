@@ -14,12 +14,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.chummer.finance.AccountNode
 import com.chummer.finance.ui.account.AccountUiListModel
 import com.chummer.finance.ui.account.Display
 import com.chummer.finance.ui.text.ItemTitleText
 import com.chummer.finance.ui.theme.AppTheme
 import com.chummer.finance.utils.rememberStateWithLifecycle
+import com.chummer.finance.AccountNode.Card as CardNode
+import com.chummer.finance.AccountNode.Jar as JarNode
 
 @Composable
 fun SelectAccountScreen(
@@ -30,20 +31,15 @@ fun SelectAccountScreen(
 
     val onItemClicked: (AccountUiListModel) -> Unit = remember {
         { item: AccountUiListModel ->
-            when (item) {
-                is AccountUiListModel.Card, is AccountUiListModel.FOP -> {
-                    screenViewModel.selectAccount(item)
-                    val route = AccountNode.Account.resolve(item.id)
-                    Log.d("SelectAccountScreen", "Navigating to $route")
-                    navController.navigate(
-                        route
-                    )
-                }
-
-                is AccountUiListModel.Jar -> {
-                    // TODO()
-                }
+            screenViewModel.selectAccount(item)
+            val route = when (item) {
+                is AccountUiListModel.Card, is AccountUiListModel.FOP -> CardNode.resolve(item.id)
+                is AccountUiListModel.Jar -> JarNode.resolve(item.id)
             }
+            Log.d(TAG, "Navigating to $route")
+            navController.navigate(
+                route
+            )
         }
     }
 
@@ -112,3 +108,5 @@ private fun AccountUiListModel.View(
         }
     }
 }
+
+private const val TAG = "SelectAccountScreen"

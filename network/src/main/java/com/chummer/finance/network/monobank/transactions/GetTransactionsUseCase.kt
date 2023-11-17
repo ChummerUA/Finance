@@ -3,6 +3,7 @@ package com.chummer.finance.network.monobank.transactions
 import com.chummer.finance.network.utils.deserializeBody
 import com.chummer.infrastructure.network.HttpUseCase
 import com.chummer.infrastructure.network.RequestDefinition
+import com.chummer.models.mapping.toUnixSecond
 import com.chummer.models.mono.GetTransactionsParameters
 import com.chummer.networkmodels.mono.Transaction
 import io.ktor.client.HttpClient
@@ -22,11 +23,13 @@ class GetTransactionsUseCase(
     override suspend fun HttpResponse.deserialize(): List<Transaction> = deserializeBody()
 
     override fun HttpRequestBuilder.configureRequest(parameter: GetTransactionsParameters) {
-        assert(parameter.from > 0 && parameter.to > parameter.from)
+        assert(parameter.from.isBefore(parameter.to))
         assert(parameter.account.isNotBlank())
 
+        val from = parameter.from.toUnixSecond()
+        val to = parameter.to.toUnixSecond()
         this.method = definition.method
-        url("${definition.subPath}/${parameter.account}/${parameter.from}/${parameter.to}")
+        url("${definition.subPath}/${parameter.account}/$from/$to")
     }
 }
 

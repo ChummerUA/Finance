@@ -5,7 +5,10 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.work.Data
+import androidx.work.WorkManager
 import com.chummer.finance.db.mono.account.getAccountFlow.GetAccountFlowUseCase
+import com.chummer.finance.db.mono.lastFetchTime.GetLastTransactionsFetchTimeUseCase
 import com.chummer.finance.db.mono.transaction.getTransaction.GetTransactionsArgument
 import com.chummer.finance.db.mono.transaction.getTransactions.GetTransactionsFlowUseCase
 import com.chummer.finance.db.mono.transaction.getTransactions.ListTransactionItem
@@ -14,27 +17,35 @@ import com.chummer.finance.ui.account.DayWithTransactions
 import com.chummer.finance.ui.account.toUiModel
 import com.chummer.finance.ui.transaction.TransactionUiListModel
 import com.chummer.finance.utils.getFormattedAmountAndCurrency
+import com.chummer.finance.utils.scheduleFetchWorker
 import com.chummer.finance.utils.stateInViewModelScope
 import com.chummer.finance.utils.toDateString
 import com.chummer.finance.utils.toTimeString
+import com.chummer.finance.workers.FetchMonoTransactionsWorker
 import com.chummer.models.mapping.toLocalDateTime
 import com.chummer.models.mapping.toUnixSecond
+import com.chummer.preferences.mono.selectedAccountType.ACCOUNT_TYPE_CARD
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.minutes
 
 @HiltViewModel
 class AccountViewModel @Inject constructor(
     application: Application,
     savedStateHandle: SavedStateHandle,
     getAccountFlow: GetAccountFlowUseCase,
-    getTransactionsFlow: GetTransactionsFlowUseCase
+    getTransactionsFlow: GetTransactionsFlowUseCase,
+    private val getLastTransactionsFetchTime: GetLastTransactionsFetchTimeUseCase,
 ) : AndroidViewModel(application) {
+    private val workerManager = WorkManager.getInstance(application.applicationContext)
+
     private val accountId: String =
         savedStateHandle.get<String>("id") ?: error("missing account id")
 
@@ -60,6 +71,29 @@ class AccountViewModel @Inject constructor(
             days
         )
     }.stateInViewModelScope(viewModelScope)
+
+    init {
+        scheduleFetch()
+    }
+
+    private fun scheduleFetch() = viewModelScope.launch {
+        val lastFetchTime = getLastTransactionsFetchTime(accountId)
+        Log.d("AccountViewModel", "Scheduling fetch. Last fetch time: $lastFetchTime")
+        val data = Data.Builder().apply {
+            putString(FetchMonoTransactionsWorker.ID_KEY, accountId)
+            putInt(FetchMonoTransactionsWorker.FETCH_TYPE_KEY, ACCOUNT_TYPE_CARD)
+            lastFetchTime?.let {
+                putLong(FetchMonoTransactionsWorker.LAST_FETCH_TIME_KEY, it.toUnixSecond())
+            }
+        }.build()
+
+        workerManager.scheduleFetchWorker<FetchMonoTransactionsWorker>(
+            FetchMonoTransactionsWorker.NAME,
+            data,
+            1.minutes,
+            lastFetchTime
+        )
+    }
 }
 
 private fun List<ListTransactionItem>.groupToTransactionsInDays() =
@@ -72,7 +106,6 @@ private fun List<ListTransactionItem>.groupToTransactionsInDays() =
         }.toImmutableList()
 
 private fun List<ListTransactionItem>.toUiTransactions() = map {
-    Log.d("AccountViewModel", "Mapping ${it.time} to ${it.time.toLocalDateTime()}")
     TransactionUiListModel(
         id = it.id,
         name = it.description,
@@ -82,3 +115,6 @@ private fun List<ListTransactionItem>.toUiTransactions() = map {
         null
     )
 }.toImmutableList()
+
+//1696203322/1697713404
+//1697737666/1700264194

@@ -7,7 +7,9 @@ import com.chummer.infrastructure.usecase.ExecutableUseCase
 import com.chummer.models.mapping.toLocalDateTime
 import com.chummer.models.mono.GetTransactionsParameters
 import kotlinx.coroutines.Dispatchers
+import java.time.temporal.ChronoUnit
 import kotlin.coroutines.CoroutineContext
+import kotlin.math.absoluteValue
 
 class FetchMonoTransactionsUseCase(
     private val getTransactionsUseCase: GetTransactionsUseCase,
@@ -20,13 +22,18 @@ class FetchMonoTransactionsUseCase(
         val account = accountId ?: jarId ?: error(
             getArgumentsMessage("account")
         )
-        assert(from > 0) { getArgumentsMessage("from") }
-        assert(to > 0) { getArgumentsMessage("to") }
+
+        val requestExceedsTimeLimit =
+            ChronoUnit.DAYS.between(from, to).absoluteValue > REQUEST_DAYS_LIMIT
+
+        val actualFrom = if (requestExceedsTimeLimit)
+            to.minusDays(REQUEST_DAYS_LIMIT)
+        else from
 
         val transactions = getTransactionsUseCase(
             GetTransactionsParameters(
                 account = account,
-                from = from,
+                from = actualFrom,
                 to = to
             )
         )
@@ -40,12 +47,12 @@ class FetchMonoTransactionsUseCase(
         )
         return when {
             transactions.isNotEmpty() -> FetchTransactionsResult.TransactionsReturned(
-                fetchFullyCompleted = transactions.size == MAX_TRANSACTIONS_IN_RESPONSE,
+                fetchFullyCompleted = transactions.size < MAX_TRANSACTIONS_IN_RESPONSE && !requestExceedsTimeLimit,
                 recentTransactionDateTime = transactions.maxOf { it.time }.toLocalDateTime(),
-                oldestTransactionDateTime = transactions.maxOf { it.time }.toLocalDateTime()
+                oldestTransactionDateTime = transactions.minOf { it.time }.toLocalDateTime()
             )
 
-            else -> FetchTransactionsResult.NoTransactionsReturned
+            else -> FetchTransactionsResult.NoTransactionsReturned(to)
         }
     }
 
@@ -54,5 +61,6 @@ class FetchMonoTransactionsUseCase(
     private companion object {
         const val KEY = "FETCH_MONO_TRANSACTIONS"
         const val MAX_TRANSACTIONS_IN_RESPONSE = 500
+        const val REQUEST_DAYS_LIMIT = 30L
     }
 }

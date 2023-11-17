@@ -24,6 +24,7 @@ android {
         }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = ConfigData.javaVersion
         targetCompatibility = ConfigData.javaVersion
     }
@@ -46,4 +47,6 @@ dependencies {
     implementation(Dependencies.Dagger.hilt)
     ksp(Dependencies.Dagger.compiler)
     ksp(Dependencies.Dagger.hiltCompiler)
+
+    coreLibraryDesugaring(Dependencies.desugaring)
 }

@@ -15,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.chummer.finance.ui.screens.account.AccountScreen
 import com.chummer.finance.ui.screens.account.selectAccount.SelectAccountScreen
+import com.chummer.finance.ui.screens.splash.SplashScreen
 import com.chummer.finance.ui.theme.AppTheme
 
 @Composable
@@ -28,6 +29,7 @@ fun Navigation(navController: NavHostController, start: NodeDefinition) = NavHos
     AccountNode.all.forEach {
         addNode(it, navController)
     }
+    addNode(SplashNode, navController)
 }
 
 sealed interface AccountNode : NodeDefinition {
@@ -38,8 +40,8 @@ sealed interface AccountNode : NodeDefinition {
         override fun Screen(navController: NavController) = SelectAccountScreen(navController)
     }
 
-    data object Account : AccountNode {
-        override val route: String = "account"
+    data object Card : AccountNode {
+        override val route: String = "card"
 
         override val arguments: List<NamedNavArgument> = listOf(
             navArgument("id") { type = NavType.StringType }
@@ -51,9 +53,33 @@ sealed interface AccountNode : NodeDefinition {
         fun resolve(id: String) = "$route/$id"
     }
 
+    data object Jar : AccountNode {
+        override val route: String = "jar"
+
+        override val arguments: List<NamedNavArgument> = listOf(
+            navArgument("id") { type = NavType.StringType }
+        )
+
+        @Composable
+        override fun Screen(navController: NavController) {
+//            JarScreen(navController)
+        }
+
+        fun resolve(id: String) = "$route/$id"
+    }
+
     companion object {
         val all
-            get() = listOf(SelectAccount, Account)
+            get() = listOf(SelectAccount, Card)
+    }
+}
+
+object SplashNode : NodeDefinition {
+    override val route: String = "start"
+
+    @Composable
+    override fun Screen(navController: NavController) {
+        SplashScreen(navController = navController)
     }
 }
 

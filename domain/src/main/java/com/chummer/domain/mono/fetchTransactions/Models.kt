@@ -5,20 +5,23 @@ import java.time.LocalDateTime
 data class FetchTransactionsArgument(
     val accountId: String?,
     val jarId: String?,
-    val from: Long,
-    val to: Long
+    val from: LocalDateTime,
+    val to: LocalDateTime
 )
 
 sealed interface FetchTransactionsResult {
     val fetchFullyCompleted: Boolean
+    val fetchDate: LocalDateTime
 
     data class TransactionsReturned(
         override val fetchFullyCompleted: Boolean,
         val recentTransactionDateTime: LocalDateTime,
-        val oldestTransactionDateTime: LocalDateTime
+        val oldestTransactionDateTime: LocalDateTime,
+        override val fetchDate: LocalDateTime = recentTransactionDateTime
     ) : FetchTransactionsResult
 
-    data object NoTransactionsReturned : FetchTransactionsResult {
+    data class NoTransactionsReturned(
+        override val fetchDate: LocalDateTime,
         override val fetchFullyCompleted: Boolean = true
-    }
+    ) : FetchTransactionsResult
 }
