@@ -37,25 +37,62 @@ fun AccountScreen(
 fun AccountUiState.DisplayContent() {
     LazyColumn {
         item(key = "account") {
-            account.Display()
+            when (account) {
+                is AccountUiModel.Card -> account.Display()
+                is AccountUiModel.FOP -> account.Display()
+            }
         }
         transactions(daysWithTransactions)
     }
 }
 
 @Composable
-fun AccountUiModel.Display() {
+fun AccountUiModel.Card.Display() {
+    val colors = AppTheme.colors
     Row(
         Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
         ItemTitleText(
             text = title,
-            color = AppTheme.colors.textPrimary,
+            color = colors.textPrimary,
             modifier = Modifier
                 .weight(1f)
                 .wrapContentHeight()
         )
-        ClickableText(text = selectAllText, color = AppTheme.colors.primary)
+        ClickableText(
+            text = selectAllText,
+            color = colors.primary
+        )
+    }
+
+    cardNumber.Display()
+
+    val dividerPadding = remember { PaddingValues(horizontal = 16.dp) }
+    DividerView(
+        paddingValues = dividerPadding
+    )
+
+    BalanceView(balance, creditInfo)
+
+    DividerView(
+        paddingValues = dividerPadding
+    )
+}
+
+@Composable
+fun AccountUiModel.FOP.Display() {
+    val colors = AppTheme.colors
+    Row(
+        Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        ItemTitleText(
+            text = title,
+            color = colors.textPrimary,
+            modifier = Modifier
+                .weight(1f)
+                .wrapContentHeight()
+        )
+        ClickableText(text = selectAllText, color = colors.primary)
     }
 
     cardNumber.Display()
@@ -66,7 +103,7 @@ fun AccountUiModel.Display() {
         paddingValues = dividerPadding
     )
 
-    BalanceView(balance)
+    BalanceView(balance, creditInfo)
 
     DividerView(
         paddingValues = dividerPadding

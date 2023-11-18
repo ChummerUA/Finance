@@ -19,16 +19,13 @@ sealed class AccountUiModel(
     open val title: String,
     open val selectAllText: String,
     open val cardNumber: AccountInfoItem,
-    open val iban: AccountInfoItem,
     open val balance: AccountInfoItem
 ) {
-
     data class Card(
         override val id: String,
         override val title: String,
         override val selectAllText: String,
         override val cardNumber: AccountInfoItem,
-        override val iban: AccountInfoItem,
         override val balance: AccountInfoItem,
         val creditInfo: AccountInfoItem?
     ) : AccountUiModel(
@@ -36,8 +33,7 @@ sealed class AccountUiModel(
         title = title,
         selectAllText = selectAllText,
         cardNumber = cardNumber,
-        iban = iban,
-        balance = balance,
+        balance = balance
     )
 
     data class FOP(
@@ -45,14 +41,14 @@ sealed class AccountUiModel(
         override val title: String,
         override val selectAllText: String,
         override val cardNumber: AccountInfoItem,
-        override val iban: AccountInfoItem,
+        val iban: AccountInfoItem,
         override val balance: AccountInfoItem,
+        val creditInfo: AccountInfoItem?
     ) : AccountUiModel(
         id = id,
         title = title,
         selectAllText = selectAllText,
         cardNumber = cardNumber,
-        iban = iban,
         balance = balance
     )
 }
@@ -80,10 +76,6 @@ private fun AccountItem.toCardUiModel(context: Context) = AccountUiModel.Card(
         context.getString(R.string.account_card_number),
         cardNumber
     ),
-    iban = AccountInfoItem(
-        context.getString(R.string.account_iban),
-        iban
-    ),
     balance = AccountInfoItem(
         context.getString(R.string.account_balance),
         getFormattedAmountAndCurrency(balance, currencyCode)
@@ -106,11 +98,12 @@ private fun AccountItem.toFopUiModel(context: Context) = AccountUiModel.FOP(
     balance = AccountInfoItem(
         context.getString(R.string.account_balance),
         getFormattedAmountAndCurrency(balance, currencyCode)
-    )
+    ),
+    creditInfo = getCreditInfo(context)
 )
 
 private fun AccountItem.getCreditInfo(context: Context): AccountInfoItem? {
-    return if (balance < creditLimit) AccountInfoItem(
+    return if (balance > creditLimit) AccountInfoItem(
         context.getString(R.string.account_your_money),
         getFormattedAmountAndCurrency(balance - creditLimit, currencyCode)
     ) else null
