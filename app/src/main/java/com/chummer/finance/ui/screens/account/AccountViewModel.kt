@@ -115,6 +115,3 @@ private fun List<ListTransactionItem>.toUiTransactions() = map {
         null
     )
 }.toImmutableList()
-
-//1696203322/1697713404
-//1697737666/1700264194
