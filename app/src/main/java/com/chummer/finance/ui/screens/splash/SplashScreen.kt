@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.chummer.finance.navigation.SplashNode
 import com.chummer.finance.navigation.nodes.AccountNode
 import com.chummer.finance.ui.screens.splash.SplashViewModel.NavigationEvent.Card
 import com.chummer.finance.ui.screens.splash.SplashViewModel.NavigationEvent.Jar
@@ -23,7 +24,11 @@ fun SplashScreen(
                 is Jar -> AccountNode.Jar.resolve(event.id)
                 is SelectAccount -> AccountNode.SelectAccount.fullRoute
             }
-            navController.navigate(route)
+            navController.navigate(route) {
+                popUpTo(SplashNode.fullRoute) {
+                    inclusive = true
+                }
+            }
         }
     }
 }

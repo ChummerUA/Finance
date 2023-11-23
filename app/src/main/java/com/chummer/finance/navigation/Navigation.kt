@@ -36,11 +36,3 @@ data object SplashNode : NodeDefinition {
         SplashScreen(navController)
     }
 }
-
-fun NavController.popUpTo(route: String, inclusive: Boolean = false) {
-    navigate(route) {
-        popUpTo(route) {
-            this.inclusive = inclusive
-        }
-    }
-}

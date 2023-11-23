@@ -14,7 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.chummer.finance.navigation.popUpTo
+import com.chummer.finance.navigation.nodes.AccountNode
 import com.chummer.finance.ui.account.AccountUiListModel
 import com.chummer.finance.ui.account.Display
 import com.chummer.finance.ui.text.ItemTitleText
@@ -38,9 +38,11 @@ fun SelectAccountScreen(
                 is AccountUiListModel.Jar -> JarNode.resolve(item.id)
             }
             Log.d(TAG, "Navigating to $route")
-            navController.popUpTo(
-                route
-            )
+            navController.navigate(route) {
+                popUpTo(AccountNode.SelectAccount.fullRoute) {
+                    inclusive = true
+                }
+            }
         }
     }
 

@@ -13,8 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.chummer.finance.navigation.nodes.AccountNode
 import com.chummer.finance.navigation.nodes.AccountNode.SelectAccount
-import com.chummer.finance.navigation.popUpTo
 import com.chummer.finance.ui.BalanceView
 import com.chummer.finance.ui.DividerView
 import com.chummer.finance.ui.account.AccountUiModel
@@ -34,15 +34,22 @@ fun CardScreen(
 ) {
     val state by rememberStateWithLifecycle(screenViewModel.state)
 
-    val onSelectAccountClicked = remember {
-        { navController.popUpTo(SelectAccount.fullRoute) }
+    val onSelectAccountClicked: ((String) -> Unit) = remember {
+        { id ->
+            // TODO figure out why card screen not popped up
+            navController.navigate(SelectAccount.fullRoute) {
+                popUpTo(AccountNode.Card.resolve(id)) {
+                    inclusive = true
+                }
+            }
+        }
     }
     state?.DisplayContent(onSelectAccountClicked)
 }
 
 @Composable
 fun CardUiState.DisplayContent(
-    onSelectAccountClicked: (() -> Unit)
+    onSelectAccountClicked: (String) -> Unit
 ) = LazyColumn {
     item(key = "account") {
         when (account) {
@@ -55,7 +62,7 @@ fun CardUiState.DisplayContent(
 
 @Composable
 private fun Card.Display(
-    onSelectAccountClicked: (() -> Unit)
+    onSelectAccountClicked: ((String) -> Unit)
 ) {
     CardNameView(onSelectAccountClicked)
 
@@ -75,7 +82,7 @@ private fun Card.Display(
 
 @Composable
 private fun FOP.Display(
-    onSelectAccountClicked: (() -> Unit)
+    onSelectAccountClicked: ((String) -> Unit)
 ) {
     CardNameView(onSelectAccountClicked)
 
@@ -96,10 +103,12 @@ private fun FOP.Display(
 
 @Composable
 private fun AccountUiModel.CardNameView(
-    onSelectAccountClicked: () -> Unit
+    onSelectAccountClicked: (String) -> Unit
 ) = Row(
     Modifier
-        .clickable(onClick = onSelectAccountClicked)
+        .clickable {
+            onSelectAccountClicked(id)
+        }
         .padding(horizontal = 16.dp, vertical = 8.dp)
 ) {
     val colors = AppTheme.colors
