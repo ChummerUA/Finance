@@ -1,7 +1,10 @@
 package com.chummer.finance.navigation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
@@ -16,6 +19,7 @@ fun Navigation(navController: NavHostController, start: NodeDefinition) = NavHos
     navController = navController,
     startDestination = start.route,
     Modifier
+        .windowInsetsPadding(WindowInsets.statusBars)
         .background(AppTheme.colors.backgroundPrimary)
         .fillMaxSize(1f)
 ) {
