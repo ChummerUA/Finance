@@ -20,4 +20,7 @@
     <string name="card_platinum">Платинова картка</string>
     <string name="card_iron">Залізна картка</string>
     <string name="card_e_aid">єДопомога</string>
+
+    <string name="date_format_full">d MMMM y р.</string>
+    <string name="date_format_short">d MMMM</string>
 </resources>

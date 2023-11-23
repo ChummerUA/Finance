@@ -1,6 +1,7 @@
 package com.chummer.finance.ui.screens.card
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
@@ -58,7 +59,7 @@ class CardViewModel @Inject constructor(
     private val daysWithTransactionsFlow: Flow<ImmutableList<DayWithTransactions>> =
         getTransactionsFlow(
             argument
-        ).map { it.groupToTransactionsInDays() }
+        ).map { it.groupToTransactionsInDays(application) }
 
     private val accountFlow = getAccountFlow(accountId).map {
         it.toUiModel(application)
@@ -95,8 +96,8 @@ class CardViewModel @Inject constructor(
     }
 }
 
-private fun List<ListTransactionItem>.groupToTransactionsInDays() =
-    groupBy { it.time.toLocalDateTime().toLocalDate().toDateString() }
+private fun List<ListTransactionItem>.groupToTransactionsInDays(context: Context) =
+    groupBy { it.time.toLocalDateTime().toLocalDate().toDateString(context) }
         .map { (date, items) ->
             DayWithTransactions(
                 date,

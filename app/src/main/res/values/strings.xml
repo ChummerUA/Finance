@@ -20,4 +20,7 @@
     <string name="card_platinum">Platinum card</string>
     <string name="card_iron">Iron card</string>
     <string name="card_e_aid">eAid</string>
+
+    <string name="date_format_full">MMMM d, y</string>
+    <string name="date_format_short">MMMM d</string>
 </resources>
