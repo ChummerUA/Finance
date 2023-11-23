@@ -1,4 +1,4 @@
-package com.chummer.finance.ui.screens.account
+package com.chummer.finance.ui.screens.card
 
 import android.app.Application
 import android.util.Log
@@ -12,7 +12,6 @@ import com.chummer.finance.db.mono.lastFetchTime.GetLastTransactionsFetchTimeUse
 import com.chummer.finance.db.mono.transaction.getTransaction.GetTransactionsArgument
 import com.chummer.finance.db.mono.transaction.getTransactions.GetTransactionsFlowUseCase
 import com.chummer.finance.db.mono.transaction.getTransactions.ListTransactionItem
-import com.chummer.finance.ui.account.AccountUiState
 import com.chummer.finance.ui.account.DayWithTransactions
 import com.chummer.finance.ui.account.toUiModel
 import com.chummer.finance.ui.transaction.TransactionUiListModel
@@ -37,7 +36,7 @@ import javax.inject.Inject
 import kotlin.time.Duration.Companion.minutes
 
 @HiltViewModel
-class AccountViewModel @Inject constructor(
+class CardViewModel @Inject constructor(
     application: Application,
     savedStateHandle: SavedStateHandle,
     getAccountFlow: GetAccountFlowUseCase,
@@ -66,7 +65,7 @@ class AccountViewModel @Inject constructor(
     }
 
     val state = combine(accountFlow, daysWithTransactionsFlow) { account, days ->
-        AccountUiState(
+        CardUiState(
             account,
             days
         )

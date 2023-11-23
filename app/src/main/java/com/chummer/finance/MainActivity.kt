@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.compose.rememberNavController
+import com.chummer.finance.navigation.Navigation
+import com.chummer.finance.navigation.SplashNode
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

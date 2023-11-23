@@ -1,4 +1,4 @@
-package com.chummer.finance.ui.screens.account.selectAccount
+package com.chummer.finance.ui.screens.selectAccount
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

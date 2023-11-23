@@ -1,4 +1,4 @@
-package com.chummer.finance.ui.screens.account.selectAccount
+package com.chummer.finance.ui.screens.selectAccount
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
@@ -14,13 +14,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.chummer.finance.navigation.popUpTo
 import com.chummer.finance.ui.account.AccountUiListModel
 import com.chummer.finance.ui.account.Display
 import com.chummer.finance.ui.text.ItemTitleText
 import com.chummer.finance.ui.theme.AppTheme
 import com.chummer.finance.utils.rememberStateWithLifecycle
-import com.chummer.finance.AccountNode.Card as CardNode
-import com.chummer.finance.AccountNode.Jar as JarNode
+import com.chummer.finance.navigation.nodes.AccountNode.Card as CardNode
+import com.chummer.finance.navigation.nodes.AccountNode.Jar as JarNode
 
 @Composable
 fun SelectAccountScreen(
@@ -37,7 +38,7 @@ fun SelectAccountScreen(
                 is AccountUiListModel.Jar -> JarNode.resolve(item.id)
             }
             Log.d(TAG, "Navigating to $route")
-            navController.navigate(
+            navController.popUpTo(
                 route
             )
         }

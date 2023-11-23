@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.chummer.finance.AccountNode
+import com.chummer.finance.navigation.nodes.AccountNode
 import com.chummer.finance.ui.screens.splash.SplashViewModel.NavigationEvent.Card
 import com.chummer.finance.ui.screens.splash.SplashViewModel.NavigationEvent.Jar
 import com.chummer.finance.ui.screens.splash.SplashViewModel.NavigationEvent.SelectAccount

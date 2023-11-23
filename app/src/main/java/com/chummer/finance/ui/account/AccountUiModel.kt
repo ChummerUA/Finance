@@ -9,11 +9,6 @@ import com.chummer.finance.utils.getFormattedAmountAndCurrency
 import com.chummer.networkmodels.mono.CARD_TYPE_FOP
 import kotlinx.collections.immutable.ImmutableList
 
-data class AccountUiState(
-    val account: AccountUiModel,
-    val daysWithTransactions: ImmutableList<DayWithTransactions>
-)
-
 sealed class AccountUiModel(
     open val id: String,
     open val title: String,
