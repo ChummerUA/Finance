@@ -86,7 +86,6 @@ private fun FOP.Display(
 ) {
     CardNameView(onSelectAccountClicked)
 
-    cardNumber.Display()
     iban.Display()
 
     val dividerPadding = remember { PaddingValues(horizontal = 16.dp) }

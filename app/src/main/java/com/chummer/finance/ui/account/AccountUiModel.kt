@@ -13,21 +13,19 @@ sealed class AccountUiModel(
     open val id: String,
     open val title: String,
     open val selectAllText: String,
-    open val cardNumber: AccountInfoItem,
     open val balance: AccountInfoItem
 ) {
     data class Card(
         override val id: String,
         override val title: String,
         override val selectAllText: String,
-        override val cardNumber: AccountInfoItem,
+        val cardNumber: AccountInfoItem,
         override val balance: AccountInfoItem,
         val creditInfo: AccountInfoItem?
     ) : AccountUiModel(
         id = id,
         title = title,
         selectAllText = selectAllText,
-        cardNumber = cardNumber,
         balance = balance
     )
 
@@ -35,7 +33,6 @@ sealed class AccountUiModel(
         override val id: String,
         override val title: String,
         override val selectAllText: String,
-        override val cardNumber: AccountInfoItem,
         val iban: AccountInfoItem,
         override val balance: AccountInfoItem,
         val creditInfo: AccountInfoItem?
@@ -43,7 +40,6 @@ sealed class AccountUiModel(
         id = id,
         title = title,
         selectAllText = selectAllText,
-        cardNumber = cardNumber,
         balance = balance
     )
 }
@@ -82,10 +78,6 @@ private fun AccountItem.toFopUiModel(context: Context) = AccountUiModel.FOP(
     id = id,
     title = getAccountName(currencyCode, type, context),
     selectAllText = context.getString(R.string.account_select_all_accounts),
-    cardNumber = AccountInfoItem(
-        context.getString(R.string.account_card_number),
-        cardNumber
-    ),
     iban = AccountInfoItem(
         context.getString(R.string.account_iban),
         iban
@@ -98,7 +90,7 @@ private fun AccountItem.toFopUiModel(context: Context) = AccountUiModel.FOP(
 )
 
 private fun AccountItem.getCreditInfo(context: Context): AccountInfoItem? {
-    return if (balance > creditLimit) AccountInfoItem(
+    return if (balance > creditLimit && creditLimit != 0L) AccountInfoItem(
         context.getString(R.string.account_your_money),
         getFormattedAmountAndCurrency(balance - creditLimit, currencyCode)
     ) else null
