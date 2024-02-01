@@ -31,7 +31,7 @@ import kotlinx.collections.immutable.ImmutableList
 fun LazyListScope.transactions(daysWithTransactions: ImmutableList<DayWithTransactions>) {
     for (day in daysWithTransactions) {
         stickyHeader {
-            DayHeader(day.day)
+            DayHeader(day.title)
         }
         items(day.transactions, key = { it.id }) {
             TransactionListItemView(transaction = it)

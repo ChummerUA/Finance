@@ -74,13 +74,21 @@ upsertOperation {
 }
 
 getOperations:
-SELECT id, time, description, operation_amount, currency_code, mcc, original_mcc, cashback_amount
-FROM operation
-WHERE time < :time AND account_id = :accountId AND jar_id = :jarId
-ORDER BY time DESC, id DESC
-LIMIT :pageSize;
+    SELECT * FROM
+        (SELECT id, time, description, operation_amount, currency_code, mcc, original_mcc, cashback_amount
+        FROM operation
+        WHERE time > :time AND account_id = :accountId
+        ORDER BY time DESC
+        LIMIT :backwardSize)
+    UNION
+    SELECT * FROM
+        (SELECT id, time, description, operation_amount, currency_code, mcc, original_mcc, cashback_amount
+        FROM operation
+        WHERE time <= :time AND account_id = :accountId
+        ORDER BY time DESC
+        LIMIT :forwardSize);
 
 getOpertionById:
-SELECT *
-FROM operation
-WHERE operation.id = :transactionId;
+    SELECT *
+    FROM operation
+    WHERE operation.id = :transactionId;

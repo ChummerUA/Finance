@@ -16,6 +16,7 @@ import com.chummer.finance.db.mono.transaction.getTransactions.ListTransactionIt
 import com.chummer.finance.ui.account.DayWithTransactions
 import com.chummer.finance.ui.account.toUiModel
 import com.chummer.finance.ui.transaction.TransactionUiListModel
+import com.chummer.finance.utils.PagingDirection
 import com.chummer.finance.utils.getFormattedAmountAndCurrency
 import com.chummer.finance.utils.scheduleFetchWorker
 import com.chummer.finance.utils.stateInViewModelScope
@@ -28,42 +29,61 @@ import com.chummer.preferences.mono.selectedAccountType.ACCOUNT_TYPE_CARD
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.minutes
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class CardViewModel @Inject constructor(
     application: Application,
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     getAccountFlow: GetAccountFlowUseCase,
     getTransactionsFlow: GetTransactionsFlowUseCase,
     private val getLastTransactionsFetchTime: GetLastTransactionsFetchTimeUseCase,
 ) : AndroidViewModel(application) {
+
     private val workerManager = WorkManager.getInstance(application.applicationContext)
 
-    private val accountId: String =
-        savedStateHandle.get<String>("id") ?: error("missing account id")
+    private val accountId: String = savedStateHandle["id"] ?: error("missing account id")
 
-    private val argument = GetTransactionsArgument(
-        accountId,
-        null,
-        LocalDateTime.now().toUnixSecond(),
-        50
-    )
+    private val dateTimeArgument =
+        savedStateHandle.getStateFlow(DATE_TIME_ARGUMENT_KEY, LocalDateTime.now().toUnixSecond())
+    private val pages = savedStateHandle.getStateFlow(PAGES_COUNT_KEY, 1L)
+    private val isBackDirection = savedStateHandle.getStateFlow(IS_BACK_DIRECTION_KEY, false)
 
-    private val daysWithTransactionsFlow: Flow<ImmutableList<DayWithTransactions>> =
-        getTransactionsFlow(
-            argument
-        ).map { it.groupToTransactionsInDays(application) }
+    private val argument = combine(
+        dateTimeArgument,
+        pages,
+        isBackDirection
+    ) { dateTimeArgument, pages, isBackDirection ->
+        GetTransactionsArgument(
+            accountId = accountId,
+            time = dateTimeArgument,
+            pageSize = PAGE_SIZE,
+            pages = pages,
+            shiftOnePageBack = isBackDirection
+        )
+    }
 
     private val accountFlow = getAccountFlow(accountId).map {
         it.toUiModel(application)
     }
+
+    private val transactions = argument.flatMapLatest { getTransactionsFlow(it) }
+    private val firstTransactionOnSecondPage = transactions.map {
+        it.drop(PAGE_SIZE.toInt()).first()
+    }
+
+    private val daysWithTransactionsFlow: Flow<ImmutableList<DayWithTransactions>> =
+        transactions.map { it.groupToTransactionsInDays(application) }
 
     val state = combine(accountFlow, daysWithTransactionsFlow) { account, days ->
         CardUiState(
@@ -74,11 +94,16 @@ class CardViewModel @Inject constructor(
 
     init {
         scheduleFetch()
+        viewModelScope.launch {
+            argument.collect {
+                Log.d(TAG, "Loading transactions. From ${it.time}, ${it.pages} pages")
+            }
+        }
     }
 
     private fun scheduleFetch() = viewModelScope.launch {
         val lastFetchTime = getLastTransactionsFetchTime(accountId)
-        Log.d("AccountViewModel", "Scheduling fetch. Last fetch time: $lastFetchTime")
+        Log.d(TAG, "Scheduling fetch. Last fetch time: $lastFetchTime")
         val data = Data.Builder().apply {
             putString(FetchMonoTransactionsWorker.ID_KEY, accountId)
             putInt(FetchMonoTransactionsWorker.FETCH_TYPE_KEY, ACCOUNT_TYPE_CARD)
@@ -94,16 +119,31 @@ class CardViewModel @Inject constructor(
             lastFetchTime
         )
     }
+
+    fun updatePages(direction: PagingDirection) = viewModelScope.launch {
+        if (direction is PagingDirection.Forward) {
+            pages.value.let {
+                if (it < MAX_PAGES)
+                    savedStateHandle[PAGES_COUNT_KEY] = it + 1
+                else
+                    savedStateHandle[DATE_TIME_ARGUMENT_KEY] =
+                        firstTransactionOnSecondPage.first().time
+            }
+        } else savedStateHandle[IS_BACK_DIRECTION_KEY] = pages.value > MAX_PAGES
+    }
 }
 
 private fun List<ListTransactionItem>.groupToTransactionsInDays(context: Context) =
-    groupBy { it.time.toLocalDateTime().toLocalDate().toDateString(context) }
+    groupBy { it.time.toLocalDateTime().toLocalDate() }
         .map { (date, items) ->
             DayWithTransactions(
                 date,
+                date.toDateString(context),
                 items.toUiTransactions()
             )
-        }.toImmutableList()
+        }
+        .sortedByDescending { it.date.toUnixSecond() }
+        .toImmutableList()
 
 private fun List<ListTransactionItem>.toUiTransactions() = map {
     TransactionUiListModel(
@@ -115,3 +155,12 @@ private fun List<ListTransactionItem>.toUiTransactions() = map {
         null
     )
 }.toImmutableList()
+
+private const val TAG = "CardViewModel"
+
+private const val PAGE_SIZE = 50L
+private const val MAX_PAGES = 6L
+
+private const val DATE_TIME_ARGUMENT_KEY = "date_time"
+private const val PAGES_COUNT_KEY = "pages_count"
+private const val IS_BACK_DIRECTION_KEY = "is_back_direction"

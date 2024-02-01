@@ -8,6 +8,7 @@ import com.chummer.finance.utils.getAccountName
 import com.chummer.finance.utils.getFormattedAmountAndCurrency
 import com.chummer.networkmodels.mono.CARD_TYPE_FOP
 import kotlinx.collections.immutable.ImmutableList
+import java.time.LocalDate
 
 sealed class AccountUiModel(
     open val id: String,
@@ -50,7 +51,8 @@ data class AccountInfoItem(
 )
 
 data class DayWithTransactions(
-    val day: String,
+    val date: LocalDate,
+    val title: String,
     val transactions: ImmutableList<TransactionUiListModel>
 )
 

@@ -1,5 +1,6 @@
 package com.chummer.finance.db.mono.transaction.getTransactions
 
+import android.util.Log
 import app.cash.sqldelight.Query
 import com.chummer.finance.db.mono.transaction.TransactionQueries
 import com.chummer.finance.db.mono.transaction.getTransaction.GetTransactionsArgument
@@ -13,12 +14,19 @@ class GetTransactionsFlowUseCase(
     transacter
 ) {
     override fun TransactionQueries.getQuery(argument: GetTransactionsArgument): Query<ListTransactionItem> {
-        val (accountId, jarId, from, pageSize) = argument
+        val (accountId, from, pageSize, pages, shiftBack) = argument
+        val forwardSize = if (shiftBack) (pages - 1) * pageSize else pages * pageSize
+        val backwardSize = if (shiftBack) pageSize else 0L
+
+        Log.d(
+            KEY,
+            "Getting operations. Time: $from, forwardSize: $forwardSize, backwardSize: $backwardSize"
+        )
         return transacter.getOperations(
             time = from,
-            pageSize = pageSize.toLong(),
             accountId = accountId,
-            jarId = jarId
+            forwardSize = forwardSize,
+            backwardSize = backwardSize
         ) { id, time, description, operation_amount, currency_code, mcc, original_mcc, cashback_amount ->
             ListTransactionItem(
                 id = id,
