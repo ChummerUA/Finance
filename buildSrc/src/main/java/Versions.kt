@@ -43,4 +43,7 @@ object Versions {
 
     const val ksp = "1.9.10-1.0.13"
     const val desugaring = "2.0.3"
+
+    const val firebaseBom = "32.7.0"
+    const val googleServices = "4.4.0"
 }

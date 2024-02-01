@@ -3,6 +3,7 @@ plugins {
     id(Plugins.JetBrains.android)
     id(Plugins.hilt)
     id(Plugins.ksp)
+    id(Plugins.googleServices)
 }
 
 android {
@@ -76,4 +77,7 @@ dependencies {
 
     implementation(Dependencies.AndroidX.work)
     coreLibraryDesugaring(Dependencies.desugaring)
+
+    implementation(platform(Dependencies.Firebase.bom))
+    implementation(Dependencies.Firebase.analytics)
 }

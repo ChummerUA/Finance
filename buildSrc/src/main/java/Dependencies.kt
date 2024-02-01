@@ -99,4 +99,12 @@ object Dependencies {
     }
 
     const val desugaring = "com.android.tools:desugar_jdk_libs:${Versions.desugaring}"
+
+    object Firebase {
+        const val root = "com.google.firebase"
+
+        const val googleServices = "com.google.gms.gogogle-services"
+        const val bom = "$root:firebase-bom:${Versions.firebaseBom}"
+        const val analytics = "$root:firebase-analytics"
+    }
 }

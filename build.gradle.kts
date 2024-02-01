@@ -22,4 +22,5 @@ plugins {
     id(Plugins.sqlDelight) version Versions.sqlDelight apply false
     id(Plugins.hilt) version Versions.Hilt.dagger apply false
     id(Plugins.ksp) version Versions.ksp apply false
+    id(Plugins.googleServices) version Versions.googleServices apply false
 }
