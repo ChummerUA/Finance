@@ -7,7 +7,7 @@ import com.chummer.finance.db.mono.account.AccountListItem
 import com.chummer.finance.db.mono.jar.JarListItem
 import com.chummer.finance.utils.getAccountName
 import com.chummer.finance.utils.getFormattedAmountAndCurrency
-import com.chummer.networkmodels.mono.CARD_TYPE_FOP
+import com.chummer.finance.network.monobank.account.CARD_TYPE_FOP
 
 sealed class AccountUiListModel(
     open val id: String,

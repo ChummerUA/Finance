@@ -4,8 +4,6 @@ import com.chummer.finance.network.utils.deserializeBody
 import com.chummer.infrastructure.network.HttpUseCase
 import com.chummer.infrastructure.network.RequestDefinition
 import com.chummer.models.mapping.toUnixSecond
-import com.chummer.models.mono.GetTransactionsParameters
-import com.chummer.networkmodels.mono.Transaction
 import io.ktor.client.HttpClient
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.url

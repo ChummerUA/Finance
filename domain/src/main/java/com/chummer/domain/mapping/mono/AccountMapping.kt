@@ -1,6 +1,6 @@
 package com.chummer.domain.mapping.mono
 
-import com.chummer.networkmodels.mono.Account as NetworkAccount
+import com.chummer.finance.network.monobank.account.Account as NetworkAccount
 import mono.Account as DbAccount
 
 fun NetworkAccount.toDbModel(clientId: String) = DbAccount(

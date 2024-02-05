@@ -1,6 +1,13 @@
-package com.chummer.networkmodels.mono
+package com.chummer.finance.network.monobank.transactions
 
 import kotlinx.serialization.Serializable
+import java.time.LocalDateTime
+
+data class GetTransactionsParameters(
+    val account: String,
+    val from: LocalDateTime,
+    val to: LocalDateTime
+)
 
 @Serializable
 data class Transaction(

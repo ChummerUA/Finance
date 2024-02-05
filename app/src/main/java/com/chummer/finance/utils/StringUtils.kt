@@ -2,12 +2,12 @@ package com.chummer.finance.utils
 
 import android.content.Context
 import com.chummer.finance.R
-import com.chummer.networkmodels.mono.CARD_TYPE_BLACK
-import com.chummer.networkmodels.mono.CARD_TYPE_EAID
-import com.chummer.networkmodels.mono.CARD_TYPE_IRON
-import com.chummer.networkmodels.mono.CARD_TYPE_PLATINUM
-import com.chummer.networkmodels.mono.CARD_TYPE_WHITE
-import com.chummer.networkmodels.mono.CARD_TYPE_YELLOW
+import com.chummer.finance.network.monobank.account.CARD_TYPE_BLACK
+import com.chummer.finance.network.monobank.account.CARD_TYPE_EAID
+import com.chummer.finance.network.monobank.account.CARD_TYPE_IRON
+import com.chummer.finance.network.monobank.account.CARD_TYPE_PLATINUM
+import com.chummer.finance.network.monobank.account.CARD_TYPE_WHITE
+import com.chummer.finance.network.monobank.account.CARD_TYPE_YELLOW
 import java.text.NumberFormat
 import java.time.LocalDate
 import java.time.LocalDateTime

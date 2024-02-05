@@ -35,7 +35,6 @@ android {
 
 dependencies {
     api(Dependencies.Infrastructure.db)
-    api(project(mapOf("path" to ":networkModels")))
     implementation(Dependencies.SqlDelight.adapters)
     implementation(Dependencies.Dagger.hilt)
     ksp(Dependencies.Dagger.compiler)

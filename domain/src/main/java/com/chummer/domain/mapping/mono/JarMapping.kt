@@ -1,6 +1,6 @@
 package com.chummer.domain.mapping.mono
 
-import com.chummer.networkmodels.mono.Jar as NetworkJar
+import com.chummer.finance.network.monobank.account.Jar as NetworkJar
 import mono.Jar as DbJar
 
 fun NetworkJar.toDbModel(clientId: String) = DbJar(

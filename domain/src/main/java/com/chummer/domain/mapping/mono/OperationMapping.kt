@@ -1,6 +1,6 @@
 package com.chummer.domain.mapping.mono
 
-import com.chummer.networkmodels.mono.Transaction
+import com.chummer.finance.network.monobank.transactions.Transaction
 import mono.Operation
 
 internal fun Transaction.toDbOperation(

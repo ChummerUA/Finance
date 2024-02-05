@@ -37,7 +37,6 @@ dependencies {
     api(Dependencies.Infrastructure.usecase)
     api(Dependencies.Infrastructure.network)
 
-    api(project(mapOf("path" to ":networkModels")))
     api(project(mapOf("path" to ":models")))
 
     implementation(Dependencies.Ktor.contentNegotiation)

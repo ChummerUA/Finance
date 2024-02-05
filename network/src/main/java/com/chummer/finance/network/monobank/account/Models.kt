@@ -1,4 +1,4 @@
-package com.chummer.networkmodels.mono
+package com.chummer.finance.network.monobank.account
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

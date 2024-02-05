@@ -6,7 +6,7 @@ import com.chummer.finance.db.mono.account.AccountItem
 import com.chummer.finance.ui.transaction.TransactionUiListModel
 import com.chummer.finance.utils.getAccountName
 import com.chummer.finance.utils.getFormattedAmountAndCurrency
-import com.chummer.networkmodels.mono.CARD_TYPE_FOP
+import com.chummer.finance.network.monobank.account.CARD_TYPE_FOP
 import kotlinx.collections.immutable.ImmutableList
 import java.time.LocalDate
 

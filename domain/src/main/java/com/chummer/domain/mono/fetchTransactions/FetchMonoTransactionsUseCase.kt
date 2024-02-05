@@ -5,7 +5,7 @@ import com.chummer.finance.db.mono.transaction.UpsertTransactionsUseCase
 import com.chummer.finance.network.monobank.transactions.GetTransactionsUseCase
 import com.chummer.infrastructure.usecase.ExecutableUseCase
 import com.chummer.models.mapping.toLocalDateTime
-import com.chummer.models.mono.GetTransactionsParameters
+import com.chummer.finance.network.monobank.transactions.GetTransactionsParameters
 import kotlinx.coroutines.Dispatchers
 import java.time.temporal.ChronoUnit
 import kotlin.coroutines.CoroutineContext
