@@ -1,5 +1,6 @@
 package com.chummer.finance.ui.screens.card
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -46,7 +47,9 @@ fun CardScreen(
         { id ->
             // TODO figure out why card screen not popped up
             navController.navigate(SelectAccount.fullRoute) {
-                popUpTo(AccountNode.Card.resolve(id)) {
+                val fullRoute = AccountNode.Card.route + "/{id}"
+                Log.d("CardScreen", "Pop up to $fullRoute")
+                popUpTo(fullRoute) {
                     inclusive = true
                 }
             }
