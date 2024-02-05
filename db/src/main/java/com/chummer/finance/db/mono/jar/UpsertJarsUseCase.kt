@@ -17,7 +17,8 @@ class UpsertJarsUseCase(
                 currencyCode = it.currency_code,
                 balance = it.balance,
                 goal = it.goal,
-                clientId = it.client_id
+                clientId = it.client_id,
+                is_deleted = false
             )
         }
     }
