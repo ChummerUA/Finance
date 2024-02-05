@@ -35,6 +35,7 @@ android {
 
 dependencies {
     api(Dependencies.Infrastructure.db)
+    api(project(mapOf("path" to ":models")))
     implementation(Dependencies.SqlDelight.adapters)
     implementation(Dependencies.Dagger.hilt)
     ksp(Dependencies.Dagger.compiler)
