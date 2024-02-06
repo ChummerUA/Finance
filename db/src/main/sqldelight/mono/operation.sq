@@ -77,14 +77,14 @@ getOperations:
     SELECT * FROM
         (SELECT id, time, description, operation_amount, currency_code, mcc, original_mcc, cashback_amount
         FROM operation
-        WHERE time > :time AND account_id = :accountId
+        WHERE time > :time AND account_id = :accountId AND description LIKE ('%' || :descriptionFilter || '%')
         ORDER BY time DESC
         LIMIT :backwardSize)
     UNION
     SELECT * FROM
         (SELECT id, time, description, operation_amount, currency_code, mcc, original_mcc, cashback_amount
         FROM operation
-        WHERE time <= :time AND account_id = :accountId
+        WHERE time <= :time AND account_id = :accountId AND description LIKE ('%' || :descriptionFilter || '%')
         ORDER BY time DESC
         LIMIT :forwardSize);
 

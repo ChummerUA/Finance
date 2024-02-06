@@ -30,6 +30,7 @@ object Versions {
     object Compose {
         const val version = "1.5.2"
         const val compiler = "1.5.3"
+        const val material = "1.1.2"
     }
 
     //For historical reasons lint version should be gradle + 23

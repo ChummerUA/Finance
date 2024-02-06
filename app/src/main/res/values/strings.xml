@@ -23,4 +23,8 @@
 
     <string name="date_format_full">MMMM d, y</string>
     <string name="date_format_short">MMMM d</string>
+    <string name="transactions_search_bar_categories_icon_description">Filter by categories</string>
+    <string name="transactions_search_bar_calendar_icon_description">Filter by date</string>
+    <string name="transactions_search_bar_search_icon_description">Transactions search</string>
+    <string name="transactions_search_bar_cancel_icon_description">Cancel transactions search</string>
 </resources>

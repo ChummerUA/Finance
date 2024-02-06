@@ -82,6 +82,7 @@ object Dependencies {
         const val runtime = "$root.runtime:runtime:${Versions.Compose.version}"
         const val ui = "$root.ui:ui:${Versions.Compose.version}"
         const val compiler = "$root.compiler:compiler:${Versions.Compose.compiler}"
+        const val material = "$root.material3:material3:${Versions.Compose.material}"
     }
 
     object Dagger {

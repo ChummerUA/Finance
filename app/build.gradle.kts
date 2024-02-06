@@ -4,6 +4,7 @@ plugins {
     id(Plugins.hilt)
     id(Plugins.ksp)
     id(Plugins.googleServices)
+    kotlin(Plugins.serialization)
 }
 
 android {
@@ -54,6 +55,7 @@ dependencies {
     implementation(Dependencies.Compose.foundation)
     implementation(Dependencies.Compose.ui)
     implementation(Dependencies.Compose.animation)
+    implementation(Dependencies.Compose.material)
 
     implementation(Dependencies.AndroidX.core)
     implementation(Dependencies.AndroidX.appCompat)

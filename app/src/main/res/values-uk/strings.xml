@@ -23,4 +23,8 @@
 
     <string name="date_format_full">d MMMM y р.</string>
     <string name="date_format_short">d MMMM</string>
+    <string name="transactions_search_bar_categories_icon_description">Фільтр за категоріями</string>
+    <string name="transactions_search_bar_calendar_icon_description">Фільтр за календарем</string>
+    <string name="transactions_search_bar_search_icon_description">Пошук транзакцій</string>
+    <string name="transactions_search_bar_cancel_icon_description">Відмінити пошук транзакцій</string>
 </resources>

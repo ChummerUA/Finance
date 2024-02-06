@@ -14,7 +14,7 @@ class GetTransactionsFlowUseCase(
     transacter
 ) {
     override fun TransactionQueries.getQuery(argument: GetTransactionsArgument): Query<ListTransactionItem> {
-        val (accountId, from, pageSize, pages, shiftBack) = argument
+        val (accountId, search, from, pageSize, pages, shiftBack) = argument
         val forwardSize = if (shiftBack) (pages - 1) * pageSize else pages * pageSize
         val backwardSize = if (shiftBack) pageSize else 0L
 
@@ -25,6 +25,7 @@ class GetTransactionsFlowUseCase(
         return transacter.getOperations(
             time = from,
             accountId = accountId,
+            descriptionFilter = search,
             forwardSize = forwardSize,
             backwardSize = backwardSize
         ) { id, time, description, operation_amount, currency_code, mcc, original_mcc, cashback_amount ->

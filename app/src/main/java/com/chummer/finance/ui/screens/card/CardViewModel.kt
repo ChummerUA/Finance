@@ -13,8 +13,10 @@ import com.chummer.finance.db.mono.lastFetchTime.GetLastTransactionsFetchTimeUse
 import com.chummer.finance.db.mono.transaction.getTransaction.GetTransactionsArgument
 import com.chummer.finance.db.mono.transaction.getTransactions.GetTransactionsFlowUseCase
 import com.chummer.finance.db.mono.transaction.getTransactions.ListTransactionItem
+import com.chummer.finance.ui.IconState.Selected
 import com.chummer.finance.ui.account.DayWithTransactions
 import com.chummer.finance.ui.account.toUiModel
+import com.chummer.finance.ui.transaction.SearchBarState
 import com.chummer.finance.ui.transaction.TransactionUiListModel
 import com.chummer.finance.utils.PagingDirection
 import com.chummer.finance.utils.getFormattedAmountAndCurrency
@@ -31,6 +33,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
@@ -59,13 +62,34 @@ class CardViewModel @Inject constructor(
     private val pages = savedStateHandle.getStateFlow(PAGES_COUNT_KEY, 1L)
     private val isBackDirection = savedStateHandle.getStateFlow(IS_BACK_DIRECTION_KEY, false)
 
+    private val search = savedStateHandle.getStateFlow(SEARCH_KEY, "")
+    private val searchBarMode: StateFlow<SearchBarMode> =
+        savedStateHandle.getStateFlow(SEARCH_BAR_MODE_KEY, SearchBarMode.Default)
+    private val searchBar = combine(
+        searchBarMode,
+        search
+    ) { mode, search ->
+        when (mode) {
+            SearchBarMode.Default -> SearchBarState.Default
+            SearchBarMode.Search -> SearchBarState.Expanded(search)
+            SearchBarMode.Categories -> SearchBarState.Expanded(
+                search,
+                categoriesIconState = Selected
+            )
+
+            SearchBarMode.Calendar -> SearchBarState.Expanded(search, calendarIconState = Selected)
+        }
+    }
+
     private val argument = combine(
         dateTimeArgument,
+        search,
         pages,
         isBackDirection
-    ) { dateTimeArgument, pages, isBackDirection ->
+    ) { dateTimeArgument, search, pages, isBackDirection ->
         GetTransactionsArgument(
             accountId = accountId,
+            search = search,
             time = dateTimeArgument,
             pageSize = PAGE_SIZE,
             pages = pages,
@@ -73,7 +97,7 @@ class CardViewModel @Inject constructor(
         )
     }
 
-    private val accountFlow = getAccountFlow(accountId).map {
+    private val account = getAccountFlow(accountId).map {
         it.toUiModel(application)
     }
 
@@ -85,9 +109,14 @@ class CardViewModel @Inject constructor(
     private val daysWithTransactionsFlow: Flow<ImmutableList<DayWithTransactions>> =
         transactions.map { it.groupToTransactionsInDays(application) }
 
-    val state = combine(accountFlow, daysWithTransactionsFlow) { account, days ->
+    val state = combine(
+        account,
+        searchBar,
+        daysWithTransactionsFlow
+    ) { account, searchBar, days ->
         CardUiState(
             account,
+            searchBar,
             days
         )
     }.stateInViewModelScope(viewModelScope)
@@ -131,6 +160,36 @@ class CardViewModel @Inject constructor(
             }
         } else savedStateHandle[IS_BACK_DIRECTION_KEY] = pages.value > MAX_PAGES
     }
+
+    fun activateSearch() {
+        // TODO replace with regular fields
+        savedStateHandle[SEARCH_BAR_MODE_KEY] = SearchBarMode.Search
+    }
+
+    fun updateSearchText(newSearch: String) {
+        savedStateHandle[SEARCH_KEY] = newSearch
+    }
+
+    fun activateCategoriesSelection() {
+        savedStateHandle[SEARCH_BAR_MODE_KEY] = SearchBarMode.Categories
+    }
+
+    fun selectCategories() {
+        savedStateHandle[SEARCH_BAR_MODE_KEY] = SearchBarMode.Default
+    }
+
+    fun activateCalendarSelection() {
+        savedStateHandle[SEARCH_BAR_MODE_KEY] = SearchBarMode.Calendar
+    }
+
+    fun applyDateRange(from: Long, to: Long) {
+        savedStateHandle[SEARCH_BAR_MODE_KEY] = SearchBarMode.Default
+    }
+
+    fun cancelSearch() {
+        savedStateHandle[SEARCH_KEY] = ""
+        savedStateHandle[SEARCH_BAR_MODE_KEY] = SearchBarMode.Default
+    }
 }
 
 private fun List<ListTransactionItem>.groupToTransactionsInDays(context: Context) =
@@ -164,3 +223,13 @@ private const val MAX_PAGES = 6L
 private const val DATE_TIME_ARGUMENT_KEY = "date_time"
 private const val PAGES_COUNT_KEY = "pages_count"
 private const val IS_BACK_DIRECTION_KEY = "is_back_direction"
+
+private const val SEARCH_KEY = "search"
+private const val SEARCH_BAR_MODE_KEY = "search_bar_mode"
+
+private enum class SearchBarMode {
+    Default,
+    Search,
+    Categories,
+    Calendar
+}

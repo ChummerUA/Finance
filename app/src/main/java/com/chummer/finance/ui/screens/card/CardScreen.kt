@@ -2,6 +2,7 @@ package com.chummer.finance.ui.screens.card
 
 import android.util.Log
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -29,7 +30,10 @@ import com.chummer.finance.ui.account.Display
 import com.chummer.finance.ui.text.ClickableText
 import com.chummer.finance.ui.text.ItemTitleText
 import com.chummer.finance.ui.theme.AppTheme
+import com.chummer.finance.ui.transaction.TransactionsSearchBarView
 import com.chummer.finance.ui.transaction.transactions
+import com.chummer.finance.utils.OnClickListener
+import com.chummer.finance.utils.OnTextChanged
 import com.chummer.finance.utils.PagingDirection
 import com.chummer.finance.utils.isScrollingUp
 import com.chummer.finance.utils.itemsAfterStart
@@ -39,9 +43,9 @@ import com.chummer.finance.utils.rememberStateWithLifecycle
 @Composable
 fun CardScreen(
     navController: NavController,
-    screenViewModel: CardViewModel = hiltViewModel()
+    viewModel: CardViewModel = hiltViewModel()
 ) {
-    val state by rememberStateWithLifecycle(screenViewModel.state)
+    val state by rememberStateWithLifecycle(viewModel.state)
 
     val onSelectAccountClicked: ((String) -> Unit) = remember {
         { id ->
@@ -57,23 +61,47 @@ fun CardScreen(
     }
 
     val listState = rememberLazyListState()
-    ConfigurePaging(listState, screenViewModel::updatePages)
+    ConfigurePaging(
+        listState,
+        viewModel::updatePages
+    )
 
-    state?.DisplayContent(listState, onSelectAccountClicked)
+    state?.DisplayContent(
+        listState = listState,
+        onSelectAccountClicked = onSelectAccountClicked,
+        onSearchClicked = viewModel::activateSearch,
+        onCategoriesClicked = viewModel::activateCategoriesSelection,
+        onCalendarClicked = viewModel::activateCalendarSelection,
+        onCancelClicked = viewModel::cancelSearch,
+        onTextChanged = viewModel::updateSearchText
+    )
 }
 
 @Composable
 fun CardUiState.DisplayContent(
     listState: LazyListState,
-    onSelectAccountClicked: (String) -> Unit
-) = LazyColumn(state = listState) {
-    item(key = "account") {
-        when (account) {
-            is Card -> account.Display(onSelectAccountClicked)
-            is FOP -> account.Display(onSelectAccountClicked)
-        }
+    onSelectAccountClicked: (String) -> Unit,
+    onSearchClicked: OnClickListener,
+    onCategoriesClicked: OnClickListener,
+    onCalendarClicked: OnClickListener,
+    onCancelClicked: OnClickListener,
+    onTextChanged: OnTextChanged
+) = Column {
+    when (account) {
+        is Card -> account.Display(onSelectAccountClicked)
+        is FOP -> account.Display(onSelectAccountClicked)
     }
-    transactions(daysWithTransactions)
+    TransactionsSearchBarView(
+        state = searchBarState,
+        onSearchClicked = onSearchClicked,
+        onCategoriesClicked = onCategoriesClicked,
+        onCalendarClicked = onCalendarClicked,
+        onCancelClicked = onCancelClicked,
+        onTextChanged = onTextChanged
+    )
+    LazyColumn(state = listState) {
+        transactions(daysWithTransactions)
+    }
 }
 
 @Composable
