@@ -27,6 +27,7 @@ import com.chummer.finance.ui.account.AccountUiModel
 import com.chummer.finance.ui.account.AccountUiModel.Card
 import com.chummer.finance.ui.account.AccountUiModel.FOP
 import com.chummer.finance.ui.account.Display
+import com.chummer.finance.ui.calendar.Calendar
 import com.chummer.finance.ui.text.ClickableText
 import com.chummer.finance.ui.text.ItemTitleText
 import com.chummer.finance.ui.theme.AppTheme
@@ -39,6 +40,7 @@ import com.chummer.finance.utils.isScrollingUp
 import com.chummer.finance.utils.itemsAfterStart
 import com.chummer.finance.utils.itemsBeforeEnd
 import com.chummer.finance.utils.rememberStateWithLifecycle
+import java.time.LocalDate
 
 @Composable
 fun CardScreen(
@@ -49,7 +51,6 @@ fun CardScreen(
 
     val onSelectAccountClicked: ((String) -> Unit) = remember {
         { id ->
-            // TODO figure out why card screen not popped up
             navController.navigate(SelectAccount.fullRoute) {
                 val fullRoute = AccountNode.Card.route + "/{id}"
                 Log.d("CardScreen", "Pop up to $fullRoute")
@@ -99,8 +100,18 @@ fun CardUiState.DisplayContent(
         onCancelClicked = onCancelClicked,
         onTextChanged = onTextChanged
     )
-    LazyColumn(state = listState) {
-        transactions(daysWithTransactions)
+
+    val today = remember { LocalDate.now() }
+    when {
+        searchBarState.isCalendar -> {
+            Calendar(today = today)
+        }
+
+        else -> {
+            LazyColumn(state = listState) {
+                transactions(daysWithTransactions)
+            }
+        }
     }
 }
 

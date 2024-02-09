@@ -84,7 +84,8 @@ fun GroupDescriptionText(
 @Composable
 fun ItemDescriptionText(
     text: String,
-    color: Color
+    color: Color,
+    modifier: Modifier = Modifier
 ) = BasicText(
     text = text,
     style = TextStyle(
@@ -92,7 +93,8 @@ fun ItemDescriptionText(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight(400),
         color = color
-    )
+    ),
+    modifier = modifier
 )
 
 @Composable

@@ -12,6 +12,7 @@ class AppColors (
     backgroundSecondary: Color,
     textPrimary: Color,
     textSecondary: Color,
+    onPrimary: Color,
     divider: Color,
     income: Color
 ) {
@@ -30,6 +31,9 @@ class AppColors (
     var textSecondary by mutableStateOf(textSecondary)
         private set
 
+    var onPrimary by mutableStateOf(onPrimary)
+        private set
+
     var divider by mutableStateOf(divider)
         private set
 
@@ -37,22 +41,15 @@ class AppColors (
         private set
 }
 
-private val lightBackgroundPrimaryColor = Color(0xFFF0F0F0)
-private val lightBackgroundSecondaryColor = Color(0xFFE1E1E1)
-private val lightTextPrimaryColor = Color(0xFF292020)
-private val lightTextSecondaryColor = Color(0xFF969696)
-private val lightDividerColor = Color(0xFFD3D3D3)
-private val lightIncomeColor = Color(0xFF72A800)
-private val lightPrimaryColor = Color(0xFF033BFF)
-
 fun lightColors() = AppColors(
-    primary = lightPrimaryColor,
-    backgroundPrimary = lightBackgroundPrimaryColor,
-    backgroundSecondary = lightBackgroundSecondaryColor,
-    textPrimary = lightTextPrimaryColor,
-    textSecondary = lightTextSecondaryColor,
-    divider = lightDividerColor,
-    income = lightIncomeColor
+    primary = Color(0xFF033BFF),
+    backgroundPrimary = Color(0xFFF0F0F0),
+    backgroundSecondary = Color(0xFFE1E1E1),
+    textPrimary = Color(0xFF292020),
+    textSecondary = Color(0xFF969696),
+    onPrimary = Color(0xFFFFFFFF),
+    divider = Color(0xFFD3D3D3),
+    income = Color(0xFF72A800)
 )
 
 internal val LocalColors = staticCompositionLocalOf{ lightColors() }

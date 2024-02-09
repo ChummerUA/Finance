@@ -27,4 +27,5 @@
     <string name="transactions_search_bar_calendar_icon_description">Фільтр за календарем</string>
     <string name="transactions_search_bar_search_icon_description">Пошук транзакцій</string>
     <string name="transactions_search_bar_cancel_icon_description">Відмінити пошук транзакцій</string>
+    <string name="show">Показати</string>
 </resources>

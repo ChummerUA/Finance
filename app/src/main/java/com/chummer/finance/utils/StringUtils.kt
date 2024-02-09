@@ -69,3 +69,7 @@ fun LocalDate.toDateString(context: Context): String {
 
 fun LocalDateTime.toDateTimeString(context: Context) =
     "${toLocalDate().toDateString(context)} ${toTimeString()}"
+
+fun LocalDate.toMonthName(): String = format(DateTimeFormatter.ofPattern("MMMM"))
+
+fun LocalDate.toShortDayName(): String = format(DateTimeFormatter.ofPattern("E"))

@@ -5,6 +5,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed interface SearchBarState {
+    val isCalendar
+        get() = this is Expanded && calendarIconState.selected
+
+    val isCategorySelection
+        get() = this is Expanded && categoriesIconState.selected
+
     data object Default : SearchBarState
 
     data class Expanded(
