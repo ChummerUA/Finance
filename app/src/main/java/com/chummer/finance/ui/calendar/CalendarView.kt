@@ -64,6 +64,7 @@ fun Calendar(
 
     val listState = rememberLazyListState()
     LazyColumn(
+        reverseLayout = true,
         state = listState,
         modifier = Modifier.weight(1f)
     ) {
@@ -74,7 +75,7 @@ fun Calendar(
                     if (it == 0) startState.value.dayOfMonth else 1
                 )
                 CalendarMonth.fromLocalDate(start)
-            }.reversed()
+            }
         }
         items(months, key = { it.key }) {
             Month(month = it, onDayClicked)
@@ -224,19 +225,22 @@ private data class CalendarMonth(
     val weeks: List<CalendarWeek>
 ) {
     val start
-        get() = weeks.first().days.first()
+        get() = weeks.first().days.first { !it.isPlaceholder }
 
     val key
         get() = weeks.first().key
 
     companion object {
         fun fromLocalDate(date: LocalDate): CalendarMonth {
-            var current = date
+            val today = LocalDate.now()
+            var current = date.withDayOfMonth(1)
             val weekStarts = mutableListOf<LocalDate>()
-            while (current.month == date.month) {
+            while (current.month == date.month && current.isBefore(today)) {
                 weekStarts.add(current)
-                val daysUntilNextWeek = 7 - current.dayOfWeek.value + 1
-                current = current.plusDays(daysUntilNextWeek.toLong())
+                current = if (current.dayOfWeek.value == 1)
+                    current.plusWeeks(1L)
+                else
+                    current.withDayOfWeek(1).plusWeeks(1L)
             }
             val weeks = weekStarts.map { CalendarWeek.fromLocalDate(it) }
             return CalendarMonth(weeks)
@@ -252,12 +256,12 @@ private data class CalendarWeek(
 
     companion object {
         fun fromLocalDate(date: LocalDate): CalendarWeek {
-            val delta = date.dayOfWeek.value.minus(1L)
-            var current = date.minusDays(delta)
+            var current = date.withDayOfWeek(1)
 
             val days = mutableListOf<CalendarDate>()
 
-            fun isPlaceholder() = !(current.month == date.month && !current.isBefore(date))
+            fun isPlaceholder() = current.month != date.month || current.isAfter(LocalDate.now())
+
             fun addAndIncrease() {
                 days.add(CalendarDate(current, DaySelectionViewMode.None, isPlaceholder()))
                 current = current.plusDays(1)
