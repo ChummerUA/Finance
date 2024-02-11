@@ -14,10 +14,10 @@ fun LazyListState.isScrollingUp(): Boolean {
     var previousScrollOffset by remember(this) { mutableIntStateOf(firstVisibleItemScrollOffset) }
     return remember(this) {
         derivedStateOf {
-            if (previousIndex != firstVisibleItemIndex) {
-                previousIndex > firstVisibleItemIndex
-            } else {
-                previousScrollOffset >= firstVisibleItemScrollOffset
+            when {
+                !isScrollInProgress -> false // Necessary when layout is animated
+                previousIndex != firstVisibleItemIndex -> previousIndex > firstVisibleItemIndex
+                else -> previousScrollOffset >= firstVisibleItemScrollOffset
             }.also {
                 previousIndex = firstVisibleItemIndex
                 previousScrollOffset = firstVisibleItemScrollOffset

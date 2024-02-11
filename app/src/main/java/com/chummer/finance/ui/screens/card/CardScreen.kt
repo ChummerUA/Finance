@@ -11,8 +11,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -28,17 +26,15 @@ import com.chummer.finance.ui.account.AccountUiModel.Card
 import com.chummer.finance.ui.account.AccountUiModel.FOP
 import com.chummer.finance.ui.account.Display
 import com.chummer.finance.ui.calendar.Calendar
+import com.chummer.finance.ui.calendar.OnDatesSelected
 import com.chummer.finance.ui.text.ClickableText
 import com.chummer.finance.ui.text.ItemTitleText
 import com.chummer.finance.ui.theme.AppTheme
 import com.chummer.finance.ui.transaction.TransactionsSearchBarView
 import com.chummer.finance.ui.transaction.transactions
+import com.chummer.finance.utils.ConfigurePaging
 import com.chummer.finance.utils.OnClickListener
 import com.chummer.finance.utils.OnTextChanged
-import com.chummer.finance.utils.PagingDirection
-import com.chummer.finance.utils.isScrollingUp
-import com.chummer.finance.utils.itemsAfterStart
-import com.chummer.finance.utils.itemsBeforeEnd
 import com.chummer.finance.utils.rememberStateWithLifecycle
 import java.time.LocalDate
 
@@ -62,10 +58,7 @@ fun CardScreen(
     }
 
     val listState = rememberLazyListState()
-    ConfigurePaging(
-        listState,
-        viewModel::updatePages
-    )
+    ConfigurePaging(15, listState, viewModel::updatePages)
 
     state?.DisplayContent(
         listState = listState,
@@ -74,7 +67,8 @@ fun CardScreen(
         onCategoriesClicked = viewModel::activateCategoriesSelection,
         onCalendarClicked = viewModel::activateCalendarSelection,
         onCancelClicked = viewModel::cancelSearch,
-        onTextChanged = viewModel::updateSearchText
+        onTextChanged = viewModel::updateSearchText,
+        onDatesSelected = viewModel::updateSelectedDates
     )
 }
 
@@ -86,7 +80,8 @@ fun CardUiState.DisplayContent(
     onCategoriesClicked: OnClickListener,
     onCalendarClicked: OnClickListener,
     onCancelClicked: OnClickListener,
-    onTextChanged: OnTextChanged
+    onTextChanged: OnTextChanged,
+    onDatesSelected: OnDatesSelected
 ) = Column {
     when (account) {
         is Card -> account.Display(onSelectAccountClicked)
@@ -104,7 +99,7 @@ fun CardUiState.DisplayContent(
     val today = remember { LocalDate.now() }
     when {
         searchBarState.isCalendar -> {
-            Calendar(today = today)
+            Calendar(today = today, onDatesSelected)
         }
 
         else -> {
@@ -177,35 +172,4 @@ private fun AccountUiModel.CardNameView(
         text = selectAllText,
         color = colors.primary
     )
-}
-
-@Composable
-private fun ConfigurePaging(
-    listState: LazyListState,
-    updatePages: ((PagingDirection) -> Unit)
-) {
-    val isScrollingUp = listState.isScrollingUp() // TODO implement isScrollingDown util
-
-    val shouldLoadNewPage by remember {
-        derivedStateOf {
-            with(listState.layoutInfo) {
-                totalItemsCount > 0 && itemsBeforeEnd <= 15
-            }
-        }
-    }
-    val shouldLoadOldPage by remember {
-        derivedStateOf {
-            with(listState.layoutInfo) {
-                isScrollingUp && totalItemsCount > 0 && itemsAfterStart >= 15
-            }
-        }
-    }
-
-    LaunchedEffect(shouldLoadNewPage, shouldLoadOldPage) {
-        val direction = if (shouldLoadNewPage) PagingDirection.Forward
-        else if (shouldLoadOldPage) PagingDirection.Backward
-        else null
-
-        direction?.let(updatePages)
-    }
 }

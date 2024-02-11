@@ -1,7 +1,9 @@
 package com.chummer.finance.ui.calendar
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
@@ -10,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContent
@@ -19,6 +22,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -37,17 +41,21 @@ import com.chummer.finance.ui.button.PrimaryButton
 import com.chummer.finance.ui.spacing.Space
 import com.chummer.finance.ui.text.ItemDescriptionText
 import com.chummer.finance.ui.text.ItemTitleText
+import com.chummer.finance.ui.theme.AppTheme
 import com.chummer.finance.ui.theme.LocalColors
+import com.chummer.finance.utils.ConfigurePaging
+import com.chummer.finance.utils.OnPageLoad
+import com.chummer.finance.utils.PagingDirection
 import com.chummer.finance.utils.toMonthName
-import com.chummer.finance.utils.toShortDayName
-import com.chummer.finance.utils.withDayOfWeek
 import com.chummer.models.mapping.toUnixSecond
-import java.time.DayOfWeek
+import kotlinx.collections.immutable.toImmutableList
 import java.time.LocalDate
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Calendar(
     today: LocalDate,
+    onSubmit: (Pair<LocalDate, LocalDate>?) -> Unit
 ) = Column(
     Modifier.padding(
         bottom = WindowInsets.safeContent.asPaddingValues().calculateBottomPadding().plus(16.dp)
@@ -55,39 +63,106 @@ fun Calendar(
 ) {
 
     val onDayClicked: ((LocalDate, Boolean) -> Unit) = remember {
-        { _, _ -> }
+        { date, isSelected ->
+            // TODO implement day selection
+        }
     }
 
     WeekHeader()
-
     DividerView(paddingValues = PaddingValues(0.dp))
 
     val listState = rememberLazyListState()
+
+    val selectedRangeStartState: MutableState<LocalDate?> = remember { mutableStateOf(null) }
+    val selectedRangeEndState: MutableState<LocalDate?> = remember { mutableStateOf(null) }
+
+    val selectedRangeStart by selectedRangeStartState
+    val selectedRangeEnd by selectedRangeEndState
+
+    val yearsState = remember {
+        mutableStateOf(
+            listOf(
+                getYear(today.year),
+                getYear(today.year - 1)
+            ).toImmutableList()
+        )
+    }
+    val years by yearsState
+
+    val pagingConfig by remember { derivedStateOf { CalendarPagingConfig.fromYears(years) } }
+    val paging: OnPageLoad = remember(pagingConfig) {
+        { direction ->
+            val yearInt = when (direction) {
+                PagingDirection.Forward -> pagingConfig.nextYear
+                PagingDirection.Backward -> pagingConfig.previousYear
+            }
+            val year = getYear(yearInt)
+
+            val dropStart =
+                if (direction is PagingDirection.Forward && pagingConfig.shouldDropYears) 1 else 0
+            val dropLast =
+                if (direction is PagingDirection.Backward && pagingConfig.shouldDropYears) 1 else 0
+
+            yearsState.value = (years + listOf(year))
+                .sortedByDescending { it.year }
+                .drop(dropStart)
+                .dropLast(dropLast)
+                .toImmutableList()
+        }
+    }
+
+    ConfigurePaging(itemsOffset = 3, listState = listState, updatePages = paging)
+
     LazyColumn(
         reverseLayout = true,
         state = listState,
         modifier = Modifier.weight(1f)
     ) {
-        val startState = mutableStateOf(today)
-        val months: List<CalendarMonth> by derivedStateOf {
-            (0..12).map {
-                val start = startState.value.minusMonths(it.toLong()).withDayOfMonth(
-                    if (it == 0) startState.value.dayOfMonth else 1
-                )
-                CalendarMonth.fromLocalDate(start)
+        for (year in years) {
+            stickyHeader {
+                YearHeader(year = year.year)
             }
-        }
-        items(months, key = { it.key }) {
-            Month(month = it, onDayClicked)
+            items(year.months, key = { it.key }) {
+                Month(month = it, onDayClicked)
+            }
         }
     }
 
     DividerView(paddingValues = PaddingValues(bottom = 12.dp))
 
-    val onSubmit: (() -> Unit) = remember {
-        { }
+    val onClick = remember(selectedRangeStart, selectedRangeEnd) {
+        {
+            if (selectedRangeStart != null && selectedRangeEnd != null)
+                onSubmit(selectedRangeStart!! to selectedRangeEnd!!)
+            else
+                onSubmit(null)
+        }
     }
-    PrimaryButton(text = stringResource(id = R.string.show), onClick = onSubmit)
+    PrimaryButton(text = stringResource(id = R.string.show), onClick = onClick)
+}
+
+@Composable
+private fun YearHeader(
+    year: Int
+) = Row(
+    modifier = Modifier
+        .fillMaxWidth(1f)
+        .padding(vertical = 4.dp),
+    horizontalArrangement = Arrangement.Center
+) {
+    ItemTitleText(
+        text = year.toString(),
+        color = AppTheme.colors.textPrimary,
+        modifier = Modifier
+            .background(
+                color = AppTheme.colors.backgroundSecondary,
+                shape = RoundedCornerShape(percent = 50)
+            )
+            .padding(
+                horizontal = 12.dp,
+                vertical = 8.dp
+            )
+    )
 }
 
 @Composable
@@ -213,91 +288,4 @@ private fun RowScope.DayContainer(
     content = content
 )
 
-enum class DaySelectionViewMode {
-    Start,
-    Middle,
-    End,
-    SingleDay,
-    None
-}
-
-private data class CalendarMonth(
-    val weeks: List<CalendarWeek>
-) {
-    val start
-        get() = weeks.first().days.first { !it.isPlaceholder }
-
-    val key
-        get() = weeks.first().key
-
-    companion object {
-        fun fromLocalDate(date: LocalDate): CalendarMonth {
-            val today = LocalDate.now()
-            var current = date.withDayOfMonth(1)
-            val weekStarts = mutableListOf<LocalDate>()
-            while (current.month == date.month && current.isBefore(today)) {
-                weekStarts.add(current)
-                current = if (current.dayOfWeek.value == 1)
-                    current.plusWeeks(1L)
-                else
-                    current.withDayOfWeek(1).plusWeeks(1L)
-            }
-            val weeks = weekStarts.map { CalendarWeek.fromLocalDate(it) }
-            return CalendarMonth(weeks)
-        }
-    }
-}
-
-private data class CalendarWeek(
-    val days: List<CalendarDate>
-) {
-    val key
-        get() = days.first { !it.isPlaceholder }.key
-
-    companion object {
-        fun fromLocalDate(date: LocalDate): CalendarWeek {
-            var current = date.withDayOfWeek(1)
-
-            val days = mutableListOf<CalendarDate>()
-
-            fun isPlaceholder() = current.month != date.month || current.isAfter(LocalDate.now())
-
-            fun addAndIncrease() {
-                days.add(CalendarDate(current, DaySelectionViewMode.None, isPlaceholder()))
-                current = current.plusDays(1)
-            }
-
-            addAndIncrease()
-            while (current.dayOfWeek.value != 1) {
-                addAndIncrease()
-            }
-
-            return CalendarWeek(days)
-        }
-    }
-}
-
-private data class CalendarDate(
-    val date: LocalDate,
-    var selectionMode: DaySelectionViewMode,
-    val isPlaceholder: Boolean
-) {
-    val key
-        get() = date.toUnixSecond()
-}
-
-private fun getWeekDayNames(): List<String> {
-    val firstDay = DayOfWeek.of(1)
-    val start = LocalDate.now().withDayOfWeek(firstDay)
-    var current = start
-    val list = mutableListOf<String>()
-    fun addAndIncrease() {
-        list.add(current.toShortDayName())
-        current = current.plusDays(1L)
-    }
-    addAndIncrease()
-    while (current.dayOfWeek != firstDay) {
-        addAndIncrease()
-    }
-    return list
-}
+typealias OnDatesSelected = ((Pair<LocalDate, LocalDate>?) -> Unit)

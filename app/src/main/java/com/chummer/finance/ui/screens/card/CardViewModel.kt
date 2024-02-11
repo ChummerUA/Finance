@@ -39,6 +39,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.minutes
@@ -168,6 +169,10 @@ class CardViewModel @Inject constructor(
 
     fun updateSearchText(newSearch: String) {
         savedStateHandle[SEARCH_KEY] = newSearch
+    }
+
+    fun updateSelectedDates(dates: Pair<LocalDate, LocalDate>?) {
+        // TODO implement date filter
     }
 
     fun activateCategoriesSelection() {
