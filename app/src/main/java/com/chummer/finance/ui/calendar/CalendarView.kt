@@ -46,6 +46,7 @@ import com.chummer.finance.ui.theme.LocalColors
 import com.chummer.finance.utils.ConfigurePaging
 import com.chummer.finance.utils.OnPageLoad
 import com.chummer.finance.utils.PagingDirection
+import com.chummer.finance.utils.TypedOnClickListener
 import com.chummer.finance.utils.toMonthName
 import com.chummer.models.mapping.toUnixSecond
 import kotlinx.collections.immutable.toImmutableList
@@ -61,13 +62,6 @@ fun Calendar(
         bottom = WindowInsets.safeContent.asPaddingValues().calculateBottomPadding().plus(16.dp)
     )
 ) {
-
-    val onDayClicked: ((LocalDate, Boolean) -> Unit) = remember {
-        { date, isSelected ->
-            // TODO implement day selection
-        }
-    }
-
     WeekHeader()
     DividerView(paddingValues = PaddingValues(0.dp))
 
@@ -81,10 +75,11 @@ fun Calendar(
 
     val yearsState = remember {
         mutableStateOf(
-            listOf(
-                getYear(today.year),
-                getYear(today.year - 1)
-            ).toImmutableList()
+            getYearsForCalendar(
+                listOf(today.year, today.year - 1),
+                selectedRangeStart,
+                selectedRangeEnd
+            )
         )
     }
     val years by yearsState
@@ -96,7 +91,7 @@ fun Calendar(
                 PagingDirection.Forward -> pagingConfig.nextYear
                 PagingDirection.Backward -> pagingConfig.previousYear
             }
-            val year = getYear(yearInt)
+            val year = getYearForCalendar(yearInt, selectedRangeStart, selectedRangeEnd)
 
             val dropStart =
                 if (direction is PagingDirection.Forward && pagingConfig.shouldDropYears) 1 else 0
@@ -112,6 +107,28 @@ fun Calendar(
     }
 
     ConfigurePaging(itemsOffset = 3, listState = listState, updatePages = paging)
+
+    val onDayClicked: TypedOnClickListener<LocalDate, Unit> =
+        remember(selectedRangeStart, selectedRangeEnd) {
+            { date ->
+                val (newStart, newEnd) = when {
+                    selectedRangeStart == null -> date to date
+                    selectedRangeStart != null && selectedRangeEnd != null && selectedRangeStart != selectedRangeEnd -> date to date
+                    selectedRangeStart?.isBefore(date) == true -> selectedRangeStart to date
+                    selectedRangeStart?.isAfter(date) == true -> date to selectedRangeStart
+                    else -> null to null
+                }
+
+                selectedRangeStartState.value = newStart
+                selectedRangeEndState.value = newEnd
+
+                yearsState.value = getYearsForCalendar(
+                    years.map { it.year },
+                    newStart,
+                    newEnd
+                )
+            }
+        }
 
     LazyColumn(
         reverseLayout = true,
@@ -178,9 +195,7 @@ private fun WeekHeader() = Row {
 }
 
 @Composable
-private fun RowScope.HeaderDay(
-    dayName: String
-) {
+private fun RowScope.HeaderDay(dayName: String) {
     val onClick = remember { { } }
     DayContainer(onClick = onClick, clickable = false, shape = RectangleShape, shapeColor = null) {
         ItemDescriptionText(text = dayName, color = LocalColors.current.textPrimary)
@@ -190,7 +205,7 @@ private fun RowScope.HeaderDay(
 @Composable
 private fun Month(
     month: CalendarMonth,
-    onDayClicked: (LocalDate, Boolean) -> Unit
+    onDayClicked: TypedOnClickListener<LocalDate, Unit>
 ) = Column(
     modifier = Modifier.padding(vertical = 8.dp)
 ) {
@@ -209,7 +224,9 @@ private fun Month(
 }
 
 @Composable
-private fun Week(week: CalendarWeek, onDayClicked: (LocalDate, Boolean) -> Unit) = Row {
+private fun Week(week: CalendarWeek, onDayClicked: TypedOnClickListener<LocalDate, Unit>) = Row(
+    Modifier.padding(8.dp)
+) {
     week.days.forEach {
         key(it.key) {
             Day(it, onDayClicked = onDayClicked)
@@ -220,10 +237,10 @@ private fun Week(week: CalendarWeek, onDayClicked: (LocalDate, Boolean) -> Unit)
 @Composable
 private fun RowScope.Day(
     day: CalendarDate,
-    onDayClicked: ((LocalDate, Boolean) -> Unit)
+    onDayClicked: TypedOnClickListener<LocalDate, Unit>
 ) {
     val colors = LocalColors.current
-    val isSelected by remember {
+    val isSelected by remember(day.key, day.selectionMode) {
         derivedStateOf { day.selectionMode != DaySelectionViewMode.None }
     }
 
@@ -236,7 +253,7 @@ private fun RowScope.Day(
     val backgroundColor = if (isSelected) colors.primary
     else null
 
-    val shape by remember {
+    val shape by remember(day.selectionMode) {
         derivedStateOf {
             when (day.selectionMode) {
                 DaySelectionViewMode.Start -> RoundedCornerShape(
@@ -255,8 +272,8 @@ private fun RowScope.Day(
         }
     }
 
-    val onClick = remember(day.date.toUnixSecond(), isSelected) {
-        { onDayClicked(day.date, isSelected) }
+    val onClick = remember(day.date.toUnixSecond()) {
+        { onDayClicked(day.date) }
     }
 
     DayContainer(
@@ -281,9 +298,7 @@ private fun RowScope.DayContainer(
     modifier = Modifier
         .weight(1f)
         .height(30.dp)
-        .apply {
-            shapeColor?.let { this.background(it, shape) } ?: this
-        }
+        .let { modifier -> shapeColor?.let { modifier.background(it, shape) } ?: modifier }
         .clickable(onClick = onClick, enabled = clickable),
     content = content
 )

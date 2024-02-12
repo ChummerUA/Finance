@@ -17,14 +17,26 @@ enum class DaySelectionViewMode {
     None
 }
 
-fun getYear(
-    year: Int
+fun getYearsForCalendar(
+    years: List<Int>,
+    selectedRangeStart: LocalDate?,
+    selectedRangeEnd: LocalDate?
+): ImmutableList<CalendarYear> {
+    return years.map {
+        getYearForCalendar(it, selectedRangeStart, selectedRangeEnd)
+    }.toImmutableList()
+}
+
+fun getYearForCalendar(
+    year: Int,
+    selectedRangeStart: LocalDate?,
+    selectedRangeEnd: LocalDate?
 ): CalendarYear {
     var current = LocalDate.of(year, 1, 1)
     val today = LocalDate.now()
     val list = mutableListOf<CalendarMonth>()
     while (current.year == year && current.isBefore(today)) {
-        list.add(CalendarMonth.fromLocalDate(current))
+        list.add(CalendarMonth.fromLocalDate(current, selectedRangeStart, selectedRangeEnd))
         current = current.plusMonths(1L)
     }
 
@@ -48,7 +60,11 @@ data class CalendarMonth(
         get() = weeks.first().key
 
     companion object {
-        fun fromLocalDate(date: LocalDate): CalendarMonth {
+        fun fromLocalDate(
+            date: LocalDate,
+            selectedRangeStart: LocalDate?,
+            selectedRangeEnd: LocalDate?
+        ): CalendarMonth {
             val today = LocalDate.now()
             var current = date.withDayOfMonth(1)
             val weekStarts = mutableListOf<LocalDate>()
@@ -59,7 +75,13 @@ data class CalendarMonth(
                 else
                     current.withDayOfWeek(1).plusWeeks(1L)
             }
-            val weeks = weekStarts.map { CalendarWeek.fromLocalDate(it) }.toImmutableList()
+            val weeks = weekStarts.map {
+                CalendarWeek.fromLocalDate(
+                    it,
+                    selectedRangeStart,
+                    selectedRangeEnd
+                )
+            }.toImmutableList()
             return CalendarMonth(weeks)
         }
     }
@@ -72,7 +94,11 @@ data class CalendarWeek(
         get() = days.first { !it.isPlaceholder }.key
 
     companion object {
-        fun fromLocalDate(date: LocalDate): CalendarWeek {
+        fun fromLocalDate(
+            date: LocalDate,
+            selectedRangeStart: LocalDate?,
+            selectedRangeEnd: LocalDate?
+        ): CalendarWeek {
             var current = date.withDayOfWeek(1)
 
             val days = mutableListOf<CalendarDate>()
@@ -80,7 +106,9 @@ data class CalendarWeek(
             fun isPlaceholder() = current.month != date.month || current.isAfter(LocalDate.now())
 
             fun addAndIncrease() {
-                days.add(CalendarDate(current, DaySelectionViewMode.None, isPlaceholder()))
+                val selection =
+                    getSelectionModeForDay(current, selectedRangeStart, selectedRangeEnd)
+                days.add(CalendarDate(current, selection, isPlaceholder()))
                 current = current.plusDays(1)
             }
 
@@ -96,7 +124,7 @@ data class CalendarWeek(
 
 data class CalendarDate(
     val date: LocalDate,
-    var selectionMode: DaySelectionViewMode,
+    val selectionMode: DaySelectionViewMode,
     val isPlaceholder: Boolean
 ) {
     val key
@@ -117,6 +145,20 @@ fun getWeekDayNames(): List<String> {
         addAndIncrease()
     }
     return list
+}
+
+private fun getSelectionModeForDay(
+    date: LocalDate,
+    selectedRangeStart: LocalDate?,
+    selectedRangeEnd: LocalDate?
+): DaySelectionViewMode = when {
+    date == selectedRangeStart && date == selectedRangeEnd -> DaySelectionViewMode.SingleDay
+    date == selectedRangeStart -> DaySelectionViewMode.Start
+    date == selectedRangeEnd -> DaySelectionViewMode.End
+    selectedRangeStart?.isBefore(date) == true && selectedRangeEnd?.isAfter(date) == true ->
+        DaySelectionViewMode.Middle
+
+    else -> DaySelectionViewMode.None
 }
 
 data class CalendarPagingConfig(
