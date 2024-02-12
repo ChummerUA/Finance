@@ -28,7 +28,7 @@ fun getYear(
         current = current.plusMonths(1L)
     }
 
-    return CalendarYear(list.toImmutableList())
+    return CalendarYear(list.reversed().toImmutableList())
 }
 
 data class CalendarYear(
