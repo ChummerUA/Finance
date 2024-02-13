@@ -106,8 +106,9 @@ data class CalendarWeek(
             fun isPlaceholder() = current.month != date.month || current.isAfter(LocalDate.now())
 
             fun addAndIncrease() {
-                val selection =
-                    getSelectionModeForDay(current, selectedRangeStart, selectedRangeEnd)
+                val selection = if (isPlaceholder()) DaySelectionViewMode.None
+                else getSelectionModeForDay(current, selectedRangeStart, selectedRangeEnd)
+
                 days.add(CalendarDate(current, selection, isPlaceholder()))
                 current = current.plusDays(1)
             }
