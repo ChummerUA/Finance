@@ -12,14 +12,18 @@ import com.chummer.finance.ui.theme.AppTheme
 
 //region prices
 @Composable
-fun LargePriceText(text: String) = BasicText(
+fun LargePriceText(
+    text: String,
+    modifier: Modifier = Modifier
+) = BasicText(
     text = text,
     style = TextStyle(
         fontSize = 36.sp,
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight(400),
         color = AppTheme.colors.textPrimary
-    )
+    ),
+    modifier = modifier
 )
 
 @Composable
@@ -54,7 +58,8 @@ fun ItemTitleText(
 @Composable
 fun GroupTitleText(
     text: String,
-    color: Color
+    color: Color,
+    modifier: Modifier = Modifier
 ) = BasicText(
     text = text,
     style = TextStyle(
@@ -62,7 +67,8 @@ fun GroupTitleText(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight(400),
         color = color
-    )
+    ),
+    modifier = modifier
 )
 //endregion
 

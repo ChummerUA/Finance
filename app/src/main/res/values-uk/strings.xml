@@ -35,4 +35,5 @@
     <string name="transaction_content_description_incoming">Отримано %1$s від %2$s.</string>
     <string name="transaction_content_description_spent">Витрачено %1$s на %2$s.</string>
     <string name="transaction_content_description_sent">Відправлено %1$s. Отримувач %2$s.</string>
+    <string name="balance_total">Загалом:</string>
 </resources>

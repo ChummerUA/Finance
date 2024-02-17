@@ -19,14 +19,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.chummer.finance.ui.account.DayWithTransactions
 import com.chummer.finance.ui.spacing.Space
 import com.chummer.finance.ui.text.ItemDescriptionText
 import com.chummer.finance.ui.text.ItemTitleText
 import com.chummer.finance.ui.theme.AppTheme
+import com.chummer.finance.utils.contentDescription
 import com.chummer.finance.utils.noContentDescription
 import kotlinx.collections.immutable.ImmutableList
 
@@ -69,9 +68,7 @@ fun TransactionListItemView(
     transaction: TransactionUiListModel
 ) = Row(
     modifier = Modifier
-        .semantics(true) {
-            contentDescription = transaction.accessibilityText
-        }
+        .contentDescription(transaction.accessibilityText)
         .padding(
             horizontal = 16.dp,
             vertical = 8.dp

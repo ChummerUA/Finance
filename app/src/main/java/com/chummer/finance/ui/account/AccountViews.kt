@@ -3,6 +3,7 @@ package com.chummer.finance.ui.account
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,6 +18,7 @@ import com.chummer.finance.ui.text.ItemDescriptionText
 import com.chummer.finance.ui.text.ItemTitleText
 import com.chummer.finance.ui.text.MediumPriceText
 import com.chummer.finance.ui.theme.AppTheme
+import com.chummer.finance.utils.mergeContentDescription
 
 @Composable
 fun AccountUiListModel.Card.Display(
@@ -105,10 +107,13 @@ private data class AccountCardViewAdditionalInfo(
 
 @Composable
 fun AccountInfoItem.Display() = Column(
-    Modifier.padding(
-        vertical = 12.dp,
-        horizontal = 16.dp
-    )
+    Modifier
+        .fillMaxWidth(1f)
+        .mergeContentDescription()
+        .padding(
+            vertical = 12.dp,
+            horizontal = 16.dp
+        )
 ) {
     GroupTitleText(text = title, color = AppTheme.colors.textSecondary)
     ItemTitleText(text = value, color = AppTheme.colors.textPrimary)

@@ -35,4 +35,5 @@
     <string name="transaction_content_description_incoming">Recieved %1$s from %2$s.</string>
     <string name="transaction_content_description_spent">Spent %1$s on %2$s.</string>
     <string name="transaction_content_description_sent">Sent %1$s to %2$s.</string>
+    <string name="balance_total">Total:</string>
 </resources>
