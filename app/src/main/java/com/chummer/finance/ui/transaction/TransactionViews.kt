@@ -19,12 +19,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.chummer.finance.ui.account.DayWithTransactions
 import com.chummer.finance.ui.spacing.Space
 import com.chummer.finance.ui.text.ItemDescriptionText
 import com.chummer.finance.ui.text.ItemTitleText
 import com.chummer.finance.ui.theme.AppTheme
+import com.chummer.finance.utils.noContentDescription
 import kotlinx.collections.immutable.ImmutableList
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -65,10 +68,14 @@ private fun DayHeader(day: String) = Row(
 fun TransactionListItemView(
     transaction: TransactionUiListModel
 ) = Row(
-    modifier = Modifier.padding(
-        horizontal = 16.dp,
-        vertical = 8.dp
-    ),
+    modifier = Modifier
+        .semantics(true) {
+            contentDescription = transaction.accessibilityText
+        }
+        .padding(
+            horizontal = 16.dp,
+            vertical = 8.dp
+        ),
     verticalAlignment = Alignment.CenterVertically
 ) {
     val colors = AppTheme.colors
@@ -77,9 +84,17 @@ fun TransactionListItemView(
     Space(12.dp)
 
     Column(Modifier.weight(1f)) {
-        ItemTitleText(text = transaction.name, color = colors.textPrimary)
+        ItemTitleText(
+            text = transaction.name,
+            color = colors.textPrimary,
+            modifier = Modifier.noContentDescription()
+        )
         Space(4.dp)
-        ItemDescriptionText(text = transaction.time, color = colors.textSecondary)
+        ItemDescriptionText(
+            text = transaction.time,
+            color = colors.textSecondary,
+            modifier = Modifier.noContentDescription()
+        )
     }
 
     Space(12.dp)
@@ -92,7 +107,11 @@ fun TransactionListItemView(
                 colors.textPrimary
         }
     }
-    ItemTitleText(text = transaction.amount, amountTextColor)
+    ItemTitleText(
+        text = transaction.amount,
+        color = amountTextColor,
+        modifier = Modifier.noContentDescription()
+    )
 }
 
 @Composable

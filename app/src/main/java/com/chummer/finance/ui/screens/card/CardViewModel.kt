@@ -18,6 +18,7 @@ import com.chummer.finance.ui.account.DayWithTransactions
 import com.chummer.finance.ui.account.toUiModel
 import com.chummer.finance.ui.transaction.SearchBarState
 import com.chummer.finance.ui.transaction.TransactionUiListModel
+import com.chummer.finance.ui.transaction.getContentDescription
 import com.chummer.finance.utils.PagingDirection
 import com.chummer.finance.utils.getFormattedAmountAndCurrency
 import com.chummer.finance.utils.scheduleFetchWorker
@@ -203,20 +204,21 @@ private fun List<ListTransactionItem>.groupToTransactionsInDays(context: Context
             DayWithTransactions(
                 date,
                 date.toDateString(context),
-                items.toUiTransactions()
+                items.toUiTransactions(context)
             )
         }
         .sortedByDescending { it.date.toUnixSecond() }
         .toImmutableList()
 
-private fun List<ListTransactionItem>.toUiTransactions() = map {
+private fun List<ListTransactionItem>.toUiTransactions(context: Context) = map {
     TransactionUiListModel(
         id = it.id,
         name = it.description,
         time = it.time.toLocalDateTime().toTimeString(),
         amount = getFormattedAmountAndCurrency(it.operationAmount, it.currencyCode),
-        income = it.operationAmount > 0,
-        null
+        income = it.isIncome,
+        icon = null,
+        accessibilityText = it.getContentDescription(context)
     )
 }.toImmutableList()
 

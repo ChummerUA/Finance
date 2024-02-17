@@ -28,4 +28,11 @@
     <string name="transactions_search_bar_search_icon_description">Transactions search</string>
     <string name="transactions_search_bar_cancel_icon_description">Cancel transactions search</string>
     <string name="show">Show</string>
+    <string name="transaction_content_description_fop_income">From FOP account.</string>
+    <string name="transaction_content_description_jar_partial_income">Partial withdrawal from jar: $s.</string>
+    <string name="transaction_content_description_jar_full">Full withdrawal from jar: $s.</string>
+    <string name="transaction_content_description_time">Date: $s</string>
+    <string name="transaction_content_description_incoming">Recieved %1$s from %2$s.</string>
+    <string name="transaction_content_description_spent">Spent %1$s on %2$s.</string>
+    <string name="transaction_content_description_sent">Sent %1$s to %2$s.</string>
 </resources>

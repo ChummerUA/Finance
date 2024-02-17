@@ -6,7 +6,8 @@ data class TransactionUiListModel(
     val time: String,
     val amount: String,
     val income: Boolean,
-    val icon: TransactionIconUiModel? = null
+    val icon: TransactionIconUiModel? = null,
+    val accessibilityText: String
 )
 
 sealed class TransactionIconUiModel {

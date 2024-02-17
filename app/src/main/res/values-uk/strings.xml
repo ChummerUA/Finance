@@ -28,4 +28,11 @@
     <string name="transactions_search_bar_search_icon_description">Пошук транзакцій</string>
     <string name="transactions_search_bar_cancel_icon_description">Відмінити пошук транзакцій</string>
     <string name="show">Показати</string>
+    <string name="transaction_content_description_fop_income">З рахунку ФОП.</string>
+    <string name="transaction_content_description_jar_partial_income">Часткове зняття з банки: $s.</string>
+    <string name="transaction_content_description_jar_full">Повне зняття з банки: $s.</string>
+    <string name="transaction_content_description_time">Дата: $s</string>
+    <string name="transaction_content_description_incoming">Отримано %1$s від %2$s.</string>
+    <string name="transaction_content_description_spent">Витрачено %1$s на %2$s.</string>
+    <string name="transaction_content_description_sent">Відправлено %1$s. Отримувач %2$s.</string>
 </resources>
