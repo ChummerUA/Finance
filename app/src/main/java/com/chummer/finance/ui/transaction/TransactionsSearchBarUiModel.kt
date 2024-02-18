@@ -2,6 +2,7 @@ package com.chummer.finance.ui.transaction
 
 import com.chummer.finance.ui.IconState
 import kotlinx.serialization.Serializable
+import java.time.LocalDate
 
 @Serializable
 sealed interface SearchBarState {
@@ -16,6 +17,7 @@ sealed interface SearchBarState {
     data class Expanded(
         val search: String = "",
         val categoriesIconState: IconState = IconState.Default,
-        val calendarIconState: IconState = IconState.Default
+        val calendarIconState: IconState = IconState.Default,
+        val range: Pair<LocalDate, LocalDate>?
     ) : SearchBarState
 }

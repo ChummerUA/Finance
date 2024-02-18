@@ -30,6 +30,7 @@ import com.chummer.finance.ui.calendar.OnDatesSelected
 import com.chummer.finance.ui.text.ClickableText
 import com.chummer.finance.ui.text.ItemTitleText
 import com.chummer.finance.ui.theme.AppTheme
+import com.chummer.finance.ui.transaction.SearchBarState
 import com.chummer.finance.ui.transaction.TransactionsSearchBarView
 import com.chummer.finance.ui.transaction.transactions
 import com.chummer.finance.utils.ConfigurePaging
@@ -98,8 +99,12 @@ fun CardUiState.DisplayContent(
 
     val today = remember { LocalDate.now() }
     when {
-        searchBarState.isCalendar -> {
-            Calendar(today = today, onDatesSelected)
+        searchBarState is SearchBarState.Expanded && searchBarState.isCalendar -> {
+            Calendar(
+                today = today,
+                range = searchBarState.range,
+                onDatesSelected
+            )
         }
 
         else -> {

@@ -5,6 +5,8 @@ import app.cash.sqldelight.Query
 import com.chummer.finance.db.mono.transaction.TransactionQueries
 import com.chummer.finance.db.mono.transaction.getTransaction.GetTransactionsArgument
 import com.chummer.infrastructure.db.useCases.flow.DbListFlowUseCase
+import com.chummer.models.mapping.toUnixSecond
+import java.time.LocalDateTime
 
 @Suppress("LocalVariableName")
 class GetTransactionsFlowUseCase(
@@ -14,18 +16,23 @@ class GetTransactionsFlowUseCase(
     transacter
 ) {
     override fun TransactionQueries.getQuery(argument: GetTransactionsArgument): Query<ListTransactionItem> {
-        val (accountId, search, from, pageSize, pages, shiftBack) = argument
+        val (accountId, search, range, currentTime, pageSize, pages, shiftBack) = argument
         val forwardSize = if (shiftBack) (pages - 1) * pageSize else pages * pageSize
         val backwardSize = if (shiftBack) pageSize else 0L
 
+        val from = range?.first?.toUnixSecond() ?: 0L
+        val to = range?.second?.plusDays(1L)?.toUnixSecond() ?: LocalDateTime.now().toUnixSecond()
+
         Log.d(
             KEY,
-            "Getting operations. Time: $from, forwardSize: $forwardSize, backwardSize: $backwardSize"
+            "Getting operations. Time: $currentTime, forwardSize: $forwardSize, backwardSize: $backwardSize"
         )
         return transacter.getOperations(
-            time = from,
+            time = currentTime,
             accountId = accountId,
             descriptionFilter = search,
+            from = from,
+            to = to,
             forwardSize = forwardSize,
             backwardSize = backwardSize
         ) { id, time, description, operation_amount, currency_code, mcc, original_mcc, cashback_amount ->

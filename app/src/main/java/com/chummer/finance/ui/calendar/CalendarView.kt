@@ -22,7 +22,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -67,8 +66,8 @@ fun Calendar(
 
     val listState = rememberLazyListState()
 
-    val selectedRangeStartState: MutableState<LocalDate?> = remember { mutableStateOf(null) }
-    val selectedRangeEndState: MutableState<LocalDate?> = remember { mutableStateOf(null) }
+    val selectedRangeStartState = remember { mutableStateOf(range?.first) }
+    val selectedRangeEndState = remember { mutableStateOf(range?.second) }
 
     val selectedRangeStart by selectedRangeStartState
     val selectedRangeEnd by selectedRangeEndState

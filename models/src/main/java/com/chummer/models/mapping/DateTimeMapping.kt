@@ -10,6 +10,8 @@ fun Long.toLocalDateTime(): LocalDateTime {
     return Instant.ofEpochSecond(this).atZone(ZoneId.systemDefault()).toLocalDateTime()
 }
 
+fun Long.toLocalDate(): LocalDate = toLocalDateTime().toLocalDate()
+
 fun LocalDateTime.toUnixSecond(): Long {
     return atZone(ZoneId.systemDefault()).toEpochSecond()
 }
