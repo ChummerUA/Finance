@@ -55,6 +55,7 @@ import java.time.LocalDate
 @Composable
 fun Calendar(
     today: LocalDate,
+    range: Pair<LocalDate, LocalDate>?,
     onSubmit: (Pair<LocalDate, LocalDate>?) -> Unit
 ) = Column(
     Modifier.padding(
