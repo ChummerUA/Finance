@@ -92,18 +92,21 @@ fun Calendar(
                 PagingDirection.Forward -> pagingConfig.nextYear
                 PagingDirection.Backward -> pagingConfig.previousYear
             }
-            val year = getYearForCalendar(yearInt, selectedRangeStart, selectedRangeEnd)
+            val year = if (yearInt <= LocalDate.now().year)
+                getYearForCalendar(yearInt, selectedRangeStart, selectedRangeEnd)
+            else null
 
             val dropStart =
                 if (direction is PagingDirection.Forward && pagingConfig.shouldDropYears) 1 else 0
             val dropLast =
                 if (direction is PagingDirection.Backward && pagingConfig.shouldDropYears) 1 else 0
 
-            yearsState.value = (years + listOf(year))
-                .sortedByDescending { it.year }
-                .drop(dropStart)
-                .dropLast(dropLast)
-                .toImmutableList()
+            if (year != null)
+                yearsState.value = (years + listOf(year))
+                    .sortedByDescending { it.year }
+                    .drop(dropStart)
+                    .dropLast(dropLast)
+                    .toImmutableList()
         }
     }
 

@@ -26,22 +26,21 @@ fun ConfigurePaging(
     listState: LazyListState,
     updatePages: OnPageLoad
 ) {
-    val isScrollingUp = listState.isScrollingUp() // TODO implement isScrollingDown util
+    val isScrollingUp by listState.isScrollingUpState()
+    val isScrollingDown by listState.isScrollingDownState()
 
-    val shouldLoadNewPage by remember {
+    val shouldLoad by remember {
         derivedStateOf {
             with(listState.layoutInfo) {
-                totalItemsCount > 0 && itemsBeforeEnd <= itemsOffset && listState.isScrollInProgress
+                val isCloseToEnd = totalItemsCount > 0 && itemsBeforeEnd <= itemsOffset
+                val isCloseToStart = totalItemsCount > 0 && itemsAfterStart <= itemsOffset
+                val new = isScrollingDown && isCloseToEnd
+                val old = isScrollingUp && isCloseToStart
+                new to old
             }
         }
     }
-    val shouldLoadOldPage by remember {
-        derivedStateOf {
-            with(listState.layoutInfo) {
-                isScrollingUp && totalItemsCount > 0 && itemsAfterStart >= itemsOffset
-            }
-        }
-    }
+    val (shouldLoadNewPage, shouldLoadOldPage) = shouldLoad
 
     LaunchedEffect(shouldLoadNewPage, shouldLoadOldPage) {
         val direction = if (shouldLoadNewPage) PagingDirection.Forward
