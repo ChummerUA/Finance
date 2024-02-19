@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -225,7 +226,9 @@ private fun Month(
 
 @Composable
 private fun Week(week: CalendarWeek, onDayClicked: TypedOnClickListener<LocalDate, Unit>) = Row(
-    Modifier.padding(8.dp)
+    Modifier
+        .fillMaxWidth(1f)
+        .padding(horizontal = 8.dp, vertical = 4.dp)
 ) {
     week.days.forEach {
         key(it.key) {
@@ -296,11 +299,23 @@ private fun RowScope.DayContainer(
 ) = Box(
     contentAlignment = Alignment.Center,
     modifier = Modifier
-        .weight(1f)
         .height(30.dp)
+        .let { modifier ->
+            if (shape == CircleShape)
+                modifier.aspectRatio(1f, true)
+            else modifier
+        }
+        .weight(1f)
         .let { modifier -> shapeColor?.let { modifier.background(it, shape) } ?: modifier }
-        .clickable(onClick = onClick, enabled = clickable),
-    content = content
-)
+) {
+    Box(
+        contentAlignment = Alignment.Center,
+        content = content,
+        modifier = Modifier
+            .height(30.dp)
+            .aspectRatio(1f, matchHeightConstraintsFirst = true)
+            .clickable(enabled = clickable, onClick = onClick)
+    )
+}
 
 typealias OnDatesSelected = ((Pair<LocalDate, LocalDate>?) -> Unit)
