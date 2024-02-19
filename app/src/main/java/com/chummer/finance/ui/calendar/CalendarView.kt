@@ -289,6 +289,7 @@ private fun RowScope.Day(
     }
 }
 
+// These nested boxes are disgusting
 @Composable
 private fun RowScope.DayContainer(
     onClick: (() -> Unit),
