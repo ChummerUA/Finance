@@ -300,7 +300,7 @@ private fun RowScope.DayContainer(
 ) = Box(
     contentAlignment = Alignment.Center,
     modifier = Modifier
-        .height(30.dp)
+        .height(dayContainerHeight)
         .let { modifier ->
             if (shape == CircleShape)
                 modifier.aspectRatio(1f, true)
@@ -313,10 +313,12 @@ private fun RowScope.DayContainer(
         contentAlignment = Alignment.Center,
         content = content,
         modifier = Modifier
-            .height(30.dp)
+            .height(dayContainerHeight)
             .aspectRatio(1f, matchHeightConstraintsFirst = true)
             .clickable(enabled = clickable, onClick = onClick)
     )
 }
 
 typealias OnDatesSelected = ((Pair<LocalDate, LocalDate>?) -> Unit)
+
+private val dayContainerHeight = 36.dp
