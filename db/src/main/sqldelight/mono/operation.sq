@@ -21,7 +21,8 @@ CREATE TABLE operation (
     counter_iban TEXT,
     counter_name TEXT,
     account_id TEXT,
-    jar_id TEXT
+    jar_id TEXT,
+    categoryId INTEGER AS Int NOT NULL
 );
 
 upsertOperation {
@@ -44,7 +45,8 @@ upsertOperation {
         counter_iban = :counterIban,
         counter_name = :counterIban,
         account_id = :accountId,
-        jar_id = :jarId
+        jar_id = :jarId,
+        categoryId = :categoryId
     WHERE id = :id;
 
     INSERT OR IGNORE
@@ -69,22 +71,23 @@ upsertOperation {
         :counterIban,
         :counterIban,
         :accountId,
-        :jarId
+        :jarId,
+        :categoryId
     );
 }
 
 getOperations:
     SELECT * FROM
-        (SELECT id, time, description, operation_amount, currency_code, mcc, original_mcc, cashback_amount
+        (SELECT id, time, description, operation_amount, currency_code, mcc, original_mcc, cashback_amount, categoryId
         FROM operation
-        WHERE time > :time AND time <= :to AND account_id = :accountId AND description LIKE ('%' || :descriptionFilter || '%')
+        WHERE time > :time AND time <= :to AND account_id = :accountId AND description LIKE ('%' || :descriptionFilter || '%') AND categoryId IN :categoryIds
         ORDER BY time
         LIMIT :backwardSize)
     UNION
     SELECT * FROM
-        (SELECT id, time, description, operation_amount, currency_code, mcc, original_mcc, cashback_amount
+        (SELECT id, time, description, operation_amount, currency_code, mcc, original_mcc, cashback_amount, categoryId
         FROM operation
-        WHERE time >= :from AND time <= :time AND account_id = :accountId AND description LIKE ('%' || :descriptionFilter || '%')
+        WHERE time >= :from AND time <= :time AND account_id = :accountId AND description LIKE ('%' || :descriptionFilter || '%') AND categoryId IN :categoryIds
         ORDER BY time DESC
         LIMIT :forwardSize);
 

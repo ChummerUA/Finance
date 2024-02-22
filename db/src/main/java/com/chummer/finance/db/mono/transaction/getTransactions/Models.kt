@@ -8,7 +8,8 @@ data class ListTransactionItem(
     val currencyCode: Int,
     val mcc: Int,
     val originalMcc: Int,
-    val cashback: Long
+    val cashback: Long,
+    val categoryId: Int
 ) {
     val isIncome: Boolean
         get() = operationAmount > 0

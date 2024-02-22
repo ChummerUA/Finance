@@ -8,9 +8,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.work.Data
 import androidx.work.WorkManager
+import com.chummer.domain.Category
 import com.chummer.finance.db.mono.account.getAccountFlow.GetAccountFlowUseCase
 import com.chummer.finance.db.mono.lastFetchTime.GetLastTransactionsFetchTimeUseCase
 import com.chummer.finance.db.mono.transaction.getTransaction.GetTransactionsArgument
+import com.chummer.finance.db.mono.transaction.getTransaction.GetTransactionsPagingConfig
 import com.chummer.finance.db.mono.transaction.getTransactions.GetTransactionsFlowUseCase
 import com.chummer.finance.db.mono.transaction.getTransactions.ListTransactionItem
 import com.chummer.finance.ui.account.DayWithTransactions
@@ -64,6 +66,18 @@ class CardViewModel @Inject constructor(
         savedStateHandle.getStateFlow(DATE_TIME_ARGUMENT_KEY, LocalDateTime.now().toUnixSecond())
     private val pages = savedStateHandle.getStateFlow(PAGES_COUNT_KEY, 1L)
     private val isBackDirection = savedStateHandle.getStateFlow(IS_BACK_DIRECTION_KEY, false)
+    private val pagingConfig = combine(
+        dateTimeArgument,
+        pages,
+        isBackDirection
+    ) { dateTime, pages, isBack ->
+        GetTransactionsPagingConfig(
+            time = dateTime,
+            pageSize = PAGE_SIZE,
+            pages = pages,
+            shiftOnePageBack = isBack
+        )
+    }
 
     private val range = combine(
         savedStateHandle.getStateFlow<Long?>(FROM_KEY, null),
@@ -72,6 +86,8 @@ class CardViewModel @Inject constructor(
         if (from != null && to != null) from.toLocalDate() to to.toLocalDate()
         else null
     }
+
+    private val selectedCategoryIds = savedStateHandle.getStateFlow("", listOf<Category>())
 
     private val search = savedStateHandle.getStateFlow(SEARCH_KEY, "")
     private val searchBarMode: StateFlow<SearchBarMode> =
@@ -89,20 +105,18 @@ class CardViewModel @Inject constructor(
     }
 
     private val argument = combine(
-        dateTimeArgument,
+        pagingConfig,
         search,
         range,
-        pages,
-        isBackDirection
-    ) { dateTimeArgument, search, range, pages, isBackDirection ->
+        selectedCategoryIds
+    ) { pagingConfig, search, range, selectedCategoryIds ->
+        val ids = selectedCategoryIds.map { it.id }
         GetTransactionsArgument(
             accountId = accountId,
+            pagingConfig = pagingConfig,
             search = search,
             range = range,
-            time = dateTimeArgument,
-            pageSize = PAGE_SIZE,
-            pages = pages,
-            shiftOnePageBack = isBackDirection
+            categoryIds = ids.ifEmpty { Category.entries.map { it.id } }
         )
     }
 
@@ -131,7 +145,7 @@ class CardViewModel @Inject constructor(
     init {
         scheduleFetch()
         viewModelScope.launch {
-            argument.collect {
+            pagingConfig.collect {
                 Log.d(TAG, "Loading transactions. From ${it.time}, ${it.pages} pages")
             }
         }

@@ -16,7 +16,9 @@ class GetTransactionsFlowUseCase(
     transacter
 ) {
     override fun TransactionQueries.getQuery(argument: GetTransactionsArgument): Query<ListTransactionItem> {
-        val (accountId, search, range, currentTime, pageSize, pages, shiftBack) = argument
+        val (accountId, pagingConfig, search, range, categoryIds) = argument
+        val (time, pageSize, pages, shiftBack) = pagingConfig
+
         val forwardSize = if (shiftBack) (pages - 1) * pageSize else pages * pageSize
         val backwardSize = if (shiftBack) pageSize else 0L
 
@@ -25,26 +27,28 @@ class GetTransactionsFlowUseCase(
 
         Log.d(
             KEY,
-            "Getting operations. Time: $currentTime, forwardSize: $forwardSize, backwardSize: $backwardSize"
+            "Getting operations. Time: $time, forwardSize: $forwardSize, backwardSize: $backwardSize"
         )
         return transacter.getOperations(
-            time = currentTime,
+            time = time,
             accountId = accountId,
             descriptionFilter = search,
             from = from,
             to = to,
             forwardSize = forwardSize,
-            backwardSize = backwardSize
-        ) { id, time, description, operation_amount, currency_code, mcc, original_mcc, cashback_amount ->
+            backwardSize = backwardSize,
+            categoryIds = categoryIds
+        ) { id, transactionTime, description, operation_amount, currency_code, mcc, original_mcc, cashback_amount, categoryId ->
             ListTransactionItem(
                 id = id,
-                time = time,
+                time = transactionTime,
                 description = description,
                 operationAmount = operation_amount,
                 currencyCode = currency_code,
                 mcc = mcc,
                 originalMcc = original_mcc,
-                cashback = cashback_amount
+                cashback = cashback_amount,
+                categoryId = categoryId
             )
         }
     }

@@ -53,7 +53,8 @@ object DbComponentsModule {
     fun provideOperationAdapter(): Operation.Adapter = Operation.Adapter(
         mccAdapter = IntColumnAdapter,
         original_mccAdapter = IntColumnAdapter,
-        currency_codeAdapter = IntColumnAdapter
+        currency_codeAdapter = IntColumnAdapter,
+        categoryIdAdapter = IntColumnAdapter
     )
 
     @Provides

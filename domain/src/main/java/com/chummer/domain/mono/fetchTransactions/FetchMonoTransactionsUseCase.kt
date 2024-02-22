@@ -1,11 +1,13 @@
 package com.chummer.domain.mono.fetchTransactions
 
+import com.chummer.domain.Category
 import com.chummer.domain.mapping.mono.toDbOperation
 import com.chummer.finance.db.mono.transaction.UpsertTransactionsUseCase
+import com.chummer.finance.network.monobank.transactions.GetTransactionsParameters
 import com.chummer.finance.network.monobank.transactions.GetTransactionsUseCase
+import com.chummer.finance.network.monobank.transactions.Transaction
 import com.chummer.infrastructure.usecase.ExecutableUseCase
 import com.chummer.models.mapping.toLocalDateTime
-import com.chummer.finance.network.monobank.transactions.GetTransactionsParameters
 import kotlinx.coroutines.Dispatchers
 import java.time.temporal.ChronoUnit
 import kotlin.coroutines.CoroutineContext
@@ -41,7 +43,8 @@ class FetchMonoTransactionsUseCase(
             transactions.map {
                 it.toDbOperation(
                     accountId = input.accountId,
-                    jarId = jarId
+                    jarId = jarId,
+                    categoryId = it.getCategoryId()
                 )
             }
         )
@@ -63,4 +66,12 @@ class FetchMonoTransactionsUseCase(
         const val MAX_TRANSACTIONS_IN_RESPONSE = 500
         const val REQUEST_DAYS_LIMIT = 30L
     }
+}
+
+private fun Transaction.getCategoryId(): Int {
+    val category = when {
+        else -> Category.OTHER
+    }
+
+    return category.id
 }

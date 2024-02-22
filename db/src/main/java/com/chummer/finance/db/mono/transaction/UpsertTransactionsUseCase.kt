@@ -28,7 +28,8 @@ class UpsertTransactionsUseCase(
                     counterIban = counter_iban,
                     id = id,
                     accountId = account_id,
-                    jarId = jar_id
+                    jarId = jar_id,
+                    categoryId = categoryId
                 )
             }
         }

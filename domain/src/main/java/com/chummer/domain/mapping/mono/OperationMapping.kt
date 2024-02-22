@@ -5,7 +5,8 @@ import mono.Operation
 
 internal fun Transaction.toDbOperation(
     accountId: String?,
-    jarId: String?
+    jarId: String?,
+    categoryId: Int
 ) = Operation(
     id = id,
     time = time,
@@ -26,5 +27,6 @@ internal fun Transaction.toDbOperation(
     counter_iban = counterIban,
     counter_name = counterName,
     account_id = accountId,
-    jar_id = jarId
+    jar_id = jarId,
+    categoryId = categoryId
 )
