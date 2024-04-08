@@ -19,8 +19,7 @@ import com.chummer.finance.R
 import com.chummer.finance.ui.IconState
 import com.chummer.finance.ui.IconView
 import com.chummer.finance.ui.spacing.Space
-import com.chummer.finance.ui.text.FilledInputTextView
-import com.chummer.finance.ui.text.defaultFilledInputTextViewModifier
+import com.chummer.finance.ui.text.FilledInputTextField
 import com.chummer.finance.utils.OnClickListener
 import com.chummer.finance.utils.OnTextChanged
 
@@ -68,13 +67,12 @@ private fun DefaultSearchBar(
     onSearchClicked: OnClickListener
 ) = SearchContainer {
     val onTextChanged: OnTextChanged = remember { { } }
-    FilledInputTextView(
+    FilledInputTextField(
         text = "",
         onTextChanged = onTextChanged,
         modifier = Modifier
             .alpha(0f)
             .weight(1f)
-            .defaultFilledInputTextViewModifier()
     )
     SearchButton(onSearchClicked)
 }
@@ -114,12 +112,11 @@ private fun ExpandedSearchBar(
     )
     SearchBarSpacing()
 
-    FilledInputTextView(
+    FilledInputTextField(
         text = text,
         onTextChanged = onTextChanged,
         modifier = Modifier
             .weight(1f)
-            .defaultFilledInputTextViewModifier()
             .focusRequester(focusRequester = focusRequester)
     )
 

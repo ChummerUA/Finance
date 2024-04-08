@@ -23,6 +23,7 @@ import com.chummer.finance.ui.transaction.TransactionUiListModel
 import com.chummer.finance.ui.transaction.getContentDescription
 import com.chummer.finance.utils.PagingDirection
 import com.chummer.finance.utils.getFormattedAmountAndCurrency
+import com.chummer.finance.utils.getNullableStateFlow
 import com.chummer.finance.utils.getStateFlow
 import com.chummer.finance.utils.scheduleFetchWorker
 import com.chummer.finance.utils.stateInViewModelScope
@@ -81,8 +82,8 @@ class CardViewModel @Inject constructor(
         )
     }
 
-    private val from = savedStateHandle.getStateFlow<Long?>(FROM_KEY, null, viewModelScope)
-    private val to = savedStateHandle.getStateFlow<Long?>(TO_KEY, null, viewModelScope)
+    private val from = savedStateHandle.getNullableStateFlow<Long?>(FROM_KEY, null, viewModelScope)
+    private val to = savedStateHandle.getNullableStateFlow<Long?>(TO_KEY, null, viewModelScope)
     private val range = combine(from, to) { from, to ->
         if (from != null && to != null) from.toLocalDate() to to.toLocalDate()
         else null

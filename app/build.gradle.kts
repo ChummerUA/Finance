@@ -56,6 +56,7 @@ dependencies {
     implementation(Dependencies.Compose.ui)
     implementation(Dependencies.Compose.animation)
     implementation(Dependencies.Compose.material)
+    implementation(Dependencies.Compose.preview)
 
     implementation(Dependencies.AndroidX.core)
     implementation(Dependencies.AndroidX.appCompat)

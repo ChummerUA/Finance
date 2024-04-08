@@ -5,7 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
-fun <T : Any?> SavedStateHandle.getStateFlow(
+fun <T : Any?> SavedStateHandle.getNullableStateFlow(
     key: String,
     initialValue: T?,
     scope: CoroutineScope
@@ -14,7 +14,7 @@ fun <T : Any?> SavedStateHandle.getStateFlow(
     val stateFlow = MutableStateFlow(currentValue)
     scope.launch {
         stateFlow.collect {
-            this@getStateFlow[key] = it
+            this@getNullableStateFlow[key] = it
         }
     }
     return stateFlow
