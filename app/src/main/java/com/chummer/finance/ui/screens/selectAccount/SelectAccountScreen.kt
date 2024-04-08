@@ -16,8 +16,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.chummer.finance.navigation.navigateTo
 import com.chummer.finance.navigation.nodes.AccountNode
+import com.chummer.finance.ui.account.AccountListItem
 import com.chummer.finance.ui.account.AccountUiListModel
-import com.chummer.finance.ui.account.Display
 import com.chummer.finance.ui.text.ItemTitleText
 import com.chummer.finance.ui.theme.AppTheme
 import com.chummer.finance.utils.rememberStateWithLifecycle
@@ -47,11 +47,12 @@ fun SelectAccountScreen(
         }
     }
 
-    state?.DisplayContent(onItemClicked = onItemClicked)
+    state?.let { SelectAccountScreen(it, onItemClicked) }
 }
 
 @Composable
-private fun SelectAccountUiState.DisplayContent(
+private fun SelectAccountScreen(
+    state: SelectAccountUiState,
     onItemClicked: (AccountUiListModel) -> Unit
 ) {
     // TODO set title
@@ -65,9 +66,9 @@ private fun SelectAccountUiState.DisplayContent(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        group(cardGroup, onItemClicked = onItemClicked)
-        group(fopGroup, onItemClicked = onItemClicked)
-        group(jarGroup, onItemClicked = onItemClicked)
+        group(state.cardGroup, onItemClicked = onItemClicked)
+        group(state.fopGroup, onItemClicked = onItemClicked)
+        group(state.jarGroup, onItemClicked = onItemClicked)
     }
 }
 
@@ -79,7 +80,10 @@ private fun <T : AccountUiListModel> LazyGridScope.group(
         if (groupShown) {
             header(title)
             items(items, key = { it.id }) {
-                it.View(onItemClicked = onItemClicked)
+                val onClick = remember(it) {
+                    { onItemClicked(it) }
+                }
+                AccountListItem(it, onClick)
             }
         }
     }
@@ -91,25 +95,6 @@ private fun LazyGridScope.header(
     item(span = { GridItemSpan(this.maxLineSpan) }) {
         val colors = AppTheme.colors
         ItemTitleText(text = title, color = colors.textPrimary)
-    }
-}
-
-@Composable
-private fun AccountUiListModel.View(
-    onItemClicked: (AccountUiListModel) -> Unit
-) {
-    when (this) {
-        is AccountUiListModel.Card -> Display {
-            onItemClicked(this)
-        }
-
-        is AccountUiListModel.FOP -> Display {
-            onItemClicked(this)
-        }
-
-        is AccountUiListModel.Jar -> Display {
-            onItemClicked(this)
-        }
     }
 }
 

@@ -21,16 +21,29 @@ import com.chummer.finance.ui.theme.AppTheme
 import com.chummer.finance.utils.mergeContentDescription
 
 @Composable
-fun AccountUiListModel.Card.Display(
-    onCardClicked: (() -> Unit)
+fun AccountListItem(
+    item: AccountUiListModel,
+    onItemClicked: () -> Unit
 ) {
+    when (item) {
+        is AccountUiListModel.Card -> Account(item, onItemClicked)
+        is AccountUiListModel.FOP -> Fop(item, onItemClicked)
+        is AccountUiListModel.Jar -> Jar(item, onItemClicked)
+    }
+}
+
+@Composable
+fun Account(
+    card: AccountUiListModel.Card,
+    onCardClicked: () -> Unit
+) = with(card) {
     val additionalInfo = remember(id, creditMoney) {
         AccountCardViewAdditionalInfo(
             creditMoneyTitle,
             creditMoney
         )
     }
-    AccountCardView(
+    AccountCard(
         name = name,
         balance = balance,
         additionalInfo = additionalInfo,
@@ -39,10 +52,11 @@ fun AccountUiListModel.Card.Display(
 }
 
 @Composable
-fun AccountUiListModel.FOP.Display(
-    onCardClicked: (() -> Unit)
-) {
-    AccountCardView(
+fun Fop(
+    fop: AccountUiListModel.FOP,
+    onCardClicked: () -> Unit
+) = with(fop) {
+    AccountCard(
         name = name,
         balance = balance,
         additionalInfo = null,
@@ -51,16 +65,17 @@ fun AccountUiListModel.FOP.Display(
 }
 
 @Composable
-fun AccountUiListModel.Jar.Display(
-    onCardClicked: (() -> Unit)
-) {
+fun Jar(
+    jar: AccountUiListModel.Jar,
+    onCardClicked: () -> Unit
+) = with(jar) {
     val additionalInfo = remember(id, goal) {
         AccountCardViewAdditionalInfo(
             goalTitle,
             goal
         )
     }
-    AccountCardView(
+    AccountCard(
         name = name,
         balance = balance,
         additionalInfo = additionalInfo,
@@ -69,7 +84,7 @@ fun AccountUiListModel.Jar.Display(
 }
 
 @Composable
-private fun AccountCardView(
+private fun AccountCard(
     name: String,
     balance: String,
     additionalInfo: AccountCardViewAdditionalInfo?,
@@ -106,7 +121,7 @@ private data class AccountCardViewAdditionalInfo(
 )
 
 @Composable
-fun AccountInfoItem.Display() = Column(
+fun AccountInfoItem(item: AccountInfoItem) = Column(
     Modifier
         .fillMaxWidth(1f)
         .mergeContentDescription()
@@ -115,6 +130,8 @@ fun AccountInfoItem.Display() = Column(
             horizontal = 16.dp
         )
 ) {
-    GroupTitleText(text = title, color = AppTheme.colors.textSecondary)
-    ItemTitleText(text = value, color = AppTheme.colors.textPrimary)
+    with(item) {
+        GroupTitleText(text = title, color = AppTheme.colors.textSecondary)
+        ItemTitleText(text = value, color = AppTheme.colors.textPrimary)
+    }
 }

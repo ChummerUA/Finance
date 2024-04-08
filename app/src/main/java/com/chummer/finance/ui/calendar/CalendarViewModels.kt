@@ -9,7 +9,7 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 
 
-enum class DaySelectionViewMode {
+enum class DaySelectionMode {
     Start,
     Middle,
     End,
@@ -106,7 +106,7 @@ data class CalendarWeek(
             fun isPlaceholder() = current.month != date.month || current.isAfter(LocalDate.now())
 
             fun addAndIncrease() {
-                val selection = if (isPlaceholder()) DaySelectionViewMode.None
+                val selection = if (isPlaceholder()) DaySelectionMode.None
                 else getSelectionModeForDay(current, selectedRangeStart, selectedRangeEnd)
 
                 days.add(CalendarDate(current, selection, isPlaceholder()))
@@ -125,7 +125,7 @@ data class CalendarWeek(
 
 data class CalendarDate(
     val date: LocalDate,
-    val selectionMode: DaySelectionViewMode,
+    val selectionMode: DaySelectionMode,
     val isPlaceholder: Boolean
 ) {
     val key
@@ -152,14 +152,14 @@ private fun getSelectionModeForDay(
     date: LocalDate,
     selectedRangeStart: LocalDate?,
     selectedRangeEnd: LocalDate?
-): DaySelectionViewMode = when {
-    date == selectedRangeStart && date == selectedRangeEnd -> DaySelectionViewMode.SingleDay
-    date == selectedRangeStart -> DaySelectionViewMode.Start
-    date == selectedRangeEnd -> DaySelectionViewMode.End
+): DaySelectionMode = when {
+    date == selectedRangeStart && date == selectedRangeEnd -> DaySelectionMode.SingleDay
+    date == selectedRangeStart -> DaySelectionMode.Start
+    date == selectedRangeEnd -> DaySelectionMode.End
     selectedRangeStart?.isBefore(date) == true && selectedRangeEnd?.isAfter(date) == true ->
-        DaySelectionViewMode.Middle
+        DaySelectionMode.Middle
 
-    else -> DaySelectionViewMode.None
+    else -> DaySelectionMode.None
 }
 
 data class CalendarPagingConfig(

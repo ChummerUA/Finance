@@ -20,18 +20,18 @@ import androidx.navigation.NavController
 import com.chummer.finance.navigation.nodes.AccountNode
 import com.chummer.finance.navigation.nodes.AccountNode.SelectAccount
 import com.chummer.finance.ui.BalanceView
-import com.chummer.finance.ui.DividerView
+import com.chummer.finance.ui.Divider
+import com.chummer.finance.ui.account.AccountInfoItem
 import com.chummer.finance.ui.account.AccountUiModel
 import com.chummer.finance.ui.account.AccountUiModel.Card
 import com.chummer.finance.ui.account.AccountUiModel.FOP
-import com.chummer.finance.ui.account.Display
 import com.chummer.finance.ui.calendar.Calendar
 import com.chummer.finance.ui.calendar.OnDatesSelected
 import com.chummer.finance.ui.text.ClickableText
 import com.chummer.finance.ui.text.ItemTitleText
 import com.chummer.finance.ui.theme.AppTheme
 import com.chummer.finance.ui.transaction.SearchBarState
-import com.chummer.finance.ui.transaction.TransactionsSearchBarView
+import com.chummer.finance.ui.transaction.TransactionsSearchBar
 import com.chummer.finance.ui.transaction.transactions
 import com.chummer.finance.utils.ConfigurePaging
 import com.chummer.finance.utils.OnClickListener
@@ -61,20 +61,25 @@ fun CardScreen(
     val listState = rememberLazyListState()
     ConfigurePaging(15, listState, viewModel::updatePages)
 
-    state?.DisplayContent(
-        listState = listState,
-        onSelectAccountClicked = onSelectAccountClicked,
-        onSearchClicked = viewModel::activateSearch,
-        onCategoriesClicked = viewModel::activateCategoriesSelection,
-        onCalendarClicked = viewModel::activateCalendarSelection,
-        onCancelClicked = viewModel::cancelSearch,
-        onTextChanged = viewModel::updateSearchText,
-        onDatesSelected = viewModel::updateSelectedDates
-    )
+    if (state == null) return
+    state?.let {
+        CardScreen(
+            cardUiState = it,
+            listState = listState,
+            onSelectAccountClicked = onSelectAccountClicked,
+            onSearchClicked = viewModel::activateSearch,
+            onCategoriesClicked = viewModel::activateCategoriesSelection,
+            onCalendarClicked = viewModel::activateCalendarSelection,
+            onCancelClicked = viewModel::cancelSearch,
+            onTextChanged = viewModel::updateSearchText,
+            onDatesSelected = viewModel::updateSelectedDates
+        )
+    }
 }
 
 @Composable
-fun CardUiState.DisplayContent(
+private fun CardScreen(
+    cardUiState: CardUiState,
     listState: LazyListState,
     onSelectAccountClicked: (String) -> Unit,
     onSearchClicked: OnClickListener,
@@ -84,97 +89,94 @@ fun CardUiState.DisplayContent(
     onTextChanged: OnTextChanged,
     onDatesSelected: OnDatesSelected
 ) = Column {
-    when (account) {
-        is Card -> account.Display(onSelectAccountClicked)
-        is FOP -> account.Display(onSelectAccountClicked)
-    }
-    TransactionsSearchBarView(
-        state = searchBarState,
-        onSearchClicked = onSearchClicked,
-        onCategoriesClicked = onCategoriesClicked,
-        onCalendarClicked = onCalendarClicked,
-        onCancelClicked = onCancelClicked,
-        onTextChanged = onTextChanged
-    )
-
-    val today = remember { LocalDate.now() }
-    when {
-        searchBarState is SearchBarState.Expanded && searchBarState.isCalendar -> {
-            Calendar(
-                today = today,
-                range = searchBarState.range,
-                onDatesSelected
-            )
+    with(cardUiState) {
+        when (account) {
+            is Card -> AccountInfo(account, onSelectAccountClicked)
+            is FOP -> AccountInfo(account, onSelectAccountClicked)
         }
+        TransactionsSearchBar(
+            state = searchBarState,
+            onSearchClicked = onSearchClicked,
+            onCategoriesClicked = onCategoriesClicked,
+            onCalendarClicked = onCalendarClicked,
+            onCancelClicked = onCancelClicked,
+            onTextChanged = onTextChanged
+        )
 
-        else -> {
-            LazyColumn(state = listState) {
-                transactions(daysWithTransactions)
+        val today = remember { LocalDate.now() }
+        when {
+            searchBarState is SearchBarState.Expanded && searchBarState.isCalendar -> {
+                Calendar(
+                    today = today,
+                    range = searchBarState.range,
+                    onDatesSelected
+                )
+            }
+
+            else -> {
+                LazyColumn(state = listState) {
+                    transactions(daysWithTransactions)
+                }
             }
         }
     }
 }
 
 @Composable
-private fun Card.Display(
+private fun AccountInfo(
+    card: Card,
     onSelectAccountClicked: ((String) -> Unit)
-) {
-    CardNameView(onSelectAccountClicked)
+) = with(card) {
+    CardName(card, onSelectAccountClicked)
 
-    cardNumber.Display()
+    AccountInfoItem(cardNumber)
 
-    val dividerPadding = remember { PaddingValues(horizontal = 16.dp) }
-    DividerView(
-        paddingValues = dividerPadding
-    )
+    val dividerPadding = PaddingValues(horizontal = 16.dp)
+    Divider(dividerPadding)
 
     BalanceView(balance, creditInfo)
 
-    DividerView(
-        paddingValues = dividerPadding
-    )
+    Divider(dividerPadding)
 }
 
 @Composable
-private fun FOP.Display(
+private fun AccountInfo(
+    fop: FOP,
     onSelectAccountClicked: ((String) -> Unit)
-) {
-    CardNameView(onSelectAccountClicked)
+) = with(fop) {
+    CardName(fop, onSelectAccountClicked)
 
-    iban.Display()
+    AccountInfoItem(fop.iban)
 
-    val dividerPadding = remember { PaddingValues(horizontal = 16.dp) }
-    DividerView(
-        paddingValues = dividerPadding
-    )
+    val dividerPadding = PaddingValues(horizontal = 16.dp)
+    Divider(dividerPadding)
 
     BalanceView(balance, creditInfo)
 
-    DividerView(
-        paddingValues = dividerPadding
-    )
+    Divider(dividerPadding)
 }
 
 @Composable
-private fun AccountUiModel.CardNameView(
+private fun CardName(
+    account: AccountUiModel,
     onSelectAccountClicked: (String) -> Unit
-) = Row(
-    Modifier
-        .clickable {
-            onSelectAccountClicked(id)
-        }
-        .padding(horizontal = 16.dp, vertical = 8.dp)
-) {
-    val colors = AppTheme.colors
-    ItemTitleText(
-        text = title,
-        color = colors.textPrimary,
-        modifier = Modifier
-            .weight(1f)
-            .wrapContentHeight()
-    )
-    ClickableText(
-        text = selectAllText,
-        color = colors.primary
-    )
+) = with(account) {
+    Row(
+        Modifier
+            .clickable { onSelectAccountClicked(id) }
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        val colors = AppTheme.colors
+        ItemTitleText(
+            text = title,
+            color = colors.textPrimary,
+            modifier = Modifier
+                .weight(1f)
+                .wrapContentHeight()
+        )
+        ClickableText(
+            text = selectAllText,
+            color = colors.primary
+        )
+    }
 }

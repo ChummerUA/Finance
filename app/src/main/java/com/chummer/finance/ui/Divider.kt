@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import com.chummer.finance.ui.theme.AppTheme
 
 @Composable
-fun DividerView(
+fun Divider(
     paddingValues: PaddingValues
 ) = Row(
     Modifier

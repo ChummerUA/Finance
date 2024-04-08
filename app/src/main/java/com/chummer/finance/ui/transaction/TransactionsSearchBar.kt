@@ -25,7 +25,7 @@ import com.chummer.finance.utils.OnClickListener
 import com.chummer.finance.utils.OnTextChanged
 
 @Composable
-fun TransactionsSearchBarView(
+fun TransactionsSearchBar(
     state: SearchBarState,
     onSearchClicked: OnClickListener,
     onCategoriesClicked: OnClickListener,
@@ -33,8 +33,8 @@ fun TransactionsSearchBarView(
     onCancelClicked: OnClickListener,
     onTextChanged: OnTextChanged
 ) = when (state) {
-    SearchBarState.Default -> DefaultSearchBarView(onSearchClicked)
-    is SearchBarState.Expanded -> ExpandedSearchBarView(
+    SearchBarState.Default -> DefaultSearchBar(onSearchClicked)
+    is SearchBarState.Expanded -> ExpandedSearchBar(
         calendarIconState = state.calendarIconState,
         categoriesIconState = state.categoriesIconState,
         text = state.search,
@@ -47,7 +47,7 @@ fun TransactionsSearchBarView(
 
 //region base components
 @Composable
-private fun SearchContainerView(content: @Composable (RowScope.() -> Unit)) = Row(
+private fun SearchContainer(content: @Composable (RowScope.() -> Unit)) = Row(
     modifier = Modifier
         .padding(
             horizontal = 16.dp,
@@ -64,9 +64,9 @@ private fun RowScope.SearchBarSpacing() = Space(size = 8.dp)
 
 //region states
 @Composable
-private fun DefaultSearchBarView(
+private fun DefaultSearchBar(
     onSearchClicked: OnClickListener
-) = SearchContainerView {
+) = SearchContainer {
     val onTextChanged: OnTextChanged = remember { { } }
     FilledInputTextView(
         text = "",
@@ -80,7 +80,7 @@ private fun DefaultSearchBarView(
 }
 
 @Composable
-private fun ExpandedSearchBarView(
+private fun ExpandedSearchBar(
     calendarIconState: IconState,
     categoriesIconState: IconState,
     text: String,
@@ -88,7 +88,7 @@ private fun ExpandedSearchBarView(
     onCalendarClicked: OnClickListener,
     onCancelClicked: OnClickListener,
     onTextChanged: OnTextChanged
-) = SearchContainerView {
+) = SearchContainer {
 
     val focusManager = LocalFocusManager.current
     val focusRequester = remember {

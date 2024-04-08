@@ -36,7 +36,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.chummer.finance.R
-import com.chummer.finance.ui.DividerView
+import com.chummer.finance.ui.Divider
 import com.chummer.finance.ui.button.PrimaryButton
 import com.chummer.finance.ui.spacing.Space
 import com.chummer.finance.ui.text.ItemDescriptionText
@@ -64,7 +64,7 @@ fun Calendar(
     )
 ) {
     WeekHeader()
-    DividerView(paddingValues = PaddingValues(0.dp))
+    Divider(paddingValues = PaddingValues(0.dp))
 
     val listState = rememberLazyListState()
 
@@ -149,7 +149,7 @@ fun Calendar(
         }
     }
 
-    DividerView(paddingValues = PaddingValues(bottom = 12.dp))
+    Divider(paddingValues = PaddingValues(bottom = 12.dp))
 
     val onClick = remember(selectedRangeStart, selectedRangeEnd) {
         {
@@ -247,7 +247,7 @@ private fun RowScope.Day(
 ) {
     val colors = LocalColors.current
     val isSelected by remember(day.key, day.selectionMode) {
-        derivedStateOf { day.selectionMode != DaySelectionViewMode.None }
+        derivedStateOf { day.selectionMode != DaySelectionMode.None }
     }
 
     val text by remember {
@@ -262,17 +262,17 @@ private fun RowScope.Day(
     val shape by remember(day.selectionMode) {
         derivedStateOf {
             when (day.selectionMode) {
-                DaySelectionViewMode.Start -> RoundedCornerShape(
+                DaySelectionMode.Start -> RoundedCornerShape(
                     topStartPercent = 50,
                     bottomStartPercent = 50
                 )
 
-                DaySelectionViewMode.End -> RoundedCornerShape(
+                DaySelectionMode.End -> RoundedCornerShape(
                     topEndPercent = 50,
                     bottomEndPercent = 50
                 )
 
-                DaySelectionViewMode.SingleDay -> CircleShape
+                DaySelectionMode.SingleDay -> CircleShape
                 else -> RectangleShape
             }
         }
