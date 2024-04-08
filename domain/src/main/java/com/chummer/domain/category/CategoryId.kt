@@ -1,4 +1,4 @@
-package com.chummer.domain
+package com.chummer.domain.category
 
 enum class Category(val id: Int) {
     OTHER(0),

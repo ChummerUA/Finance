@@ -1,6 +1,6 @@
 package com.chummer.domain.mono.fetchTransactions
 
-import com.chummer.domain.Category
+import com.chummer.domain.category.Category
 import com.chummer.domain.mapping.mono.toDbOperation
 import com.chummer.finance.db.mono.transaction.UpsertTransactionsUseCase
 import com.chummer.finance.network.monobank.transactions.GetTransactionsParameters

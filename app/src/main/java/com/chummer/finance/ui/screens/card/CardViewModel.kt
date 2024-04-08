@@ -8,7 +8,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.work.Data
 import androidx.work.WorkManager
-import com.chummer.domain.Category
+import com.chummer.domain.category.Category
 import com.chummer.finance.db.mono.account.getAccountFlow.GetAccountFlowUseCase
 import com.chummer.finance.db.mono.lastFetchTime.GetLastTransactionsFetchTimeUseCase
 import com.chummer.finance.db.mono.transaction.getTransaction.GetTransactionsArgument
@@ -23,6 +23,7 @@ import com.chummer.finance.ui.transaction.TransactionUiListModel
 import com.chummer.finance.ui.transaction.getContentDescription
 import com.chummer.finance.utils.PagingDirection
 import com.chummer.finance.utils.getFormattedAmountAndCurrency
+import com.chummer.finance.utils.getStateFlow
 import com.chummer.finance.utils.scheduleFetchWorker
 import com.chummer.finance.utils.stateInViewModelScope
 import com.chummer.finance.utils.toDateString
@@ -37,11 +38,11 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -52,7 +53,7 @@ import kotlin.time.Duration.Companion.minutes
 @HiltViewModel
 class CardViewModel @Inject constructor(
     application: Application,
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     getAccountFlow: GetAccountFlowUseCase,
     getTransactionsFlow: GetTransactionsFlowUseCase,
     private val getLastTransactionsFetchTime: GetLastTransactionsFetchTimeUseCase,
@@ -62,12 +63,13 @@ class CardViewModel @Inject constructor(
 
     private val accountId: String = savedStateHandle["id"] ?: error("missing account id")
 
-    private val dateTimeArgument =
-        savedStateHandle.getStateFlow(DATE_TIME_ARGUMENT_KEY, LocalDateTime.now().toUnixSecond())
-    private val pages = savedStateHandle.getStateFlow(PAGES_COUNT_KEY, 1L)
-    private val isBackDirection = savedStateHandle.getStateFlow(IS_BACK_DIRECTION_KEY, false)
+    private val now = LocalDateTime.now().toUnixSecond()
+    private val dateTime = savedStateHandle.getStateFlow(DATE_TIME_KEY, now, viewModelScope)
+    private val pages = savedStateHandle.getStateFlow(PAGES_COUNT_KEY, 1L, viewModelScope)
+    private val isBackDirection =
+        savedStateHandle.getStateFlow(IS_BACK_DIRECTION_KEY, false, viewModelScope)
     private val pagingConfig = combine(
-        dateTimeArgument,
+        dateTime,
         pages,
         isBackDirection
     ) { dateTime, pages, isBack ->
@@ -79,20 +81,19 @@ class CardViewModel @Inject constructor(
         )
     }
 
-    private val range = combine(
-        savedStateHandle.getStateFlow<Long?>(FROM_KEY, null),
-        savedStateHandle.getStateFlow<Long?>(TO_KEY, null)
-    ) { from, to ->
+    private val from = savedStateHandle.getStateFlow<Long?>(FROM_KEY, null, viewModelScope)
+    private val to = savedStateHandle.getStateFlow<Long?>(TO_KEY, null, viewModelScope)
+    private val range = combine(from, to) { from, to ->
         if (from != null && to != null) from.toLocalDate() to to.toLocalDate()
         else null
     }
 
     private val selectedCategoryIds = savedStateHandle.getStateFlow("", listOf<Category>())
 
-    private val search = savedStateHandle.getStateFlow(SEARCH_KEY, "")
-    private val searchBarMode: StateFlow<SearchBarMode> =
-        savedStateHandle.getStateFlow(SEARCH_BAR_MODE_KEY, SearchBarMode.Default)
-    private val searchBar = combine(searchBarMode, search, range) { mode, search, range ->
+    private val searchQuery = savedStateHandle.getStateFlow(SEARCH_KEY, "", viewModelScope)
+    private val searchBarMode =
+        savedStateHandle.getStateFlow(SEARCH_BAR_MODE_KEY, SearchBarMode.Default, viewModelScope)
+    private val searchBar = combine(searchBarMode, searchQuery, range) { mode, search, range ->
         when (mode) {
             SearchBarMode.Default -> SearchBarState.Default
             else -> SearchBarState.Expanded(
@@ -106,7 +107,7 @@ class CardViewModel @Inject constructor(
 
     private val argument = combine(
         pagingConfig,
-        search,
+        searchQuery,
         range,
         selectedCategoryIds
     ) { pagingConfig, search, range, selectedCategoryIds ->
@@ -172,46 +173,51 @@ class CardViewModel @Inject constructor(
 
     fun updatePages(direction: PagingDirection) = viewModelScope.launch {
         if (direction is PagingDirection.Forward) {
-            pages.value.let {
-                if (it < MAX_PAGES)
-                    savedStateHandle[PAGES_COUNT_KEY] = it + 1
+            pages.value.let { pagesCount ->
+                if (pagesCount < MAX_PAGES)
+                    pages.update { it + 1 }
                 else
-                    savedStateHandle[DATE_TIME_ARGUMENT_KEY] =
-                        firstTransactionOnSecondPage.first().time
+                    dateTime.update { firstTransactionOnSecondPage.first().time }
             }
-        } else savedStateHandle[IS_BACK_DIRECTION_KEY] = pages.value > MAX_PAGES
+        } else isBackDirection.update { pages.value > MAX_PAGES }
     }
 
-    fun activateSearch() {
-        // TODO replace with regular fields
-        savedStateHandle[SEARCH_BAR_MODE_KEY] = SearchBarMode.Search
-    }
+    fun activateSearch() = setSearchBar(SearchBarMode.Search)
 
-    fun updateSearchText(newSearch: String) {
-        savedStateHandle[SEARCH_KEY] = newSearch
-    }
+    fun updateSearchText(newSearch: String) = searchQuery.update { newSearch }
 
     fun updateSelectedDates(dates: Pair<LocalDate, LocalDate>?) {
-        savedStateHandle[FROM_KEY] = dates?.first?.toUnixSecond()
-        savedStateHandle[TO_KEY] = dates?.second?.toUnixSecond()
-        savedStateHandle[SEARCH_BAR_MODE_KEY] = SearchBarMode.Default
+        from.update { dates?.first?.toUnixSecond() }
+        to.update { dates?.second?.toUnixSecond() }
+        setSearchBar(SearchBarMode.Default)
     }
 
-    fun activateCategoriesSelection() {
-        savedStateHandle[SEARCH_BAR_MODE_KEY] = SearchBarMode.Categories
-    }
+    fun activateCategoriesSelection() = setSearchBar(SearchBarMode.Categories)
 
-    fun selectCategories() {
-        savedStateHandle[SEARCH_BAR_MODE_KEY] = SearchBarMode.Default
-    }
-
-    fun activateCalendarSelection() {
-        savedStateHandle[SEARCH_BAR_MODE_KEY] = SearchBarMode.Calendar
-    }
+    fun activateCalendarSelection() = setSearchBar(SearchBarMode.Calendar)
 
     fun cancelSearch() {
-        savedStateHandle[SEARCH_KEY] = ""
-        savedStateHandle[SEARCH_BAR_MODE_KEY] = SearchBarMode.Default
+        searchQuery.update { "" }
+        setSearchBar(SearchBarMode.Default)
+    }
+
+    private fun setSearchBar(mode: SearchBarMode) = searchBarMode.update { mode }
+
+    private companion object {
+        const val TAG = "CardViewModel"
+
+        const val PAGE_SIZE = 50L
+        const val MAX_PAGES = 6L
+
+        const val DATE_TIME_KEY = "date_time"
+        const val PAGES_COUNT_KEY = "pages_count"
+        const val IS_BACK_DIRECTION_KEY = "is_back_direction"
+
+        const val SEARCH_KEY = "search"
+        const val SEARCH_BAR_MODE_KEY = "search_bar_mode"
+
+        const val FROM_KEY = "from"
+        const val TO_KEY = "to"
     }
 }
 
@@ -238,21 +244,6 @@ private fun List<ListTransactionItem>.toUiTransactions(context: Context) = map {
         accessibilityText = it.getContentDescription(context)
     )
 }.toImmutableList()
-
-private const val TAG = "CardViewModel"
-
-private const val PAGE_SIZE = 50L
-private const val MAX_PAGES = 6L
-
-private const val DATE_TIME_ARGUMENT_KEY = "date_time"
-private const val PAGES_COUNT_KEY = "pages_count"
-private const val IS_BACK_DIRECTION_KEY = "is_back_direction"
-
-private const val SEARCH_KEY = "search"
-private const val SEARCH_BAR_MODE_KEY = "search_bar_mode"
-
-private const val FROM_KEY = "from"
-private const val TO_KEY = "to"
 
 private enum class SearchBarMode {
     Default,
