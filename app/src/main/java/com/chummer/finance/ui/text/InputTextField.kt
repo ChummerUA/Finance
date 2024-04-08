@@ -17,7 +17,7 @@ import com.chummer.finance.ui.theme.LocalColors
 import com.chummer.finance.utils.OnTextChanged
 
 @Composable
-fun InputTextView(
+fun InputTextField(
     text: String,
     onTextChanged: OnTextChanged,
     modifier: Modifier,
@@ -44,7 +44,7 @@ fun InputTextView(
 )
 
 @Composable
-fun FilledInputTextView(
+fun FilledInputTextField(
     text: String,
     onTextChanged: OnTextChanged,
     @SuppressLint("ModifierParameter") modifier: Modifier = Modifier.defaultFilledInputTextViewModifier(),
@@ -57,7 +57,7 @@ fun FilledInputTextView(
     singleLine: Boolean = false,
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     minLines: Int = 1
-) = InputTextView(
+) = InputTextField(
     text = text,
     onTextChanged = onTextChanged,
     modifier = modifier,
